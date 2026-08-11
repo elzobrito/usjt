@@ -68,23 +68,8 @@ Sistema digital
 - **Qualidade afetada:** acessibilidade.
 - **Melhoria:** permitir a ampliação da fonte, aumentar as áreas de toque e oferecer alto contraste.
 
-## Entrega e apresentação
+# Entrega
 
-Ao finalizar, cada grupo deverá publicar o link ou a imagem do mapa. O grupo terá **dois minutos** para apresentar:
-
-1. o problema mais relevante encontrado;
-2. a qualidade de uso afetada;
-3. a melhoria proposta.
-
-## Critérios de avaliação
-
-| Critério | Pontuação |
-|---|---:|
-| Identificação dos elementos de IHC | 3 pontos |
-| Análise das qualidades de uso | 3 pontos |
-| Coerência das melhorias propostas | 2 pontos |
-| Clareza visual e apresentação | 2 pontos |
-| **Total** | **10 pontos** |
 
 ## Pergunta de fechamento
 
