@@ -1,0 +1,11 @@
+# Apostilas e binários ficam no disco local, não no GitHub
+*.pdf
+*.pptx
+*.ppt
+*.xlsx
+*.docx
+*.zip
+
+.DS_Store
+Thumbs.db
+*.lock
