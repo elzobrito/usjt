@@ -55,29 +55,4 @@ O grupo anterior deixou algum problema passar?
 
 Essa segunda etapa simula uma revisão independente.
 
-Discussão
 
-O professor pode explorar situações como:
-
-CSS sintaticamente aceito, mas seletor incorreto;
-diferenças entre Titulo e titulo;
-associação incorreta entre label e campo;
-id escrito de maneira diferente;
-propriedade CSS inexistente;
-elementos HTML estruturalmente posicionados no local errado;
-recurso aparentemente funcionando apesar da existência de defeitos.
-Pergunta final
-
-Se uma página tão pequena pode conter vários defeitos, o que acontece em um sistema com centenas de milhares ou milhões de linhas de código?
-
-Conexão com qualidade
-
-A atividade permite introduzir uma distinção importante:
-
-Teste não é a única forma de encontrar defeitos.
-
-Revisão, inspeção, análise estática, padrões e processos também fazem parte da garantia da qualidade.
-
-Tempo
-
-20 a 25 minutos.
