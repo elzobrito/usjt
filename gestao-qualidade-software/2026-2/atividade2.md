@@ -2,7 +2,7 @@ Atividade 2 — Caça ao defeito: quem encontra o bug que passou pelo teste?
 Situação
 
 Vocês fazem parte da equipe de qualidade responsável por liberar uma pequena página para produção.
-
+'''
 <!DOCTYPE html>
 <html>
 <head>
