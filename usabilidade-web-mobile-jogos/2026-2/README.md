@@ -12,6 +12,8 @@ Regra das páginas HTML: **não invente JavaScript.** Só HTML e CSS.
 | [atividades/codigo.html](atividades/codigo.html) | Aula 04 | Quebra-cabeça 1 — a tela mente |
 | [atividades/cpdogp2.html](atividades/cpdogp2.html) | Aula 04 | Quebra-cabeça 2 — a lista está na página |
 | [atividades/codigo3.html](atividades/codigo3.html) | Aula 04 | Quebra-cabeça 3 — parece certo no papel |
+| [atividades/atividade-site.md](atividades/atividade-site.md) | Publicação | Enunciado do site no GitHub Pages |
+| [atividades/site-padrao/](atividades/site-padrao/) | Publicação | Layout-contrato (HTML + CSS, sem JavaScript) |
 
 Abra cada `.html` no navegador (duplo clique ou arrastar o arquivo para o Chrome/Firefox). O que a tela mostra é o exercício: há erros de propósito.
 
@@ -40,6 +42,12 @@ Ordem sugerida:
 Em cada rodada: circule o problema, diga o que quebra na tela e proponha o conserto em uma linha.
 
 Tese da aula: o HTML estrutura, o CSS veste. Nenhum dos dois fabrica a lista do Período.
+
+## Site no GitHub Pages
+
+Enunciado em `atividades/atividade-site.md`. O aluno copia `atividades/site-padrao/`, troca os textos entre `[colchetes]`, altera só o `:root` das cores e publica a pasta como raiz do repositório.
+
+Layout travado (menu, páginas, formulário com `label`). Liberdade: o negócio, o copy e no máximo dois extras da lista. Sem JavaScript.
 
 ## Para quem conduz a aula
 

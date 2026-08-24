@@ -1,0 +1,346 @@
+/* ============================================================
+   Layout-contrato da disciplina (UC 0011109)
+   PODE alterar: o bloco :root (cores, fontes).
+   NÃO altere: estrutura do header/nav/main/footer, a grade
+   da home, o formulário nem os tamanhos mínimos de toque.
+   Sem JavaScript. Só HTML e CSS.
+   ============================================================ */
+
+:root {
+  /* --- identidade (o aluno pode trocar) --- */
+  --cor-fundo: #f4efe6;
+  --cor-superficie: #fffdf8;
+  --cor-texto: #1a1a1a;
+  --cor-texto-suave: #3d4450;
+  --cor-acao: #0b4f6c;
+  --cor-acao-texto: #ffffff;
+  --cor-header: #12232e;
+  --cor-header-texto: #f4efe6;
+  --cor-borda: #d9d0c3;
+  --cor-foco: #b44a2a;
+  --fonte-texto: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --fonte-titulo: Georgia, "Times New Roman", serif;
+
+  /* --- contrato (não desmonte) --- */
+  --largura: 70rem;
+  --largura-texto: 42rem;
+  --espaco: 1.25rem;
+  --raio: 0.5rem;
+  --alvo: 2.75rem; /* 44px */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fonte-texto);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--cor-acao);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 3px;
+}
+
+.skip {
+  position: absolute;
+  left: 0.75rem;
+  top: -4rem;
+  z-index: 20;
+  padding: 0.6rem 0.9rem;
+  background: var(--cor-acao);
+  color: var(--cor-acao-texto);
+  text-decoration: none;
+  border-radius: var(--raio);
+}
+
+.skip:focus {
+  top: 0.75rem;
+}
+
+/* ----- header / nav (ordem travada) ----- */
+
+.site-header {
+  background: var(--cor-header);
+  color: var(--cor-header-texto);
+}
+
+.site-header a {
+  color: var(--cor-header-texto);
+  text-decoration: none;
+}
+
+.site-header__inner,
+.site-footer__inner,
+.conteudo {
+  width: min(100% - 2rem, var(--largura));
+  margin-inline: auto;
+}
+
+.site-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  min-height: 4.25rem;
+  padding-block: 0.75rem;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--fonte-titulo);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.marca__marca {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.35rem;
+  background: var(--cor-acao);
+  color: var(--cor-acao-texto);
+  font-size: 1rem;
+}
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.menu a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--alvo);
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+}
+
+.menu a:hover {
+  background: rgb(255 255 255 / 0.12);
+}
+
+.menu a[aria-current="page"] {
+  background: var(--cor-acao);
+  color: var(--cor-acao-texto);
+}
+
+/* ----- conteúdo ----- */
+
+.conteudo {
+  padding-block: 2rem 3.5rem;
+}
+
+.conteudo--estreito {
+  width: min(100% - 2rem, var(--largura-texto));
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fonte-titulo);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+  margin: 0 0 0.75rem;
+}
+
+h2 {
+  font-size: 1.45rem;
+  margin: 2rem 0 0.6rem;
+}
+
+p {
+  margin: 0 0 1rem;
+  color: var(--cor-texto-suave);
+}
+
+.lede {
+  font-size: 1.2rem;
+  max-width: 38rem;
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.25rem 0 0;
+}
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--alvo);
+  padding: 0.45rem 1.15rem;
+  border-radius: var(--raio);
+  background: var(--cor-acao);
+  color: var(--cor-acao-texto);
+  text-decoration: none;
+  font-weight: 600;
+  border: 2px solid var(--cor-acao);
+}
+
+.botao:hover {
+  filter: brightness(1.08);
+}
+
+.botao--secundario {
+  background: transparent;
+  color: var(--cor-acao);
+}
+
+.hero {
+  padding: 1rem 0 2rem;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espaco);
+  margin-top: 2rem;
+}
+
+@media (min-width: 44rem) {
+  .grade {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: 1.15rem 1.2rem 1.3rem;
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+.aviso {
+  padding: 0.85rem 1rem;
+  border-left: 4px solid var(--cor-acao);
+  background: var(--cor-superficie);
+  border-radius: 0 var(--raio) var(--raio) 0;
+}
+
+/* ----- formulário ----- */
+
+form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.campo {
+  display: grid;
+  gap: 0.35rem;
+}
+
+label {
+  font-weight: 650;
+}
+
+.ajuda {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--cor-texto-suave);
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: var(--alvo);
+  padding: 0.45rem 0.7rem;
+  font: inherit;
+  color: var(--cor-texto);
+  background: var(--cor-superficie);
+  border: 1px solid #8b8378;
+  border-radius: var(--raio);
+}
+
+textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+button[type="submit"] {
+  width: fit-content;
+  min-height: var(--alvo);
+  padding: 0.45rem 1.2rem;
+  font: inherit;
+  font-weight: 650;
+  color: var(--cor-acao-texto);
+  background: var(--cor-acao);
+  border: 0;
+  border-radius: var(--raio);
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  filter: brightness(1.08);
+}
+
+/* ----- 404 ----- */
+
+.vazio {
+  text-align: left;
+  padding-block: 2rem;
+}
+
+/* ----- footer ----- */
+
+.site-footer {
+  border-top: 1px solid var(--cor-borda);
+  background: var(--cor-superficie);
+  padding-block: 1.25rem 1.75rem;
+  font-size: 0.95rem;
+  color: var(--cor-texto-suave);
+}
+
+.site-footer p {
+  margin: 0;
+}

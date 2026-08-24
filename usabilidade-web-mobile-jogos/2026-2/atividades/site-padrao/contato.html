@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contato — [Nome do negócio]</title>
+  <meta name="description" content="Fale com [Nome do negócio].">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <a class="skip" href="#conteudo">Saltar para o conteúdo</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="marca" href="index.html">
+        <span class="marca__marca" aria-hidden="true">N</span>
+        <span>[Nome do negócio]</span>
+      </a>
+      <nav aria-label="Principal">
+        <ul class="menu">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="sobre.html">Sobre</a></li>
+          <li><a href="servico.html">Serviço</a></li>
+          <li><a href="contato.html" aria-current="page">Contato</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo" class="conteudo conteudo--estreito">
+    <h1>Contato</h1>
+    <p class="lede">[Em uma frase: o que acontece depois que a pessoa envia — prazo de resposta, canal.]</p>
+
+    <p class="aviso">
+      O GitHub Pages só hospeda arquivos estáticos: este formulário <strong>não envia e-mail</strong>.
+      A nota é a usabilidade do formulário (rótulos, tipos, ajuda), não o envio de verdade.
+    </p>
+
+    <!-- NÃO tire os label. NÃO troque id/for. Pode mudar textos de ajuda e as opções do assunto. -->
+    <form action="contato.html" method="get">
+      <div class="campo">
+        <label for="nome">Nome</label>
+        <input id="nome" name="nome" type="text" autocomplete="name" required maxlength="80">
+      </div>
+
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <p class="ajuda" id="ajuda-email">Usaremos só para responder este pedido.</p>
+        <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="ajuda-email">
+      </div>
+
+      <div class="campo">
+        <label for="assunto">Assunto</label>
+        <select id="assunto" name="assunto" required>
+          <option value="">Escolha</option>
+          <option value="orcamento">Pedido de orçamento</option>
+          <option value="duvida">Dúvida sobre o serviço</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="mensagem">Mensagem</label>
+        <p class="ajuda" id="ajuda-mensagem">Diga o que você precisa em poucas frases.</p>
+        <textarea id="mensagem" name="mensagem" required minlength="10" maxlength="500" aria-describedby="ajuda-mensagem"></textarea>
+      </div>
+
+      <button type="submit">Enviar pedido</button>
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>[Nome do negócio] · Trabalho da UC Usabilidade, web, mobile e jogos · [Seu nome]</p>
+    </div>
+  </footer>
+</body>
+</html>
