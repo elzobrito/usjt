@@ -8,7 +8,7 @@ Criação no sistema:  POST /api/_______________
 
 Depois escreva uma frase para cada:
 
-1. O arquivo serve para quê?
+1. O arquivo HTML serve para quê?
 2. O GET serve para quê?
 3. O POST serve para quê?
 
