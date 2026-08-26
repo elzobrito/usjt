@@ -31,9 +31,3 @@ O que chega:
 | 11 | `DELETE /api/orcamentos/DEMO-0007` | | |
 | 12 | `GET /enviarFormulario` | | |
 
-Para cada linha em que a rota for `nenhuma`, escreva **o motivo em uma destas fórmulas**:
-
-- *há URL, mas o servidor não registrou método + caminho*
-- *é arquivo estático; Pages devolve o HTML, não despacha API*
-- *o fragmento não entra na comparação*
-- *o nome descreve a tela, não o recurso*
