@@ -1,0 +1,78 @@
+{
+  "enunciado": "No caso didático BDGETEC, associe cada evidência da coluna A à característica de qualidade de produto predominante da coluna B, usando os nomes de alto nível da Aula 02. Não trate o modelo como prova automática nem copie subcaracterísticas normativas.",
+  "coluna_a": [
+    {
+      "id": "a1",
+      "texto": "Vinte consultas de escolas concluídas no ambiente de teste"
+    },
+    {
+      "id": "a2",
+      "texto": "Percentil 95 sobe de 1,8 s para 14,2 s com 600 sessões em Totais de Alunos"
+    },
+    {
+      "id": "a3",
+      "texto": "Três pessoas só com teclado não abrem o menu Mapeamento (só onmouseover)"
+    },
+    {
+      "id": "a4",
+      "texto": "Dado de login do BDGETEC visível no navegador"
+    },
+    {
+      "id": "a5",
+      "texto": "Após falha de rede, a interface nega e o servidor grava o filtro"
+    }
+  ],
+  "coluna_b": [
+    {
+      "id": "b1",
+      "texto": "Eficiência de desempenho"
+    },
+    {
+      "id": "b2",
+      "texto": "Segurança da informação"
+    },
+    {
+      "id": "b3",
+      "texto": "Adequação funcional"
+    },
+    {
+      "id": "b4",
+      "texto": "Confiabilidade"
+    },
+    {
+      "id": "b5",
+      "texto": "Capacidade de interação"
+    }
+  ],
+  "gabarito_correspondencia": {
+    "a1": "b3",
+    "a2": "b1",
+    "a3": "b5",
+    "a4": "b2",
+    "a5": "b4"
+  },
+  "alternativas": [
+    {
+      "letra": "A",
+      "texto": "a1-b1; a2-b3; a3-b5; a4-b2; a5-b4"
+    },
+    {
+      "letra": "B",
+      "texto": "a1-b3; a2-b1; a3-b5; a4-b2; a5-b4"
+    },
+    {
+      "letra": "C",
+      "texto": "a1-b3; a2-b1; a3-b2; a4-b5; a5-b4"
+    },
+    {
+      "letra": "D",
+      "texto": "a1-b3; a2-b5; a3-b1; a4-b2; a5-b4"
+    },
+    {
+      "letra": "E",
+      "texto": "a1-b4; a2-b1; a3-b5; a4-b2; a5-b3"
+    }
+  ],
+  "resposta_correta": "B",
+  "feedback": "Predominâncias do gabarito docente da Aula 02: 20/20 consultas de escolas é adequação funcional; p95 é desempenho; menu Mapeamento/teclado é capacidade de interação; dado de login visível no navegador é segurança da informação como indício; estado inconsistente após falha de rede é confiabilidade. Uma evidência pode atravessar características; a predominante precisa de justificativa no texto do caso."
+}

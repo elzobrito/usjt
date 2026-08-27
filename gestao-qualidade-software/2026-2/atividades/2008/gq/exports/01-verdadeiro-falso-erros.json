@@ -1,0 +1,51 @@
+{
+  "enunciado": "Julgue as afirmações sobre qualidade de produto na Aula 02 (BDGETEC e família SQuaRE) e assinale a sequência correta de verdadeiro (V) ou falso (F).",
+  "afirmacoes": [
+    {
+      "numero": 1,
+      "texto": "Concluir uma consulta de escolas com período válido no ambiente de teste prova que o BDGETEC tem qualidade suficiente para o novo período no dia seguinte."
+    },
+    {
+      "numero": 2,
+      "texto": "Como o BDGETEC é sítio de governo, a Lei Brasileira de Inclusão (Lei nº 13.146/2015) e o eMAG podem ser usados nesta aula como fonte de critério de acessibilidade, mesmo que o pedido de software não mencione isso."
+    },
+    {
+      "numero": 3,
+      "texto": "A família SQuaRE organiza perguntas sobre produto, uso e dados, mas o modelo não escolhe automaticamente prioridade, métrica, limiar nem a decisão institucional."
+    },
+    {
+      "numero": 4,
+      "texto": "Ver no navegador um dado de login do BDGETEC autoriza afirmar, sem investigação adicional, que houve invasão confirmada e vazamento de dados pessoais."
+    }
+  ],
+  "alternativas": [
+    {
+      "letra": "A",
+      "texto": "V F V F"
+    },
+    {
+      "letra": "B",
+      "texto": "F F V F"
+    },
+    {
+      "letra": "C",
+      "texto": "F V V F"
+    },
+    {
+      "letra": "D",
+      "texto": "F F F V"
+    },
+    {
+      "letra": "E",
+      "texto": "V F F F"
+    }
+  ],
+  "resposta_correta": "C",
+  "gabarito_vf": "FVVF",
+  "justificativas": [
+    "A matrícula concluída demonstra adequação funcional naquele percurso, não qualidade sob carga, teclado, autorização, falha de rede ou manutenção.",
+    "LBI e eMAG são públicos e podem ser usados como critério de acessibilidade em sítio de governo, mesmo se o pedido omitiu isso. ISO não é usada nesta aula: só citada.",
+    "O plano da aula afirma que o modelo organiza vocabulário e perguntas e não substitui prioridade, métrica, limiar ou decisão institucional.",
+    "Um dado de login visível no navegador é indício; o caso declara que o teste não confirmou uso da conta alheia nem exposição de dados pessoais."
+  ]
+}
