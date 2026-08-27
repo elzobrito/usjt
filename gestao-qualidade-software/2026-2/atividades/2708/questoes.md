@@ -156,3 +156,46 @@ Autor: aceita ou recusa a crítica, em uma linha.
 > Antes eu decidia por ___. Agora preciso de característica, requisito, medida e ___.
 
 > Qual processo precisaria existir para essa evidência ser produzida de novo no próximo período?
+
+
+## Parte 6
+### Uma escola deseja criar um sistema para empréstimo de livros.
+
+O aluno poderá pegar alguns livros emprestados.
+Os livros deverão ser devolvidos rapidamente.
+Se houver atraso, o aluno receberá uma punição.
+O sistema deverá ser fácil de usar.
+
+Tarefa no caderno
+
+1. Encontre palavras pouco claras
+
+Copie do documento três palavras ou expressões que podem causar dúvidas.
+
+
+2. Responda às perguntas
+
+Quantos livros o aluno pode pegar?
+
+Quantos dias ele pode ficar com o livro?
+
+Qual é a punição por atraso?
+
+O que significa um sistema “fácil de usar”?
+
+3. Dê sua opinião
+
+As informações do documento são suficientes para começar a programar o sistema?
+
+( ) Sim
+( ) Não
+
+Explique sua resposta em uma frase:
+
+4. Corrija uma frase
+
+Reescreva esta frase de maneira mais clara:
+
+Os livros deverão ser devolvidos rapidamente.
+
+Frase corrigida:
