@@ -3,15 +3,17 @@
 **UC:** Gestão da Qualidade de Software (0006960)  
 **Turma:** CCP1AN-MCC2-91149740 — noturno, 49 estudantes  
 **Docente:** Elzo Brito  
-**Decisão:** Conversation ESAA DEC-0052 (2026-08-27)
+**Decisão de teste:** spec 2026-08-28 (revoga DEC-0052). Protocolo único; Java, JavaScript ou Python conforme a máquina. Sem JUnit/pytest/Jest como requisito de sala.
 
 ## Linguagem dos testes
 
-A partir das **aulas seguintes à Aula 02**, testes automatizados são em **Java + JUnit 5**.
+A partir da **Aula 03 (03/09)**, o teste da sala é um **oráculo** `PASS`/`FAIL` (saída 0 ou 1), na língua que a máquina tiver.
 
-- Não usar Python, pytest, JavaScript ou Playwright como linguagem da turma.
-- A Aula 02 (27/08) permanece **papel e caneta**; não exige notebook nem compilador.
-- O “caça aos defeitos” em `atividades/2008/main.java` continua válido como inspeção. Os testes automatizados ficam em `atividades/java-testes/`.
+- Esqueletos: `atividades/0309/oraculo.py`, `oraculo.js`, `Oraculo.java`.
+- JUnit, pytest e Jest não são requisito. Podem aparecer como ponte de 10 min.
+- A Aula 02 (27/08) foi papel e caneta.
+- O “caça aos defeitos” em `atividades/2008/main.java` continua válido como inspeção.
+- A fatia Maven em `atividades/java-testes/` é produto sob teste / material de casa, não material da Aula 03.
 
 ## Produto e limites
 
