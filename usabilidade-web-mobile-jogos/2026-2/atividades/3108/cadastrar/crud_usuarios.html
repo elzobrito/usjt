@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuários</title>
+    <style>
+        body {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 16px;
+            font-family: Arial, sans-serif;
+            color: #222;
+        }
+        .cadastro {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .cadastro label { font-weight: bold; }
+        input { padding: 8px; }
+        .cadastro input { flex: 1; min-width: 160px; }
+        button { padding: 8px 12px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .mensagem { color: #08752c; }
+        .erro { color: #b00020; }
+    </style>
+</head>
+<body>
+    <h1>Cadastro de usuários</h1>
+    <form class="cadastro" action="/usuarios" method="post">
+        <label for="nome">Nome</label>
+        <input id="nome" type="text" name="nome" placeholder="Digite o nome" required>
+        <button type="submit">Cadastrar</button>
+    </form>
+    {% if mensagem %}
+        <p class="mensagem">{{ mensagem }}</p>
+    {% endif %}
+    {% if erro %}
+        <p class="erro">{{ erro }}</p>
+    {% endif %}
+    <h2>Usuários cadastrados</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.nome }}</td>
+                    <td></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">Nenhum usuário cadastrado.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
