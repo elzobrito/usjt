@@ -289,3 +289,10 @@ O produto continua somente em HTML e CSS. O site estático não conclui envio, r
 | 153 | Carreto e mudança de kombi | Mudança curta no bairro | Origem, destino, data |
 | 154 | Locação de mesas, cadeiras e tenda | Churrasco ou festa | Data, quantidade, bairro |
 | 155 | Loja de 1,99 / variedades | Quem busca um item barato do dia | Dúvida de produto / reserva |
+
+## CRUD em Python
+
+https://drive.google.com/drive/folders/1DakCd33thkBPWM46xmQ6ChnpMN3x9Xhk
+
+## Site Padrão
+https://drive.google.com/drive/folders/1DuB9npi-4K8ZiQDmJzdvCGvtNiwgLOw8?usp=drive_link
