@@ -136,7 +136,7 @@ Recusar e cancelar chegam no mesmo estado `cancelado`; o caminho diz quem fez o 
 
 ## Conferência antes de assinar (145–170 min)
 
-A dupla devolve a folha, ainda sem congelar, se aparecer qualquer um:
+Ao devolver a folha, ainda sem congelar, se aparecer qualquer um:
 
 - verbo de tela no caminho;
 - um só papel (sumiu quem atende);
