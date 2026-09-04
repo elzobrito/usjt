@@ -1,136 +1,188 @@
 import tkinter as tk
 from tkinter import ttk
 
+import customtkinter as ctk
+
 
 class CadastroUsuariosJanela:
 
     def __init__(self):
 
         # ---------------------------------------------------------
-        # JANELA PRINCIPAL
+        # CONFIGURAÇÃO GERAL
         # ---------------------------------------------------------
 
-        self.janela = tk.Tk()
+        ctk.set_appearance_mode("light")
+        ctk.set_default_color_theme("blue")
 
-        self.janela.title("Cadastro de usuários")
+        # ---------------------------------------------------------
+        # CORES
+        # ---------------------------------------------------------
 
-        self.janela.geometry("670x430")
-
-        self.janela.minsize(620, 380)
-
-        # Cor de fundo da aplicação.
         self.cor_fundo = "#F5F7FA"
 
-        # Verde do botão Cadastrar.
+        self.cor_card = "#FFFFFF"
+
+        self.cor_texto = "#282828"
+
+        self.cor_texto_secundario = "#666666"
+
+        self.cor_borda = "#D5D9E0"
+
         self.cor_cadastrar = "#2E7D32"
 
-        # Vermelho do botão Excluir.
+        self.cor_cadastrar_hover = "#1B5E20"
+
         self.cor_excluir = "#B71C1C"
 
-        # Azul utilizado na seleção da tabela.
+        self.cor_excluir_hover = "#8E0000"
+
         self.cor_selecao = "#285A96"
 
-        # Verde das mensagens de sucesso.
         self.cor_sucesso = "#236E3C"
 
-        # Vermelho das mensagens de erro.
         self.cor_erro = "#B42828"
 
+        # ---------------------------------------------------------
+        # JANELA
+        # ---------------------------------------------------------
+
+        self.janela = ctk.CTk()
+
+        self.janela.title(
+            "Cadastro de usuários"
+        )
+
+        self.janela.geometry(
+            "700x460"
+        )
+
+        self.janela.minsize(
+            650,
+            400
+        )
+
         self.janela.configure(
-            bg=self.cor_fundo
+            fg_color=self.cor_fundo
         )
 
         # ---------------------------------------------------------
-        # DADOS
+        # PRÓXIMO ID
         # ---------------------------------------------------------
 
         self.proximo_id = 3
 
         # ---------------------------------------------------------
-        # ESTILOS
+        # CONFIGURAÇÃO DA TABELA
         # ---------------------------------------------------------
 
-        self.configurar_estilos()
+        self.configurar_estilo_tabela()
 
         # ---------------------------------------------------------
         # PAINEL PRINCIPAL
         # ---------------------------------------------------------
 
-        self.painel_principal = tk.Frame(
+        self.painel_principal = ctk.CTkFrame(
             self.janela,
-            bg=self.cor_fundo
+            fg_color=self.cor_fundo,
+            corner_radius=0
         )
 
         self.painel_principal.pack(
             fill="both",
             expand=True,
-            padx=25,
-            pady=20
+            padx=30,
+            pady=25
         )
 
         # ---------------------------------------------------------
         # TÍTULO
         # ---------------------------------------------------------
 
-        self.titulo = tk.Label(
+        self.titulo = ctk.CTkLabel(
             self.painel_principal,
             text="Cadastro de usuários",
-            font=("Arial", 22, "bold"),
-            bg=self.cor_fundo,
-            fg="#282828"
+            font=ctk.CTkFont(
+                size=26,
+                weight="bold"
+            ),
+            text_color=self.cor_texto
         )
 
         self.titulo.pack(
-            pady=(0, 15)
+            pady=(0, 18)
         )
 
         # ---------------------------------------------------------
-        # FORMULÁRIO
+        # CARD DO FORMULÁRIO
         # ---------------------------------------------------------
 
-        self.formulario = tk.Frame(
+        self.card_formulario = ctk.CTkFrame(
             self.painel_principal,
-            bg="white",
-            highlightbackground="#CDD2DA",
-            highlightthickness=1
+            fg_color=self.cor_card,
+            corner_radius=16,
+            border_width=1,
+            border_color=self.cor_borda
+        )
+
+        self.card_formulario.pack(
+            fill="x",
+            pady=(0, 10)
+        )
+
+        # ---------------------------------------------------------
+        # CONTEÚDO DO FORMULÁRIO
+        # ---------------------------------------------------------
+
+        self.formulario = ctk.CTkFrame(
+            self.card_formulario,
+            fg_color="transparent"
         )
 
         self.formulario.pack(
             fill="x",
-            pady=(0, 8),
-            ipady=8
+            padx=18,
+            pady=16
         )
 
         # ---------------------------------------------------------
-        # RÓTULO NOME
+        # RÓTULO
         # ---------------------------------------------------------
 
-        self.rotulo_nome = tk.Label(
+        self.rotulo_nome = ctk.CTkLabel(
             self.formulario,
             text="Nome:",
-            font=("Arial", 11, "bold"),
-            bg="white",
-            fg="#282828"
+            font=ctk.CTkFont(
+                size=14,
+                weight="bold"
+            ),
+            text_color=self.cor_texto
         )
 
         self.rotulo_nome.pack(
             side="left",
-            padx=(15, 8)
+            padx=(0, 8)
         )
 
         # ---------------------------------------------------------
         # CAMPO NOME
         # ---------------------------------------------------------
 
-        self.campo_nome = ttk.Entry(
+        self.campo_nome = ctk.CTkEntry(
             self.formulario,
-            width=25,
-            font=("Arial", 11)
+            width=230,
+            height=38,
+            placeholder_text="Digite o nome",
+            font=ctk.CTkFont(
+                size=14
+            ),
+            corner_radius=10,
+            border_width=1,
+            border_color=self.cor_borda
         )
 
         self.campo_nome.pack(
             side="left",
-            ipady=5,
             padx=(0, 10)
         )
 
@@ -138,19 +190,28 @@ class CadastroUsuariosJanela:
         # BOTÃO CADASTRAR
         # ---------------------------------------------------------
 
-        self.botao_cadastrar = tk.Button(
+        self.botao_cadastrar = ctk.CTkButton(
             self.formulario,
             text="Cadastrar",
             command=self.cadastrar_usuario,
-            font=("Arial", 10, "bold"),
-            bg=self.cor_cadastrar,
-            fg="white",
-            activebackground="#1B5E20",
-            activeforeground="white",
-            cursor="hand2",
-            relief="flat",
-            padx=14,
-            pady=7
+
+            width=110,
+            height=38,
+
+            corner_radius=10,
+
+            fg_color=self.cor_cadastrar,
+
+            hover_color=self.cor_cadastrar_hover,
+
+            text_color="white",
+
+            font=ctk.CTkFont(
+                size=13,
+                weight="bold"
+            ),
+
+            cursor="hand2"
         )
 
         self.botao_cadastrar.pack(
@@ -162,19 +223,28 @@ class CadastroUsuariosJanela:
         # BOTÃO EXCLUIR
         # ---------------------------------------------------------
 
-        self.botao_excluir = tk.Button(
+        self.botao_excluir = ctk.CTkButton(
             self.formulario,
             text="Excluir selecionado",
             command=self.excluir_usuario,
-            font=("Arial", 10, "bold"),
-            bg=self.cor_excluir,
-            fg="white",
-            activebackground="#8E0000",
-            activeforeground="white",
-            cursor="hand2",
-            relief="flat",
-            padx=14,
-            pady=7
+
+            width=155,
+            height=38,
+
+            corner_radius=10,
+
+            fg_color=self.cor_excluir,
+
+            hover_color=self.cor_excluir_hover,
+
+            text_color="white",
+
+            font=ctk.CTkFont(
+                size=13,
+                weight="bold"
+            ),
+
+            cursor="hand2"
         )
 
         self.botao_excluir.pack(
@@ -183,35 +253,77 @@ class CadastroUsuariosJanela:
         )
 
         # ---------------------------------------------------------
-        # MENSAGEM
+        # MENSAGEM DE STATUS
         # ---------------------------------------------------------
 
-        self.mensagem = tk.Label(
+        self.mensagem = ctk.CTkLabel(
             self.painel_principal,
             text=" ",
-            font=("Arial", 10),
-            bg=self.cor_fundo,
-            fg="#464646",
-            anchor="w"
+            anchor="w",
+            font=ctk.CTkFont(
+                size=13
+            ),
+            text_color=self.cor_texto_secundario
         )
 
         self.mensagem.pack(
             fill="x",
-            pady=(0, 5)
+            padx=5,
+            pady=(0, 8)
+        )
+
+        # ---------------------------------------------------------
+        # CARD DA TABELA
+        # ---------------------------------------------------------
+
+        self.card_tabela = ctk.CTkFrame(
+            self.painel_principal,
+            fg_color=self.cor_card,
+            corner_radius=16,
+            border_width=1,
+            border_color=self.cor_borda
+        )
+
+        self.card_tabela.pack(
+            fill="both",
+            expand=True
+        )
+
+        # ---------------------------------------------------------
+        # TÍTULO DA TABELA
+        # ---------------------------------------------------------
+
+        self.titulo_tabela = ctk.CTkLabel(
+            self.card_tabela,
+            text="Usuários cadastrados",
+            anchor="w",
+            font=ctk.CTkFont(
+                size=15,
+                weight="bold"
+            ),
+            text_color=self.cor_texto
+        )
+
+        self.titulo_tabela.pack(
+            fill="x",
+            padx=18,
+            pady=(15, 8)
         )
 
         # ---------------------------------------------------------
         # ÁREA DA TABELA
         # ---------------------------------------------------------
 
-        self.frame_tabela = ttk.LabelFrame(
-            self.painel_principal,
-            text="Usuários cadastrados"
+        self.area_tabela = ctk.CTkFrame(
+            self.card_tabela,
+            fg_color="transparent"
         )
 
-        self.frame_tabela.pack(
+        self.area_tabela.pack(
             fill="both",
-            expand=True
+            expand=True,
+            padx=15,
+            pady=(0, 15)
         )
 
         # ---------------------------------------------------------
@@ -219,32 +331,40 @@ class CadastroUsuariosJanela:
         # ---------------------------------------------------------
 
         self.tabela = ttk.Treeview(
-            self.frame_tabela,
-            columns=("id", "nome"),
+            self.area_tabela,
+
+            columns=(
+                "id",
+                "nome"
+            ),
+
             show="headings",
+
             selectmode="browse"
         )
 
-        # Define o título das colunas.
+        # Cabeçalho ID.
         self.tabela.heading(
             "id",
             text="ID"
         )
 
+        # Cabeçalho Nome.
         self.tabela.heading(
             "nome",
             text="Nome"
         )
 
-        # Define o tamanho das colunas.
+        # Coluna ID.
         self.tabela.column(
             "id",
             width=80,
             minwidth=60,
-            anchor="center",
-            stretch=False
+            stretch=False,
+            anchor="center"
         )
 
+        # Coluna Nome.
         self.tabela.column(
             "nome",
             width=450,
@@ -253,12 +373,14 @@ class CadastroUsuariosJanela:
         )
 
         # ---------------------------------------------------------
-        # BARRA DE ROLAGEM
+        # SCROLLBAR
         # ---------------------------------------------------------
 
         self.rolagem = ttk.Scrollbar(
-            self.frame_tabela,
+            self.area_tabela,
+
             orient="vertical",
+
             command=self.tabela.yview
         )
 
@@ -278,108 +400,177 @@ class CadastroUsuariosJanela:
         )
 
         # ---------------------------------------------------------
-        # USUÁRIOS INICIAIS
+        # DADOS INICIAIS
         # ---------------------------------------------------------
 
         self.tabela.insert(
             "",
             "end",
-            values=(1, "Ana")
+            values=(
+                1,
+                "Ana"
+            )
         )
 
         self.tabela.insert(
             "",
             "end",
-            values=(2, "Carlos")
+            values=(
+                2,
+                "Carlos"
+            )
         )
 
         # ---------------------------------------------------------
-        # ACESSIBILIDADE / TECLADO
+        # ACESSIBILIDADE E TECLADO
         # ---------------------------------------------------------
 
-        # Enter cadastra o usuário.
+        # Enter cadastra.
         self.janela.bind(
             "<Return>",
-            lambda evento: self.cadastrar_usuario()
+            lambda evento:
+                self.cadastrar_usuario()
         )
 
-        # Alt + N leva o foco ao campo Nome.
+        # Alt + N coloca o foco no campo Nome.
         self.janela.bind(
             "<Alt-n>",
-            lambda evento: self.campo_nome.focus_set()
+            lambda evento:
+                self.campo_nome.focus_set()
         )
 
         # Alt + C cadastra.
         self.janela.bind(
             "<Alt-c>",
-            lambda evento: self.cadastrar_usuario()
+            lambda evento:
+                self.cadastrar_usuario()
         )
 
-        # Alt + E exclui o usuário selecionado.
+        # Alt + E exclui.
         self.janela.bind(
             "<Alt-e>",
-            lambda evento: self.excluir_usuario()
+            lambda evento:
+                self.excluir_usuario()
         )
 
-        # Delete também pode excluir a linha selecionada.
+        # Delete exclui o usuário selecionado.
         self.tabela.bind(
             "<Delete>",
-            lambda evento: self.excluir_usuario()
+            lambda evento:
+                self.excluir_usuario()
         )
 
-        # Coloca inicialmente o cursor no campo Nome.
+        # Foco inicial.
         self.campo_nome.focus_set()
 
     # =============================================================
-    # CONFIGURAÇÃO VISUAL DA TABELA
+    # ESTILO DA TABELA
     # =============================================================
 
-    def configurar_estilos(self):
+    def configurar_estilo_tabela(self):
 
         estilo = ttk.Style()
 
-        # O tema clam permite maior controle visual.
         try:
-            estilo.theme_use("clam")
+
+            estilo.theme_use(
+                "clam"
+            )
+
         except tk.TclError:
+
             pass
 
-        # Estilo geral da tabela.
+        # ---------------------------------------------------------
+        # CORPO DA TABELA
+        # ---------------------------------------------------------
+
         estilo.configure(
             "Treeview",
-            font=("Arial", 11),
-            rowheight=32,
-            background="white",
-            fieldbackground="white",
-            foreground="#282828"
+
+            background="#FFFFFF",
+
+            fieldbackground="#FFFFFF",
+
+            foreground="#282828",
+
+            rowheight=34,
+
+            font=(
+                "Arial",
+                11
+            ),
+
+            borderwidth=0
         )
 
-        # Aparência da linha selecionada.
+        # ---------------------------------------------------------
+        # SELEÇÃO
+        # ---------------------------------------------------------
+
         estilo.map(
             "Treeview",
+
             background=[
-                ("selected", self.cor_selecao)
+                (
+                    "selected",
+                    self.cor_selecao
+                )
             ],
+
             foreground=[
-                ("selected", "white")
+                (
+                    "selected",
+                    "white"
+                )
             ]
         )
 
-        # Aparência do cabeçalho.
+        # ---------------------------------------------------------
+        # CABEÇALHO
+        # ---------------------------------------------------------
+
         estilo.configure(
             "Treeview.Heading",
-            font=("Arial", 11, "bold"),
-            padding=8
+
+            background="#EEF1F5",
+
+            foreground="#282828",
+
+            font=(
+                "Arial",
+                11,
+                "bold"
+            ),
+
+            padding=9,
+
+            relief="flat"
+        )
+
+        estilo.map(
+            "Treeview.Heading",
+
+            background=[
+                (
+                    "active",
+                    "#E2E6EB"
+                )
+            ]
         )
 
     # =============================================================
-    # CADASTRAR USUÁRIO
+    # CADASTRAR
     # =============================================================
 
     def cadastrar_usuario(self):
 
-        # Obtém o texto digitado.
-        nome = self.campo_nome.get().strip()
+        # Obtém o nome informado.
+        nome = (
+            self.campo_nome
+            .get()
+            .strip()
+        )
 
         # ---------------------------------------------------------
         # VALIDAÇÃO
@@ -397,12 +588,13 @@ class CadastroUsuariosJanela:
             return
 
         # ---------------------------------------------------------
-        # ADICIONA NA TABELA
+        # INSERE NA TABELA
         # ---------------------------------------------------------
 
         self.tabela.insert(
             "",
             "end",
+
             values=(
                 self.proximo_id,
                 nome
@@ -415,10 +607,10 @@ class CadastroUsuariosJanela:
         # Limpa o campo.
         self.campo_nome.delete(
             0,
-            tk.END
+            "end"
         )
 
-        # Mensagem de sucesso.
+        # Exibe mensagem.
         self.definir_mensagem(
             "Sucesso: usuário cadastrado.",
             self.cor_sucesso
@@ -428,13 +620,15 @@ class CadastroUsuariosJanela:
         self.campo_nome.focus_set()
 
     # =============================================================
-    # EXCLUIR USUÁRIO
+    # EXCLUIR
     # =============================================================
 
     def excluir_usuario(self):
 
-        # Obtém a linha selecionada.
-        selecionado = self.tabela.selection()
+        selecionado = (
+            self.tabela
+            .selection()
+        )
 
         # ---------------------------------------------------------
         # VALIDAÇÃO
@@ -452,7 +646,7 @@ class CadastroUsuariosJanela:
             return
 
         # ---------------------------------------------------------
-        # EXCLUSÃO
+        # REMOVE DA TABELA
         # ---------------------------------------------------------
 
         self.tabela.delete(
@@ -476,13 +670,13 @@ class CadastroUsuariosJanela:
         cor
     ):
 
-        self.mensagem.config(
+        self.mensagem.configure(
             text=texto,
-            fg=cor
+            text_color=cor
         )
 
     # =============================================================
-    # EXECUÇÃO
+    # EXECUTAR
     # =============================================================
 
     def executar(self):
@@ -490,9 +684,9 @@ class CadastroUsuariosJanela:
         self.janela.mainloop()
 
 
-# -------------------------------------------------------------
-# INÍCIO DO PROGRAMA
-# -------------------------------------------------------------
+# =============================================================
+# PROGRAMA PRINCIPAL
+# =============================================================
 
 if __name__ == "__main__":
 
