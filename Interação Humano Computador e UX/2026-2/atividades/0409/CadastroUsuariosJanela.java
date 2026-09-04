@@ -11,13 +11,12 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -25,23 +24,22 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 public class CadastroUsuariosJanela {
 
     public static void main(String[] args) {
 
-        // Executa a criação da interface na thread apropriada do Swing.
+        // Executa a criação da tela na thread de interface do Swing.
         SwingUtilities.invokeLater(CadastroUsuariosJanela::criarTela);
     }
-
 
     private static void criarTela() {
 
         // ---------------------------------------------------------
-        // APARÊNCIA DO SWING
+        // APARÊNCIA
         // ---------------------------------------------------------
 
-        // Tenta utilizar o tema Nimbus, caso esteja disponível.
         try {
 
             for (UIManager.LookAndFeelInfo info
@@ -64,70 +62,98 @@ public class CadastroUsuariosJanela {
             );
         }
 
-
         // ---------------------------------------------------------
         // CORES
         // ---------------------------------------------------------
 
-        Color corFundo = new Color(245, 247, 250);
+        Color corFundo =
+                new Color(245, 247, 250);
 
-        Color corTexto = new Color(40, 40, 40);
+        Color corTexto =
+                new Color(40, 40, 40);
 
-        Color corBorda = new Color(205, 210, 218);
+        Color corBorda =
+                new Color(205, 210, 218);
 
-        // Verde do botão Cadastrar.
-        Color corCadastrar = new Color(46, 125, 50);
+        Color corCadastrar =
+                new Color(46, 125, 50);
 
-        // Vermelho do botão Excluir.
-        Color corExcluir = new Color(183, 28, 28);
+        Color corExcluir =
+                new Color(183, 28, 28);
 
-        // Azul utilizado na seleção da lista.
-        Color corSelecao = new Color(40, 90, 150);
+        Color corSelecao =
+                new Color(40, 90, 150);
 
-        // Verde usado nas mensagens de sucesso.
-        Color corSucesso = new Color(35, 110, 60);
+        Color corSucesso =
+                new Color(35, 110, 60);
 
-        // Vermelho usado nas mensagens de erro.
-        Color corErro = new Color(180, 40, 40);
-
+        Color corErro =
+                new Color(180, 40, 40);
 
         // ---------------------------------------------------------
-        // DADOS DOS USUÁRIOS
+        // MODELO DA TABELA
         // ---------------------------------------------------------
 
-        // Cria o modelo que armazenará os usuários da lista.
-        DefaultListModel<String> usuarios =
-                new DefaultListModel<>();
+        /*
+         * DefaultTableModel armazena os dados
+         * que serão exibidos na JTable.
+         *
+         * As duas colunas serão:
+         *
+         * ID
+         * Nome
+         */
+        DefaultTableModel modeloTabela =
+                new DefaultTableModel(
+                        new Object[]{"ID", "Nome"},
+                        0
+                ) {
 
-        // Adiciona usuários iniciais.
-        usuarios.addElement("1 — Ana");
-        usuarios.addElement("2 — Carlos");
+                    /*
+                     * Sobrescrevemos este método
+                     * para impedir que o usuário
+                     * edite diretamente as células.
+                     */
+                    @Override
+                    public boolean isCellEditable(
+                            int linha,
+                            int coluna) {
 
-        // Guarda o ID que será utilizado no próximo cadastro.
+                        return false;
+                    }
+                };
+
+        // Adiciona os usuários iniciais.
+        modeloTabela.addRow(
+                new Object[]{1, "Ana"}
+        );
+
+        modeloTabela.addRow(
+                new Object[]{2, "Carlos"}
+        );
+
+        // Próximo código de usuário.
         int[] proximoId = {3};
 
-
         // ---------------------------------------------------------
-        // JANELA PRINCIPAL
+        // JANELA
         // ---------------------------------------------------------
 
         JFrame janela =
-                new JFrame("Cadastro de usuários");
+                new JFrame(
+                        "Cadastro de usuários"
+                );
 
-        // Encerra o programa quando a janela for fechada.
         janela.setDefaultCloseOperation(
                 JFrame.EXIT_ON_CLOSE
         );
 
-        // Define o layout principal.
         janela.setLayout(
                 new BorderLayout()
         );
 
-        // Define a cor de fundo.
         janela.getContentPane()
                 .setBackground(corFundo);
-
 
         // ---------------------------------------------------------
         // PAINEL PRINCIPAL
@@ -135,12 +161,16 @@ public class CadastroUsuariosJanela {
 
         JPanel painelPrincipal =
                 new JPanel(
-                        new BorderLayout(15, 15)
+                        new BorderLayout(
+                                15,
+                                15
+                        )
                 );
 
-        painelPrincipal.setBackground(corFundo);
+        painelPrincipal.setBackground(
+                corFundo
+        );
 
-        // Cria espaço ao redor de todo o conteúdo.
         painelPrincipal.setBorder(
                 new EmptyBorder(
                         20,
@@ -149,7 +179,6 @@ public class CadastroUsuariosJanela {
                         25
                 )
         );
-
 
         // ---------------------------------------------------------
         // TÍTULO
@@ -169,7 +198,9 @@ public class CadastroUsuariosJanela {
                 )
         );
 
-        titulo.setForeground(corTexto);
+        titulo.setForeground(
+                corTexto
+        );
 
         titulo.setBorder(
                 new EmptyBorder(
@@ -180,12 +211,10 @@ public class CadastroUsuariosJanela {
                 )
         );
 
-        // Nome acessível para leitores de tela.
         titulo.getAccessibleContext()
                 .setAccessibleName(
                         "Cadastro de usuários"
                 );
-
 
         // ---------------------------------------------------------
         // FORMULÁRIO
@@ -214,9 +243,8 @@ public class CadastroUsuariosJanela {
                 )
         );
 
-
         // ---------------------------------------------------------
-        // RÓTULO NOME
+        // RÓTULO
         // ---------------------------------------------------------
 
         JLabel rotuloNome =
@@ -229,7 +257,6 @@ public class CadastroUsuariosJanela {
                         14
                 )
         );
-
 
         // ---------------------------------------------------------
         // CAMPO NOME
@@ -253,7 +280,6 @@ public class CadastroUsuariosJanela {
                 )
         );
 
-        // Cria uma borda arredondada no campo.
         campoNome.setBorder(
                 BorderFactory.createCompoundBorder(
 
@@ -271,24 +297,24 @@ public class CadastroUsuariosJanela {
                 )
         );
 
-
         // ---------------------------------------------------------
         // ACESSIBILIDADE DO CAMPO
         // ---------------------------------------------------------
 
-        // Informa que o rótulo "Nome" pertence ao campo.
-        rotuloNome.setLabelFor(campoNome);
+        rotuloNome.setLabelFor(
+                campoNome
+        );
 
-        // Alt + N coloca o foco no campo Nome.
-        rotuloNome.setDisplayedMnemonic('N');
+        // Alt + N leva o foco para o campo.
+        rotuloNome.setDisplayedMnemonic(
+                'N'
+        );
 
-        // Nome utilizado por tecnologias assistivas.
         campoNome.getAccessibleContext()
                 .setAccessibleName(
                         "Nome do usuário"
                 );
 
-        // Explica a finalidade do campo.
         campoNome.getAccessibleContext()
                 .setAccessibleDescription(
                         "Digite o nome do usuário que será cadastrado."
@@ -297,7 +323,6 @@ public class CadastroUsuariosJanela {
         campoNome.setToolTipText(
                 "Digite o nome do usuário"
         );
-
 
         // ---------------------------------------------------------
         // BOTÃO CADASTRAR
@@ -309,8 +334,10 @@ public class CadastroUsuariosJanela {
                         corCadastrar
                 );
 
-        // Alt + C aciona o botão.
-        botaoCadastrar.setMnemonic('C');
+        // Alt + C
+        botaoCadastrar.setMnemonic(
+                'C'
+        );
 
         botaoCadastrar
                 .getAccessibleContext()
@@ -321,13 +348,12 @@ public class CadastroUsuariosJanela {
         botaoCadastrar
                 .getAccessibleContext()
                 .setAccessibleDescription(
-                        "Adiciona o nome digitado à lista de usuários."
+                        "Adiciona o usuário à tabela."
                 );
 
         botaoCadastrar.setToolTipText(
                 "Cadastrar novo usuário"
         );
-
 
         // ---------------------------------------------------------
         // BOTÃO EXCLUIR
@@ -339,8 +365,10 @@ public class CadastroUsuariosJanela {
                         corExcluir
                 );
 
-        // Alt + E aciona o botão.
-        botaoExcluir.setMnemonic('E');
+        // Alt + E
+        botaoExcluir.setMnemonic(
+                'E'
+        );
 
         botaoExcluir
                 .getAccessibleContext()
@@ -351,29 +379,35 @@ public class CadastroUsuariosJanela {
         botaoExcluir
                 .getAccessibleContext()
                 .setAccessibleDescription(
-                        "Remove da lista o usuário atualmente selecionado."
+                        "Remove da tabela o usuário selecionado."
                 );
 
         botaoExcluir.setToolTipText(
                 "Excluir o usuário selecionado"
         );
 
+        // ---------------------------------------------------------
+        // ADICIONA COMPONENTES AO FORMULÁRIO
+        // ---------------------------------------------------------
+
+        formulario.add(
+                rotuloNome
+        );
+
+        formulario.add(
+                campoNome
+        );
+
+        formulario.add(
+                botaoCadastrar
+        );
+
+        formulario.add(
+                botaoExcluir
+        );
 
         // ---------------------------------------------------------
-        // ADICIONA OS COMPONENTES AO FORMULÁRIO
-        // ---------------------------------------------------------
-
-        formulario.add(rotuloNome);
-
-        formulario.add(campoNome);
-
-        formulario.add(botaoCadastrar);
-
-        formulario.add(botaoExcluir);
-
-
-        // ---------------------------------------------------------
-        // MENSAGENS
+        // MENSAGEM
         // ---------------------------------------------------------
 
         JLabel mensagem =
@@ -400,20 +434,15 @@ public class CadastroUsuariosJanela {
                 )
         );
 
-        // Informa às tecnologias assistivas
-        // que esse componente apresenta mensagens.
-        mensagem
-                .getAccessibleContext()
+        mensagem.getAccessibleContext()
                 .setAccessibleName(
                         "Mensagem de status"
                 );
 
-        mensagem
-                .getAccessibleContext()
+        mensagem.getAccessibleContext()
                 .setAccessibleDescription(
                         "Apresenta mensagens de erro ou confirmação."
                 );
-
 
         // ---------------------------------------------------------
         // PAINEL SUPERIOR
@@ -446,77 +475,144 @@ public class CadastroUsuariosJanela {
                 BorderLayout.SOUTH
         );
 
-
         // ---------------------------------------------------------
-        // LISTA DE USUÁRIOS
+        // TABELA
         // ---------------------------------------------------------
 
-        JList<String> lista =
-                new JList<>(usuarios);
+        /*
+         * Cria a tabela usando o modelo definido anteriormente.
+         */
+        JTable tabela =
+                new JTable(
+                        modeloTabela
+                );
 
-        lista.setFont(
+        tabela.setFont(
                 new Font(
                         "SansSerif",
                         Font.PLAIN,
-                        15
+                        14
                 )
         );
 
-        // Permite selecionar apenas um usuário.
-        lista.setSelectionMode(
+        /*
+         * Define a altura das linhas.
+         */
+        tabela.setRowHeight(
+                32
+        );
+
+        /*
+         * Permite selecionar apenas
+         * uma linha por vez.
+         */
+        tabela.setSelectionMode(
                 ListSelectionModel.SINGLE_SELECTION
         );
 
-        // Define a altura de cada linha.
-        lista.setFixedCellHeight(34);
+        /*
+         * Faz a seleção considerar
+         * a linha inteira.
+         */
+        tabela.setRowSelectionAllowed(
+                true
+        );
 
-        lista.setBackground(Color.WHITE);
+        /*
+         * Não permite selecionar
+         * apenas uma célula individual.
+         */
+        tabela.setCellSelectionEnabled(
+                false
+        );
 
-        lista.setForeground(corTexto);
-
-        lista.setSelectionBackground(
+        /*
+         * Define as cores utilizadas
+         * na linha selecionada.
+         */
+        tabela.setSelectionBackground(
                 corSelecao
         );
 
-        lista.setSelectionForeground(
+        tabela.setSelectionForeground(
                 Color.WHITE
         );
 
-        lista.setBorder(
-                new EmptyBorder(
-                        8,
-                        10,
-                        8,
-                        10
-                )
+        /*
+         * Faz a tabela ocupar
+         * toda a área disponível.
+         */
+        tabela.setFillsViewportHeight(
+                true
         );
 
+        /*
+         * Impede que o usuário
+         * reorganize as colunas.
+         */
+        tabela.getTableHeader()
+                .setReorderingAllowed(
+                        false
+                );
+
+        /*
+         * Altera a fonte do cabeçalho.
+         */
+        tabela.getTableHeader()
+                .setFont(
+                        new Font(
+                                "SansSerif",
+                                Font.BOLD,
+                                14
+                        )
+                );
+
+        /*
+         * Define uma largura menor
+         * para a coluna ID.
+         */
+        tabela.getColumnModel()
+                .getColumn(0)
+                .setPreferredWidth(60);
+
+        tabela.getColumnModel()
+                .getColumn(0)
+                .setMaxWidth(100);
+
+        /*
+         * Define uma largura maior
+         * para a coluna Nome.
+         */
+        tabela.getColumnModel()
+                .getColumn(1)
+                .setPreferredWidth(400);
 
         // ---------------------------------------------------------
-        // ACESSIBILIDADE DA LISTA
+        // ACESSIBILIDADE DA TABELA
         // ---------------------------------------------------------
 
-        lista.getAccessibleContext()
+        tabela.getAccessibleContext()
                 .setAccessibleName(
-                        "Usuários cadastrados"
+                        "Tabela de usuários cadastrados"
                 );
 
-        lista.getAccessibleContext()
+        tabela.getAccessibleContext()
                 .setAccessibleDescription(
-                        "Lista contendo os usuários cadastrados no sistema."
+                        "Tabela contendo o código e o nome dos usuários cadastrados."
                 );
 
-        lista.setToolTipText(
-                "Selecione um usuário para excluí-lo"
+        tabela.setToolTipText(
+                "Selecione uma linha para excluir um usuário"
         );
 
-
         // ---------------------------------------------------------
-        // BARRA DE ROLAGEM
+        // SCROLL DA TABELA
         // ---------------------------------------------------------
 
         JScrollPane rolagem =
-                new JScrollPane(lista);
+                new JScrollPane(
+                        tabela
+                );
 
         rolagem.setBorder(
                 BorderFactory.createCompoundBorder(
@@ -534,9 +630,8 @@ public class CadastroUsuariosJanela {
                 )
         );
 
-
         // ---------------------------------------------------------
-        // ORGANIZAÇÃO DA INTERFACE
+        // ORGANIZAÇÃO DA JANELA
         // ---------------------------------------------------------
 
         painelPrincipal.add(
@@ -553,37 +648,37 @@ public class CadastroUsuariosJanela {
                 painelPrincipal
         );
 
-
         // ---------------------------------------------------------
-        // ACESSIBILIDADE:
-        // ENTER EXECUTA CADASTRAR
+        // ENTER CADASTRA
         // ---------------------------------------------------------
 
-        // Define o botão Cadastrar como botão padrão.
-        //
-        // Assim, após digitar o nome,
-        // basta pressionar Enter.
+        /*
+         * Permite cadastrar pressionando Enter.
+         */
         janela.getRootPane()
                 .setDefaultButton(
                         botaoCadastrar
                 );
 
-
         // ---------------------------------------------------------
-        // EVENTO: CADASTRAR
+        // EVENTO CADASTRAR
         // ---------------------------------------------------------
 
         botaoCadastrar.addActionListener(
                 evento -> {
 
-                    // Obtém o nome digitado.
+                    /*
+                     * Obtém o texto digitado
+                     * e remove espaços extras.
+                     */
                     String nome =
                             campoNome
                                     .getText()
                                     .strip();
 
-
-                    // Verifica se o campo está vazio.
+                    /*
+                     * Verifica se o campo está vazio.
+                     */
                     if (nome.isEmpty()) {
 
                         definirMensagem(
@@ -592,91 +687,109 @@ public class CadastroUsuariosJanela {
                                 corErro
                         );
 
-                        // Retorna o foco ao campo.
                         campoNome.requestFocusInWindow();
 
                         return;
                     }
 
-
-                    // Adiciona o usuário à lista.
-                    usuarios.addElement(
-                            proximoId[0]
-                                    + " — "
-                                    + nome
+                    /*
+                     * Adiciona uma nova linha à tabela.
+                     *
+                     * Primeira coluna: ID
+                     * Segunda coluna: nome
+                     */
+                    modeloTabela.addRow(
+                            new Object[]{
+                                    proximoId[0],
+                                    nome
+                            }
                     );
 
-
-                    // Incrementa o próximo ID.
+                    /*
+                     * Incrementa o próximo ID.
+                     */
                     proximoId[0] += 1;
 
-
-                    // Limpa o campo.
+                    /*
+                     * Limpa o campo.
+                     */
                     campoNome.setText("");
 
-
-                    // Informa que a operação funcionou.
+                    /*
+                     * Exibe mensagem de sucesso.
+                     */
                     definirMensagem(
                             mensagem,
                             "Sucesso: usuário cadastrado.",
                             corSucesso
                     );
 
-
-                    // Retorna o foco ao campo.
+                    /*
+                     * Retorna o foco
+                     * para o campo Nome.
+                     */
                     campoNome.requestFocusInWindow();
                 }
         );
 
-
         // ---------------------------------------------------------
-        // EVENTO: EXCLUIR
+        // EVENTO EXCLUIR
         // ---------------------------------------------------------
 
         botaoExcluir.addActionListener(
                 evento -> {
 
-                    // Obtém o índice selecionado.
-                    int indice =
-                            lista.getSelectedIndex();
+                    /*
+                     * Obtém o número da linha
+                     * selecionada na tabela.
+                     */
+                    int linha =
+                            tabela.getSelectedRow();
 
-
-                    // Nenhum item selecionado retorna -1.
-                    if (indice < 0) {
+                    /*
+                     * Caso nenhuma linha esteja selecionada,
+                     * getSelectedRow() retorna -1.
+                     */
+                    if (linha < 0) {
 
                         definirMensagem(
                                 mensagem,
-                                "Erro: selecione um usuário na lista.",
+                                "Erro: selecione um usuário na tabela.",
                                 corErro
                         );
 
-                        // Coloca o foco na lista.
-                        lista.requestFocusInWindow();
+                        tabela.requestFocusInWindow();
 
                         return;
                     }
 
+                    /*
+                     * Remove a linha selecionada
+                     * do modelo da tabela.
+                     */
+                    modeloTabela.removeRow(
+                            linha
+                    );
 
-                    // Remove o usuário.
-                    usuarios.remove(indice);
-
-
-                    // Exibe a confirmação.
+                    /*
+                     * Exibe mensagem de sucesso.
+                     */
                     definirMensagem(
                             mensagem,
                             "Sucesso: usuário excluído.",
                             corSucesso
                     );
 
-
-                    // Retorna o foco ao campo de nome.
+                    /*
+                     * Retorna o foco
+                     * para o campo Nome.
+                     */
                     campoNome.requestFocusInWindow();
                 }
         );
 
-
         // ---------------------------------------------------------
-        // CONFIGURAÇÕES FINAIS DA JANELA
+        // CONFIGURAÇÕES FINAIS
         // ---------------------------------------------------------
 
         janela.setSize(
@@ -691,19 +804,29 @@ public class CadastroUsuariosJanela {
                 )
         );
 
-        // Centraliza a janela na tela.
-        janela.setLocationRelativeTo(null);
+        /*
+         * Centraliza a janela.
+         */
+        janela.setLocationRelativeTo(
+                null
+        );
 
-        // Torna a janela visível.
-        janela.setVisible(true);
+        /*
+         * Exibe a janela.
+         */
+        janela.setVisible(
+                true
+        );
 
-        // Coloca inicialmente o foco no campo Nome.
+        /*
+         * Coloca o foco inicial
+         * no campo Nome.
+         */
         campoNome.requestFocusInWindow();
     }
 
-
     // =========================================================
-    // MÉTODO PARA EXIBIR MENSAGENS
+    // MÉTODO PARA MENSAGENS
     // =========================================================
 
     private static void definirMensagem(
@@ -711,19 +834,23 @@ public class CadastroUsuariosJanela {
             String texto,
             Color cor) {
 
-        // Altera o texto apresentado na tela.
-        mensagem.setText(texto);
+        mensagem.setText(
+                texto
+        );
 
-        // Altera a cor visual.
-        mensagem.setForeground(cor);
+        mensagem.setForeground(
+                cor
+        );
 
-        // Atualiza também a informação usada
-        // pelas tecnologias assistivas.
-        mensagem
-                .getAccessibleContext()
-                .setAccessibleDescription(texto);
+        /*
+         * Atualiza também a descrição
+         * utilizada pelas tecnologias assistivas.
+         */
+        mensagem.getAccessibleContext()
+                .setAccessibleDescription(
+                        texto
+                );
     }
-
 
     // =========================================================
     // BOTÃO ARREDONDADO
@@ -734,7 +861,6 @@ public class CadastroUsuariosJanela {
 
         private final Color cor;
 
-
         public BotaoArredondado(
                 String texto,
                 Color cor) {
@@ -742,7 +868,6 @@ public class CadastroUsuariosJanela {
             super(texto);
 
             this.cor = cor;
-
 
             setFont(
                     new Font(
@@ -752,30 +877,58 @@ public class CadastroUsuariosJanela {
                     )
             );
 
-            setForeground(Color.WHITE);
+            setForeground(
+                    Color.WHITE
+            );
 
-            // O botão continua podendo receber
-            // foco pelo teclado.
-            setFocusable(true);
+            /*
+             * O componente continua sendo um JButton,
+             * portanto mantém comportamento de teclado
+             * e recursos de acessibilidade.
+             */
+            setFocusable(
+                    true
+            );
 
-            // A área padrão do Swing não será desenhada,
-            // pois criaremos nossa própria aparência.
-            setContentAreaFilled(false);
+            /*
+             * Não utiliza o fundo padrão
+             * do botão Swing.
+             */
+            setContentAreaFilled(
+                    false
+            );
 
-            setOpaque(false);
+            setOpaque(
+                    false
+            );
 
-            // A borda será desenhada manualmente.
-            setBorderPainted(false);
+            /*
+             * A borda será desenhada
+             * pelo nosso próprio código.
+             */
+            setBorderPainted(
+                    false
+            );
 
-            // O foco padrão não será utilizado.
-            // A classe desenhará um foco personalizado
-            // e mais visível.
-            setFocusPainted(false);
+            /*
+             * O indicador de foco também
+             * será desenhado manualmente.
+             */
+            setFocusPainted(
+                    false
+            );
 
-            // Ativa o comportamento de mouse sobre o botão.
-            setRolloverEnabled(true);
+            /*
+             * Permite detectar quando
+             * o mouse está sobre o botão.
+             */
+            setRolloverEnabled(
+                    true
+            );
 
-            // Cria espaço interno no botão.
+            /*
+             * Espaçamento interno.
+             */
             setBorder(
                     new EmptyBorder(
                             9,
@@ -786,24 +939,26 @@ public class CadastroUsuariosJanela {
             );
         }
 
-
         @Override
         protected void paintComponent(
                 Graphics g) {
 
-            // Cria uma cópia do objeto gráfico.
             Graphics2D g2 =
                     (Graphics2D) g.create();
 
-
-            // Suaviza as bordas arredondadas.
+            /*
+             * Suaviza o desenho
+             * das bordas arredondadas.
+             */
             g2.setRenderingHint(
                     RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON
             );
 
-
-            // Define a cor conforme o estado do botão.
+            /*
+             * Altera a cor dependendo
+             * do estado do botão.
+             */
             if (getModel().isPressed()) {
 
                 g2.setColor(
@@ -819,11 +974,14 @@ public class CadastroUsuariosJanela {
 
             } else {
 
-                g2.setColor(cor);
+                g2.setColor(
+                        cor
+                );
             }
 
-
-            // Desenha o fundo arredondado.
+            /*
+             * Desenha o fundo arredondado.
+             */
             g2.fillRoundRect(
                     0,
                     0,
@@ -833,19 +991,15 @@ public class CadastroUsuariosJanela {
                     18
             );
 
-
             // -------------------------------------------------
-            // INDICAÇÃO VISUAL DE FOCO
+            // FOCO VISÍVEL
             // -------------------------------------------------
 
-            // Se o botão estiver com foco,
-            // desenha uma borda branca pontilhada.
-            //
-            // Isso é importante para quem navega
-            // utilizando apenas o teclado.
             if (hasFocus()) {
 
-                g2.setColor(Color.WHITE);
+                g2.setColor(
+                        Color.WHITE
+                );
 
                 g2.setStroke(
                         new BasicStroke(
@@ -858,6 +1012,10 @@ public class CadastroUsuariosJanela {
                         )
                 );
 
+                /*
+                 * Desenha uma linha pontilhada
+                 * quando o botão possui foco.
+                 */
                 g2.drawRoundRect(
                         4,
                         4,
@@ -868,19 +1026,20 @@ public class CadastroUsuariosJanela {
                 );
             }
 
-
             g2.dispose();
 
-
-            // Solicita ao JButton que desenhe
-            // o texto normalmente.
-            super.paintComponent(g);
+            /*
+             * Permite que o JButton
+             * desenhe seu texto normalmente.
+             */
+            super.paintComponent(
+                    g
+            );
         }
     }
 
-
     // =========================================================
-    // PAINEL COM FUNDO ARREDONDADO
+    // PAINEL ARREDONDADO
     // =========================================================
 
     static class PainelArredondado
@@ -890,20 +1049,20 @@ public class CadastroUsuariosJanela {
 
         private final Color corFundo;
 
-
         public PainelArredondado(
                 int raio,
                 Color corFundo) {
 
-            this.raio = raio;
+            this.raio =
+                    raio;
 
-            this.corFundo = corFundo;
+            this.corFundo =
+                    corFundo;
 
-            // Impede o JPanel de desenhar
-            // seu fundo retangular tradicional.
-            setOpaque(false);
+            setOpaque(
+                    false
+            );
         }
-
 
         @Override
         protected void paintComponent(
@@ -912,15 +1071,18 @@ public class CadastroUsuariosJanela {
             Graphics2D g2 =
                     (Graphics2D) g.create();
 
-
             g2.setRenderingHint(
                     RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON
             );
 
-
-            // Desenha o fundo arredondado.
-            g2.setColor(corFundo);
+            /*
+             * Desenha o fundo arredondado
+             * do painel.
+             */
+            g2.setColor(
+                    corFundo
+            );
 
             g2.fillRoundRect(
                     0,
@@ -931,14 +1093,13 @@ public class CadastroUsuariosJanela {
                     raio
             );
 
-
             g2.dispose();
 
-
-            super.paintComponent(g);
+            super.paintComponent(
+                    g
+            );
         }
     }
-
 
     // =========================================================
     // BORDA ARREDONDADA
@@ -951,16 +1112,16 @@ public class CadastroUsuariosJanela {
 
         private final int raio;
 
-
         public BordaArredondada(
                 Color cor,
                 int raio) {
 
-            this.cor = cor;
+            this.cor =
+                    cor;
 
-            this.raio = raio;
+            this.raio =
+                    raio;
         }
-
 
         @Override
         public void paintBorder(
@@ -974,17 +1135,18 @@ public class CadastroUsuariosJanela {
             Graphics2D g2 =
                     (Graphics2D) g.create();
 
-
             g2.setRenderingHint(
                     RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON
             );
 
+            g2.setColor(
+                    cor
+            );
 
-            g2.setColor(cor);
-
-
-            // Desenha a borda arredondada.
+            /*
+             * Desenha a borda arredondada.
+             */
             g2.drawRoundRect(
                     x,
                     y,
@@ -994,10 +1156,8 @@ public class CadastroUsuariosJanela {
                     raio
             );
 
-
             g2.dispose();
         }
-
 
         @Override
         public Insets getBorderInsets(
@@ -1010,7 +1170,6 @@ public class CadastroUsuariosJanela {
                     8
             );
         }
-
 
         @Override
         public Insets getBorderInsets(
