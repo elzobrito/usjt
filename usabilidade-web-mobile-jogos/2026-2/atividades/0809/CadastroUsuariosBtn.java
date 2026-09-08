@@ -15,7 +15,8 @@ public class CadastroUsuariosBtn {
         janela.add(rotulo);
         janela.add(botao);
         janela.setSize(480, 240);
-        janela.addWindowListener(new WindowAdapter() {
+       
+         botao.addActionListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent evento) {
                 janela.dispose();
