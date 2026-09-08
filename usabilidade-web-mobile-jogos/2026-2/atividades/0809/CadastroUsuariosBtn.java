@@ -2,6 +2,8 @@ import java.awt.Button;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Label;
+import java.awt.event.ActionEvent;        // ✅ Import adicionado
+import java.awt.event.ActionListener;     // ✅ Import adicionado
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -15,14 +17,16 @@ public class CadastroUsuariosBtn {
         janela.add(rotulo);
         janela.add(botao);
         janela.setSize(480, 240);
-       
-         botao.addActionListener(new WindowAdapter() {
+
+        // ✅ Botão usa ActionListener com actionPerformed
+        botao.addActionListener(new ActionListener() {
             @Override
-            public void windowClosing(WindowEvent evento) {
-                janela.dispose();
+            public void actionPerformed(ActionEvent evento) {
+                 janela.dispose();
                 System.exit(0);
             }
         });
+
         janela.setVisible(true);
     }
 }
