@@ -35,7 +35,7 @@ Entregue:
 - uma captura de tela do dashboard aberto;
 - uma captura de tela mostrando pelo menos uma das novas ações funcionando.
 
-## Critérios de avaliação — 10 pontos
+## Critérios de avaliação
 
 | Critério |
 |---|---:|
