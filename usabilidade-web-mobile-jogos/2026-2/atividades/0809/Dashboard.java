@@ -4,17 +4,15 @@ import java.awt.*;
 public class Dashboard extends JFrame {
 
     public Dashboard(String usuario) {
-
         setTitle("Sistema Acadêmico");
         setSize(1024, 600);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel menu = new JPanel();
         menu.setPreferredSize(new Dimension(220, 0));
         menu.setBackground(new Color(30, 60, 120));
-
-        menu.setLayout(new GridLayout(6, 1, 10, 10));
+        menu.setLayout(new GridLayout(5, 1, 10, 10));
 
         JButton btnAlunos = new JButton("Alunos");
         JButton btnProfessores = new JButton("Professores");
@@ -29,13 +27,10 @@ public class Dashboard extends JFrame {
         menu.add(btnSair);
 
         JPanel conteudo = new JPanel(new BorderLayout());
-
         JLabel lblUsuario = new JLabel(
                 "Usuário logado: " + usuario,
                 SwingConstants.CENTER);
-
         lblUsuario.setFont(new Font("SansSerif", Font.BOLD, 22));
-
         conteudo.add(lblUsuario, BorderLayout.CENTER);
 
         setLayout(new BorderLayout());
