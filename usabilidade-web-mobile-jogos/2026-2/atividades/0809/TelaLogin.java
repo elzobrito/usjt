@@ -104,7 +104,6 @@ public class TelaLogin extends JFrame {
                                 JOptionPane.INFORMATION_MESSAGE);
 
                         dispose(); // fecha a tela de login
-
                         new Dashboard(usuario); // abre o dashboard
 
                     } else {
