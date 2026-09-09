@@ -79,7 +79,7 @@ public class TelaLogin extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String usuario = campoUsuario.getText().trim();
-                String senha   = new String(campoSenha.getPassword()).trim();
+                String senha = new String(campoSenha.getPassword()).trim();
 
                 if (usuario.isEmpty() || senha.isEmpty()) {
                     JOptionPane.showMessageDialog(
@@ -93,6 +93,28 @@ public class TelaLogin extends JFrame {
                             "Login realizado com sucesso!\nUsuário: " + usuario,
                             "Bem-vindo!",
                             JOptionPane.INFORMATION_MESSAGE);
+
+                    // Simulação de autenticação
+                    if (usuario.equals("admin") && senha.equals("123")) {
+
+                        JOptionPane.showMessageDialog(
+                                TelaLogin.this,
+                                "Login realizado com sucesso!",
+                                "Bem-vindo!",
+                                JOptionPane.INFORMATION_MESSAGE);
+
+                        dispose(); // fecha a tela de login
+
+                        new Dashboard(usuario); // abre o dashboard
+
+                    } else {
+
+                        JOptionPane.showMessageDialog(
+                                TelaLogin.this,
+                                "Usuário ou senha inválidos.",
+                                "Erro de Login",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
