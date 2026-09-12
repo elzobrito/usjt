@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Incidente 074 — Investigação em IHC</title>
+<style>
+:root{
+  --bg:#f4f6f8;--hdr:#1e3a5f;--act:#e8980c;--ok:#27874a;--err:#c0392b;
+  --txt:#1a1a2e;--wht:#fff;--pnl:#dfe6ee;--lgt:#eef2f7;--mut:#6b7a8d;
+  --brd:#c5d0dc;--grn:#e8f5e9;--red:#fce8e6;--warn:#fff3e0;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI",system-ui,sans-serif}
+body{background:var(--bg);color:var(--txt);min-height:100vh;display:flex;flex-direction:column}
+
+/* ── Header ─────────────────────────────────────────── */
+#hdr{background:var(--hdr);color:var(--wht);padding:0 16px;height:54px;
+     display:flex;align-items:center;gap:12px;flex-shrink:0;box-shadow:0 2px 6px #0004;position:sticky;top:0;z-index:100}
+#hdr .logo{font-size:20px}
+#hdr .title{font-weight:700;font-size:15px;white-space:nowrap}
+#hdr .spacer{flex:1}
+#hdr .eq{font-size:12px;color:var(--pnl);white-space:nowrap}
+#hdr .tl{font-weight:700;font-size:13px;white-space:nowrap}
+#hdr .pi{font-size:12px;color:var(--act);white-space:nowrap}
+#hdr .sep{width:1px;height:28px;background:#3a5a8c;margin:0 6px}
+.hbtn{background:#2d4d7a;color:var(--wht);border:none;border-radius:4px;
+      padding:4px 10px;font-size:12px;cursor:pointer;white-space:nowrap;transition:background .15s}
+.hbtn:hover{background:#3a5a8c}
+.hbtn.save{background:var(--act)}
+.hbtn.save:hover{background:#c87a0a}
+
+/* ── Progress dots ───────────────────────────────────── */
+#dots{display:flex;gap:4px;padding:0 2px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--brd);transition:background .3s}
+.dot.done{background:var(--ok)}
+.dot.current{background:var(--act)}
+
+/* ── Main ───────────────────────────────────────────── */
+#main{flex:1;overflow-y:auto;padding:0 0 40px}
+
+/* ── Screen title bar ───────────────────────────────── */
+.stitle{background:var(--hdr);color:var(--wht);padding:14px 24px}
+.stitle h2{font-size:16px;margin-bottom:4px}
+.stitle p{font-size:13px;opacity:.8;line-height:1.5}
+.content{padding:16px 24px;max-width:900px;margin:0 auto}
+
+/* ── Cards / panels ─────────────────────────────────── */
+.card{background:var(--wht);border:1px solid var(--brd);border-radius:8px;margin:12px 0;overflow:hidden}
+.card-hd{background:var(--hdr);color:var(--wht);padding:10px 16px;font-weight:700;font-size:13px}
+.card-hd.ok{background:var(--ok)}
+.card-hd.warn{background:#e65100}
+.card-body{padding:14px 16px}
+.panel{background:var(--pnl);border-radius:6px;padding:12px 16px;margin:10px 0}
+.panel.green{background:var(--grn)}
+.panel.yellow{background:var(--warn)}
+.panel.red{background:var(--red)}
+.panel.blue{background:#e3f2fd}
+.panel.muted{background:var(--lgt)}
+
+/* ── Forms ──────────────────────────────────────────── */
+.field{display:flex;align-items:center;gap:8px;margin:8px 0;flex-wrap:wrap}
+.field label{min-width:220px;font-size:13px;font-weight:600;color:var(--txt)}
+.field input,.field select,.field textarea{
+  border:1px solid var(--brd);border-radius:4px;padding:6px 10px;
+  font-size:13px;font-family:inherit;background:var(--wht);color:var(--txt);
+  transition:border-color .15s}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--hdr);outline:none}
+.field input{width:260px}
+.field input.mono{font-family:"Courier New",monospace;font-size:14px;width:120px}
+.field input.wide{width:400px}
+.field select{width:320px}
+.field .fb{font-size:16px;min-width:20px}
+.field .fb.ok{color:var(--ok)}
+.field .fb.err{color:var(--err)}
+.field textarea{width:100%;min-height:70px;resize:vertical}
+
+/* ── Tables ─────────────────────────────────────────── */
+table{border-collapse:collapse;width:100%}
+th{background:var(--hdr);color:var(--wht);padding:8px 12px;text-align:left;font-size:13px}
+td{padding:8px 12px;font-size:13px;border-bottom:1px solid var(--brd)}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:var(--lgt)}
+td.mono{font-family:"Courier New",monospace;font-size:14px}
+td.hilite{background:#fce8e6}
+
+/* ── Buttons ────────────────────────────────────────── */
+.btn{border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;
+     cursor:pointer;transition:background .15s,opacity .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.primary{background:var(--hdr);color:var(--wht)}
+.btn.primary:hover:not(:disabled){background:#2d4d7a}
+.btn.success{background:var(--ok);color:var(--wht)}
+.btn.success:hover:not(:disabled){background:#1e6338}
+.btn.danger{background:var(--err);color:var(--wht)}
+.btn.danger:hover:not(:disabled){background:#a02020}
+.btn.accent{background:var(--act);color:var(--wht)}
+.btn.accent:hover:not(:disabled){background:#c87a0a}
+.btn.muted{background:var(--mut);color:var(--wht)}
+.btn.muted:hover:not(:disabled){background:#4e5f70}
+.btn.outline{background:transparent;color:var(--hdr);border:2px solid var(--hdr)}
+.btn.small{padding:5px 12px;font-size:12px}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:16px;border-top:1px solid var(--brd)}
+
+/* ── SVG mock interface ─────────────────────────────── */
+.mock-wrap{background:var(--lgt);border:2px solid var(--brd);border-radius:8px;
+           padding:12px;margin:12px 0;text-align:center}
+.mock-wrap svg{max-width:100%;cursor:default}
+.mock-elem{cursor:pointer;transition:opacity .15s}
+.mock-elem:hover{opacity:.85}
+.mock-elem.selected-ess{filter:drop-shadow(0 0 4px #1565c0)}
+.mock-elem.selected-comp{filter:drop-shadow(0 0 4px #b71c1c)}
+
+/* ── Workstation grid ───────────────────────────────── */
+.posto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:480px;margin:12px 0}
+.posto-cell{background:var(--pnl);border:2px dashed var(--brd);border-radius:8px;
+            min-height:80px;padding:8px;text-align:center;font-size:12px;transition:all .2s}
+.posto-cell.has-item{background:#e3f2fd;border-color:#1565c0;border-style:solid}
+.posto-cell .cell-label{color:var(--mut);font-size:11px;margin-bottom:4px}
+.posto-cell .cell-item{font-weight:700;font-size:13px;color:var(--hdr)}
+.posto-center{background:var(--hdr);color:var(--wht)}
+
+/* ── Event list (T10) ───────────────────────────────── */
+.ev-list{list-style:none}
+.ev-item{display:flex;align-items:center;gap:8px;padding:8px 10px;
+         background:var(--wht);border:1px solid var(--brd);margin:4px 0;border-radius:6px}
+.ev-item .ev-txt{flex:1;font-family:"Courier New",monospace;font-size:12px}
+.ev-item.highlight .ev-txt{color:var(--err)}
+.ev-arrows{display:flex;flex-direction:column;gap:2px}
+.ev-arrows button{background:var(--hdr);color:var(--wht);border:none;border-radius:3px;
+                   width:22px;height:18px;cursor:pointer;font-size:11px;line-height:1}
+
+/* ── Caderno strip ──────────────────────────────────── */
+.caderno{background:#fff8e1;border-left:4px solid #f9a825;border-radius:0 6px 6px 0;
+         padding:8px 14px;margin:10px 0;font-size:12px;color:#5d4037}
+.caderno::before{content:"📓 Caderno: ";font-weight:700}
+
+/* ── Toast ──────────────────────────────────────────── */
+#toast{position:fixed;top:64px;right:16px;z-index:999;display:none;
+       background:var(--ok);color:var(--wht);border-radius:8px;padding:12px 16px;
+       max-width:340px;box-shadow:0 4px 16px #0004;animation:slideIn .3s ease}
+@keyframes slideIn{from{transform:translateX(360px)}to{transform:translateX(0)}}
+#toast .t-title{font-weight:700;font-size:13px;margin-bottom:4px}
+#toast .t-body{font-size:12px;opacity:.9}
+
+/* ── Dialogs ────────────────────────────────────────── */
+.overlay{position:fixed;inset:0;background:#0006;z-index:200;display:flex;
+         align-items:center;justify-content:center}
+.dialog{background:var(--wht);border-radius:12px;padding:0;max-width:560px;width:90%;
+        max-height:80vh;overflow-y:auto;box-shadow:0 8px 40px #0004}
+.dialog-hd{background:var(--hdr);color:var(--wht);padding:14px 20px;border-radius:12px 12px 0 0;
+           display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.dialog-body{padding:16px 20px}
+.dialog-close{background:none;border:none;color:var(--wht);font-size:20px;cursor:pointer;opacity:.7}
+.dialog-close:hover{opacity:1}
+
+/* ── Pista badge ────────────────────────────────────── */
+.pista-badge{display:inline-flex;gap:10px;align-items:flex-start;
+             background:var(--pnl);border-radius:6px;padding:8px 12px;margin:6px 0}
+.pista-id{background:var(--act);color:var(--wht);font-weight:700;font-size:12px;
+          padding:2px 8px;border-radius:4px;white-space:nowrap}
+.pista-txt{font-size:13px}
+
+/* ── Inicio ─────────────────────────────────────────── */
+#inicio{display:flex;flex-direction:column;align-items:center;justify-content:center;
+        min-height:calc(100vh - 54px);padding:32px 24px;text-align:center;gap:12px}
+#inicio .hero{font-size:56px;line-height:1}
+#inicio h1{font-size:26px;color:var(--hdr)}
+#inicio .sub{color:var(--mut);font-size:14px}
+#inicio .desc{max-width:480px;line-height:1.6;font-size:14px}
+.saves-list{max-width:500px;width:100%;text-align:left;margin:8px 0}
+.save-item{display:flex;align-items:center;justify-content:space-between;
+           padding:10px 14px;background:var(--lgt);border:1px solid var(--brd);
+           border-radius:6px;margin:4px 0;cursor:pointer;transition:background .15s}
+.save-item:hover{background:#d8e6f8;border-color:var(--hdr)}
+.save-item .si-main{font-size:13px;font-weight:600}
+.save-item .si-sub{font-size:12px;color:var(--mut)}
+
+/* ── Final screen ───────────────────────────────────── */
+#final{text-align:center;padding:40px 24px}
+#final .medal{font-size:64px}
+#final h1{font-size:24px;color:var(--hdr);margin:12px 0}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <span class="logo">🔍</span>
+  <span class="title">INCIDENTE 074</span>
+  <div id="dots"></div>
+  <div class="spacer"></div>
+  <span class="eq" id="h-eq"></span>
+  <span class="tl" id="h-tl"></span>
+  <span class="pi" id="h-pi"></span>
+  <div class="sep"></div>
+  <button class="hbtn" onclick="openArquivo()">Arquivo</button>
+  <button class="hbtn" onclick="openPistas()">Pistas</button>
+  <button class="hbtn" onclick="openDica()">💡 Dica</button>
+  <button class="hbtn save" onclick="exportJSON()">💾 Exportar</button>
+</div>
+
+<div id="main"></div>
+<div id="toast"><div class="t-title" id="t-title"></div><div class="t-body" id="t-body"></div></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  DADOS
+// ═══════════════════════════════════════════════════════════
+const VERSAO = "2.0-web";
+const PISTAS = {
+  E01:"Destino solicitado: 74 / K / 19.",
+  E02:"A interface inicia com Prédio A selecionado e destaca a ação de concluir.",
+  E03:"Preservar os dados e indicar o ponto de retomada são apoios diferentes.",
+  E04:"O destino foi registrado como Prédio A; os demais campos correspondem à solicitação.",
+  E05:"Corrigir um campo não deve eliminar informações válidas sem necessidade.",
+  E06:"A ação 'Concluir' não apresentava etapa de revisão do destino.",
+  E07:"A investigação precisa considerar frequência de uso, alcance e organização do posto.",
+  E08:"B atende aos critérios definidos neste teste; isso não comprova superioridade universal.",
+  E09:"O registro terminou com o prédio inicial; o histórico ajuda a reconstruir ações, mas não revela causas cognitivas.",
+};
+const NOMES = {
+  1:"O Incidente 074",2:"O Manual de Códigos",3:"O que chama atenção?",
+  4:"O telefone tocou",5:"O registro suspeito",6:"Corrigir sem recomeçar",
+  7:"O que significa concluir?",8:"Além da tela",9:"Mais rápido = melhor?",
+  10:"Reconstruindo os acontecimentos",11:"O relatório da equipe",12:"A recepção reabriu",
+};
+const DICAS = {
+  1:["Fato: algo verificável diretamente no relato.",
+     "Hipótese: uma explicação ainda não demonstrada.",
+     "Suas perguntas de investigação guiarão todo o restante."],
+  2:["Prédio B: código começa com 7.",
+     "Acessório (inglês: accessories) → inicial K.",
+     "Armário 3: código termina em 9."],
+  3:["E1 (campo Prédio) é essencial para conferir o destino.",
+     "E6 (botão verde grande) e E5 (aviso campanha) competem pela atenção.",
+     "Visível ≠ em destaque — um pode ser fácil de ignorar."],
+  4:["Ao retornar: quais campos sobreviveram à interrupção?",
+     "O aviso informa o balcão correto para documentos.",
+     "O ponto de retomada = próximo campo vazio."],
+  5:["Compare com a Pista E01 (74 / K / 19).",
+     "Código 28 = Prédio A (consulte a tabela da Tela 2).",
+     "Apenas UM campo diverge entre o registrado e o solicitado."],
+  6:["Após a simulação, observe os campos que ficaram em branco.",
+     "Categoria (K), Armário (19) e Descrição eram válidos e foram apagados.",
+     "A regra ideal: alterar somente o campo errado."],
+  7:["Teste cada comando com o formulário preenchido.",
+     "Voltar deveria proteger o rascunho (pedir antes de descartar).",
+     "Concluir deveria exibir um resumo do destino."],
+  8:["Itens muito usados → posições mais acessíveis.",
+     "Teclado, telefone e bandeja são usados frequentemente.",
+     "O arquivo raramente consultado pode ficar no fundo."],
+  9:["Critérios: tempo médio ≤ 50s  e  incorretos ≤ 1.",
+     "Versão A tem 5 incorretos — falha no critério.",
+     "1 ÷ 20 × 100 = 5%."],
+  10:["Ordene usando os horários registrados.",
+      "O histórico mostra ações, não intenções internas.",
+      "Não é possível confirmar, pelo histórico, se Lia verificou conscientemente o destino."],
+  11:["Relação: evidência → problema → melhoria → verificação.",
+      "Recupere a versão e porcentagem da Tela 9.",
+      "A incerteza final não é fraqueza — é honestidade investigativa."],
+  12:["Prédio C = 63  ·  Documento = D  ·  Armário 2 = 16.",
+      "Ative a revisão de destino antes de iniciar o preenchimento.",
+      "Ao retomar após interrupção: verifique se todos os campos estão preservados."],
+};
+const EVENTOS = [
+  "EV1 · 14:02 — Formulário aberto com Prédio 28 (A) já selecionado",
+  "EV2 · 14:03 — Categoria K, Armário 19, Descrição preenchidos",
+  "EV3 · 14:04 — Atendimento telefônico iniciado",
+  "EV4 · 14:06 — Retorno ao formulário",
+  "EV5 · 14:06 — Comando Concluir acionado",
+  "EV6 · 14:06 — Registro encerrado com Prédio 28 (A)",
+];
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+let state = null;
+
+function newState(eq){
+  return {versao:VERSAO,equipe:eq,telaAtual:1,etapasConcluidas:[],
+    pistas:{},hipotesesIniciais:[],hipotesesRevisadas:[],
+    respostas:{},dicasUsadas:{},tentativas:{},
+    horarioInicio:new Date().toISOString(),relatorio:{}};
+}
+
+function save(){
+  if(!state) return;
+  localStorage.setItem('inc074_'+state.equipe, JSON.stringify(state));
+}
+
+function loadFromLS(eq){
+  const raw = localStorage.getItem('inc074_'+eq);
+  return raw ? JSON.parse(raw) : null;
+}
+
+function listSaves(){
+  const saves=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k.startsWith('inc074_')){
+      try{saves.push(JSON.parse(localStorage.getItem(k)));}catch(e){}
+    }
+  }
+  return saves.sort((a,b)=>a.equipe.localeCompare(b.equipe));
+}
+
+function setResp(k,v){state.respostas[k]=v;save();}
+function getResp(k){return state.respostas[k]||{};}
+function addPista(pid){
+  if(!state.pistas[pid]){
+    state.pistas[pid]=PISTAS[pid];save();updateHeader();
+    toast("🔍 Pista "+pid+" coletada",PISTAS[pid],"var(--act)");
+  }
+}
+function addTent(k){state.tentativas[k]=(state.tentativas[k]||0)+1;save();}
+function done(n){
+  if(!state.etapasConcluidas.includes(n))state.etapasConcluidas.push(n);
+  state.telaAtual=Math.min(n+1,12);save();
+}
+
+function escHtml(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// ═══════════════════════════════════════════════════════════
+//  HEADER
+// ═══════════════════════════════════════════════════════════
+function updateHeader(n){
+  if(!state){document.getElementById('h-eq').textContent='';return;}
+  document.getElementById('h-eq').textContent='Equipe: '+state.equipe;
+  document.getElementById('h-pi').textContent='🔍 '+Object.keys(state.pistas).length+'/9 pistas';
+  const tn=n||state.telaAtual;
+  document.getElementById('h-tl').textContent='Tela '+tn+'/12';
+  // dots
+  const dc=document.getElementById('dots');dc.innerHTML='';
+  for(let i=1;i<=12;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(state.etapasConcluidas.includes(i)?' done':i===tn?' current':'');
+    d.title='Tela '+i+': '+NOMES[i];
+    d.onclick=(()=>{const x=i;return ()=>showScreen(x);})(i);
+    d.style.cursor='pointer';
+    dc.appendChild(d);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════════
+let toastTimer;
+function toast(title,msg,color='var(--ok)'){
+  const t=document.getElementById('toast');
+  document.getElementById('t-title').textContent=title;
+  document.getElementById('t-body').textContent=msg.length>90?msg.slice(0,90)+'…':msg;
+  t.style.background=color;t.style.display='block';
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.display='none',4000);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  DIALOGS
+// ═══════════════════════════════════════════════════════════
+function dialog(title,html){
+  const ov=document.createElement('div');ov.className='overlay';
+  ov.innerHTML=`<div class="dialog">
+    <div class="dialog-hd">${escHtml(title)}<button class="dialog-close" onclick="this.closest('.overlay').remove()">✕</button></div>
+    <div class="dialog-body">${html}</div>
+  </div>`;
+  ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+}
+
+function openArquivo(){
+  if(!state){dialog('Arquivo','Nenhuma investigação ativa.');return;}
+  const t2=getResp('t02');
+  const conv=t2.predio?`<div class="panel muted" style="margin-top:10px"><strong>Sua conversão (T2):</strong><br>
+    <code>${t2.predio} / ${t2.cat} / ${t2.local} / ${escHtml(t2.desc||'')}</code></div>`:'';
+  dialog('Arquivo do Caso — Incidente 074',`
+    <table><tr><th>Campo</th><th>Dado</th></tr>
+    <tr><td>Objeto</td><td>Guarda-chuva azul</td></tr>
+    <tr><td>Destino solicitado</td><td><code>Prédio B (74) · Acessório (K) · Armário 3 (19)</code></td></tr>
+    <tr><td>Destino registrado</td><td><code style="color:var(--err)">Prédio A (28) · Acessório (K) · Armário 3 (19)</code></td></tr>
+    <tr><td>Horário (fictício)</td><td>14h02–14h06</td></tr></table>${conv}`);
+}
+
+function openPistas(){
+  if(!state){dialog('Pistas','Nenhuma investigação ativa.');return;}
+  const pst=state.pistas;const ids=Object.keys(pst).sort();
+  const html=ids.length?ids.map(id=>`<div class="pista-badge">
+    <span class="pista-id">${id}</span><span class="pista-txt">${escHtml(pst[id])}</span></div>`).join('')
+    :'<p style="color:var(--mut)">Nenhuma pista coletada ainda.</p>';
+  dialog('Pistas Coletadas ('+ids.length+'/9)',html);
+}
+
+function openDica(){
+  if(!state)return;
+  const n=state.telaAtual;
+  const dicas=DICAS[n]||['Releia o enunciado com atenção.'];
+  const usado=state.dicasUsadas[n]||0;
+  const txt=dicas[Math.min(usado,dicas.length-1)];
+  state.dicasUsadas[n]=Math.min(usado+1,dicas.length);save();
+  const rem=Math.max(0,dicas.length-(state.dicasUsadas[n]||0));
+  dialog(`💡 Dica — Tela ${n}`,`<p style="font-size:14px;line-height:1.6;margin-bottom:12px">${escHtml(txt)}</p>
+    <p style="font-size:12px;color:var(--mut)">(${rem} dica(s) restante(s) nesta tela)</p>`);
+}
+
+function exportJSON(){
+  if(!state){alert('Nenhuma investigação ativa.');return;}
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`inc074_${state.equipe.replace(/\s+/g,'-')}.json`;
+  a.click();toast('💾 Arquivo salvo','Baixe o JSON para continuar em outro computador');
+}
+
+function importJSON(){
+  const input=document.createElement('input');input.type='file';input.accept='.json';
+  input.onchange=e=>{
+    const f=e.target.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=ev=>{try{state=JSON.parse(ev.target.result);save();showScreen(state.telaAtual);}
+    catch(err){alert('Arquivo inválido.');}};
+    r.readAsText(f);
+  };
+  input.click();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ROUTER
+// ═══════════════════════════════════════════════════════════
+const SCREENS={1:s1,2:s2,3:s3,4:s4,5:s5,6:s6,7:s7,8:s8,9:s9,10:s10,11:s11,12:s12};
+function showScreen(n){
+  state.telaAtual=n;save();
+  updateHeader(n);
+  const m=document.getElementById('main');
+  m.innerHTML='';
+  (SCREENS[n]||s1)(m);
+  m.scrollTop=0;
+  window.scrollTo(0,0);
+}
+
+// ── advance button helper ────────────────────────────────
+function advBtn(container,n,label){
+  label=label||'Avançar → Tela '+(n+1);
+  const btn=document.createElement('button');
+  btn.className='btn success';btn.id='adv-btn';btn.disabled=true;
+  btn.textContent=label;
+  btn.onclick=()=>{done(n);if(n<12)showScreen(n+1);else showFinal();};
+  container.appendChild(btn);
+  return btn;
+}
+function setAdv(ok){
+  const b=document.getElementById('adv-btn');if(!b)return;
+  b.disabled=!ok;b.className='btn '+(ok?'success':'muted');
+}
+
+// ── Title bar ──────────────────────────────────────────
+function titleBar(m,n,sub){
+  const d=document.createElement('div');d.className='stitle';
+  d.innerHTML=`<h2>Tela ${n} — ${NOMES[n]}</h2>${sub?`<p>${escHtml(sub)}</p>`:''}`;
+  m.appendChild(d);
+  const c=document.createElement('div');c.className='content';m.appendChild(c);
+  return c;
+}
+
+// ── Card helper ─────────────────────────────────────────
+function card(parent,hdText,hdClass){
+  const d=document.createElement('div');d.className='card';
+  const h=document.createElement('div');h.className='card-hd'+(hdClass?' '+hdClass:'');h.textContent=hdText;
+  const b=document.createElement('div');b.className='card-body';
+  d.appendChild(h);d.appendChild(b);parent.appendChild(d);return b;
+}
+
+// ── Nav bar helper ──────────────────────────────────────
+function nav(parent,n,backN,advLabel){
+  const d=document.createElement('div');d.className='nav';
+  if(backN>0){
+    const b=document.createElement('button');b.className='btn muted';
+    b.innerHTML='← Voltar';b.onclick=()=>showScreen(backN);d.appendChild(b);
+  }else{d.appendChild(document.createElement('span'));}
+  const a=advBtn(d,n,advLabel);
+  parent.appendChild(d);return a;
+}
+
+// ── Caderno ─────────────────────────────────────────────
+function caderno(parent,txt){
+  const d=document.createElement('div');d.className='caderno';d.textContent=txt;
+  parent.appendChild(d);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA 1 — O Incidente 074
+// ═══════════════════════════════════════════════════════════
+function s1(m){
+  const c=titleBar(m,1,'Um guarda-chuva azul foi registrado no Prédio A, mas a ficha indicava Prédio B.\nO supervisor declarou: "Lia provavelmente não prestou atenção." Ainda não há evidências suficientes.');
+  const sv=getResp('t01')||{};
+
+  // Equipe
+  const ci=card(c,'IDENTIFICAÇÃO DA EQUIPE');
+  ci.innerHTML=`<div class="field"><label>Nome da equipe:</label>
+    <input type="text" id="i-eq" value="${escHtml(state.equipe)}" placeholder="Dupla-01" style="width:220px"
+           oninput="state.equipe=this.value;save();document.getElementById('h-eq').textContent='Equipe: '+this.value;chk1()">
+  </div>`;
+
+  // Classificação
+  const cc=card(c,'CLASSIFICAR AFIRMAÇÕES');
+  cc.innerHTML=`<p style="font-size:13px;margin-bottom:12px">Associe cada afirmação à sua categoria:</p>
+  ${['A01|O prédio registrado difere do indicado na ficha.|Fato informado no caso',
+     'A02|Lia não prestou atenção.|Hipótese ainda não demonstrada',
+     'A03|A interface pode ter contribuído para o erro.|Hipótese a investigar']
+  .map(row=>{
+    const [id,txt,gab]=row.split('|');
+    const val=sv['c_'+id]||'';
+    return `<div class="field" style="flex-wrap:nowrap">
+      <label style="min-width:340px;font-weight:400">[${id}] ${escHtml(txt)}</label>
+      <select id="sel-${id}" onchange="chk1()" style="width:280px">
+        <option value="">— escolha —</option>
+        ${['Fato informado no caso','Hipótese ainda não demonstrada','Hipótese a investigar']
+          .map(o=>`<option value="${o}" ${o===val?'selected':''}>${o}</option>`).join('')}
+      </select>
+      <span class="fb" id="fb-${id}"></span>
+    </div>`;
+  }).join('')}`;
+
+  // Perguntas
+  const cp=card(c,'PERGUNTAS DE INVESTIGAÇÃO');
+  const p1=(state.hipotesesIniciais||[])[0]||'';
+  const p2=(state.hipotesesIniciais||[])[1]||'';
+  cp.innerHTML=`<p style="font-size:13px;margin-bottom:10px">Escreva duas perguntas para guiar a investigação. <em>Ex: "Qual prédio estava selecionado inicialmente?"</em></p>
+  <div class="field"><label>Pergunta 1:</label><input type="text" id="p1" class="wide" value="${escHtml(p1)}" oninput="savePerg();chk1()"></div>
+  <div class="field"><label>Pergunta 2:</label><input type="text" id="p2" class="wide" value="${escHtml(p2)}" oninput="savePerg();chk1()"></div>`;
+
+  caderno(c,'Desenvolva suas perguntas antes de digitá-las aqui.');
+  nav(c,1,0);
+  chk1();
+}
+function savePerg(){
+  state.hipotesesIniciais=[g('p1').value.trim(),g('p2').value.trim()];save();
+}
+function chk1(){
+  const gab={A01:'Fato informado no caso',A02:'Hipótese ainda não demonstrada',A03:'Hipótese a investigar'};
+  let allok=true;
+  for(const id of Object.keys(gab)){
+    const v=gv('sel-'+id);const ok=v===gab[id];
+    setFb('fb-'+id,v?ok:'');
+    if(!ok)allok=false;
+  }
+  const p1=(g('p1')?.value||'').trim();const p2=(g('p2')?.value||'').trim();
+  const pergsOk=p1.length>=8&&p2.length>=8;
+  const eqOk=state.equipe.length>=2;
+  setAdv(allok&&pergsOk&&eqOk);
+  if(allok){
+    const d={c_A01:gv('sel-A01'),c_A02:gv('sel-A02'),c_A03:gv('sel-A03')};setResp('t01',d);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA 2 — O Manual de Códigos
+// ═══════════════════════════════════════════════════════════
+function s2(m){
+  const c=titleBar(m,2,'O sistema usa códigos internos. Consulte o manual e converta a ficha do incidente.');
+  const sv=getResp('t02');
+
+  const cm=card(c,'MANUAL DO SISTEMA');
+  cm.innerHTML=`<div style="display:flex;gap:24px;flex-wrap:wrap">
+  ${[['Prédio',['Prédio A:28','Prédio B:74','Prédio C:63']],
+     ['Categoria',['Acessório:K','Documento:D','Eletrônico:Y']],
+     ['Local',['Armário 1:12','Armário 2:16','Armário 3:19']]]
+  .map(([h,rows])=>`<table style="min-width:200px"><tr><th>${h}</th><th>Código</th></tr>
+    ${rows.map(r=>{const[n,c]=r.split(':');return`<tr><td>${n}</td><td class="mono">${c}</td></tr>`;}).join('')}
+    </table>`).join('')}
+  </div>
+  <div class="panel" style="margin-top:12px"><strong>Ficha do incidente:</strong>
+  &nbsp; Prédio B · Acessório · Armário 3 · guarda-chuva azul</div>`;
+
+  const cf=card(c,'CONVERTER FICHA PARA CÓDIGOS');
+  const gab={predio:'74',cat:'K',local:'19',desc:'guarda-chuva azul'};
+  cf.innerHTML=[['predio','Código do Prédio B:','mono'],['cat','Código de Acessório:','mono'],
+    ['local','Código do Armário 3:','mono'],['desc','Descrição do objeto:','']]
+  .map(([id,lbl,cls])=>`<div class="field">
+    <label>${lbl}</label>
+    <input type="text" id="f2-${id}" class="${cls}" value="${escHtml(sv[id]||'')}" oninput="chk2()">
+    <span class="fb" id="fb2-${id}"></span>
+  </div>`).join('');
+
+  caderno(c,'Copie as tabelas e converta a ficha antes de preencher aqui.');
+  nav(c,2,1);chk2();
+}
+function chk2(){
+  const gab={predio:'74',cat:'K',local:'19',desc:'guarda-chuva azul'};
+  let ok=true;const d={};
+  for(const [k,gv_] of Object.entries(gab)){
+    const v=(g(`f2-${k}`)?.value||'').trim();d[k]=v;
+    const match=(k==='desc')?(v.toLowerCase().includes('guarda')||v.toLowerCase().includes('azul')):(v===gv_);
+    setFb(`fb2-${k}`,v?match:'');
+    if(!match)ok=false;
+  }
+  setResp('t02',d);
+  if(ok)addPista('E01');
+  setAdv(ok);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA 3 — O que chama atenção?
+// ═══════════════════════════════════════════════════════════
+function s3(m){
+  const c=titleBar(m,3,'Reprodução da interface antiga para inspeção. Clique nos elementos para analisar.');
+  const sv=getResp('t03');
+
+  // SVG mock
+  const mw=document.createElement('div');mw.className='mock-wrap';
+  mw.innerHTML=`<p style="font-size:12px;color:var(--mut);margin-bottom:8px">⬇ Interface antiga (apenas para inspeção — clique nos elementos)</p>
+  <svg id="mock-svg" viewBox="0 0 640 310" style="width:100%;max-width:640px;border:1px solid var(--brd);border-radius:6px">
+    <!-- bg -->
+    <rect width="640" height="310" fill="#f0f4f8"/>
+    <!-- titlebar -->
+    <rect width="640" height="36" fill="#1e3a5f"/>
+    <text x="14" y="24" fill="white" font-size="12" font-weight="bold" font-family="Arial">SISTEMA DE ACHADOS E PERDIDOS</text>
+    <!-- E1: Prédio (muted, essential) -->
+    <g class="mock-elem" id="me-E1" data-id="E1">
+      <rect x="14" y="48" width="290" height="28" rx="4" fill="#dfe6ee" stroke="#c5d0dc"/>
+      <text x="20" y="67" font-size="11" fill="#6b7a8d" font-family="Arial">Prédio: [ Prédio A ▾ ] ← já selecionado</text>
+      <text x="298" y="52" font-size="9" fill="#c0392b" font-weight="bold" font-family="Arial">[E1]</text>
+    </g>
+    <!-- E2: Categoria -->
+    <g class="mock-elem" id="me-E2" data-id="E2">
+      <rect x="14" y="84" width="290" height="28" rx="4" fill="#eef2f7" stroke="#c5d0dc"/>
+      <text x="20" y="103" font-size="11" fill="#1a1a2e" font-family="Arial">Categoria: [                    ]</text>
+      <text x="298" y="88" font-size="9" fill="#c0392b" font-weight="bold" font-family="Arial">[E2]</text>
+    </g>
+    <!-- E3: Armário -->
+    <g class="mock-elem" id="me-E3" data-id="E3">
+      <rect x="14" y="120" width="290" height="28" rx="4" fill="#eef2f7" stroke="#c5d0dc"/>
+      <text x="20" y="139" font-size="11" fill="#1a1a2e" font-family="Arial">Armário: [                     ]</text>
+      <text x="298" y="124" font-size="9" fill="#c0392b" font-weight="bold" font-family="Arial">[E3]</text>
+    </g>
+    <!-- E4: Descrição (central) -->
+    <g class="mock-elem" id="me-E4" data-id="E4">
+      <rect x="14" y="156" width="612" height="28" rx="4" fill="#eef2f7" stroke="#c5d0dc"/>
+      <text x="320" y="175" font-size="11" fill="#1a1a2e" font-family="Arial" text-anchor="middle">Descrição: guarda-chuva azul (campo centralizado)</text>
+      <text x="620" y="160" font-size="9" fill="#c0392b" font-weight="bold" font-family="Arial">[E4]</text>
+    </g>
+    <!-- E5: Campanha (competing) -->
+    <g class="mock-elem" id="me-E5" data-id="E5">
+      <rect x="322" y="48" width="304" height="100" rx="4" fill="#fff3cd" stroke="#f0ad4e" stroke-width="2"/>
+      <text x="474" y="75" font-size="12" fill="#856404" font-weight="bold" text-anchor="middle" font-family="Arial">⚠ CAMPANHA INTERNA ⚠</text>
+      <text x="474" y="98" font-size="11" fill="#856404" text-anchor="middle" font-family="Arial">Sorteio na sexta-feira!</text>
+      <text x="474" y="116" font-size="10" fill="#856404" text-anchor="middle" font-family="Arial">Participe e ganhe prêmios!</text>
+      <text x="620" y="52" font-size="9" fill="#c0392b" font-weight="bold" font-family="Arial">[E5]</text>
+    </g>
+    <!-- E6: CONCLUIR (big green, competing) -->
+    <g class="mock-elem" id="me-E6" data-id="E6">
+      <rect x="14" y="200" width="612" height="90" rx="8" fill="#27874a"/>
+      <text x="320" y="252" font-size="18" fill="white" font-weight="bold" text-anchor="middle" font-family="Arial">✅   C O N C L U I R</text>
+      <text x="620" y="204" font-size="9" fill="#c0392b" font-weight="bold" font-family="Arial">[E6]</text>
+    </g>
+  </svg>`;
+  c.appendChild(mw);
+
+  // Selection controls
+  const sel={ess:sv.essencial||null,comp:sv.competidor||null};
+  const ca=card(c,'INSPEÇÃO — SELECIONAR ELEMENTOS');
+  ca.innerHTML=`<div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <button class="btn primary small" id="btn-ess" onclick="setMode('ess')">→ Selecionar elemento ESSENCIAL</button>
+    <button class="btn danger small" id="btn-comp" onclick="setMode('comp')">→ Selecionar COMPETIDOR de atenção</button>
+    <span id="mode-hint" style="font-size:12px;color:var(--mut);align-self:center"></span>
+  </div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap">
+    <div><strong style="font-size:13px">1) Essencial:</strong> <span id="lbl-ess" style="font-size:13px;color:var(--mut)">não selecionado</span></div>
+    <div><strong style="font-size:13px">2) Competidor:</strong> <span id="lbl-comp" style="font-size:13px;color:var(--mut)">não selecionado</span></div>
+  </div>
+  <div style="margin-top:12px;display:flex;gap:24px;flex-wrap:wrap">
+    <div class="field"><label>Consequência do essencial:</label>
+      <select id="c-ess" onchange="chk3()">
+        <option value="">— escolha —</option>
+        <option value="pass">Pode passar despercebido</option>
+        <option value="comp">Compete pela atenção</option>
+        <option value="ajuda">Ajuda a conferir o destino</option>
+      </select></div>
+    <div class="field"><label>Consequência do competidor:</label>
+      <select id="c-comp" onchange="chk3()">
+        <option value="">— escolha —</option>
+        <option value="pass">Pode passar despercebido</option>
+        <option value="comp">Compete pela atenção</option>
+        <option value="ajuda">Ajuda a conferir o destino</option>
+      </select></div>
+  </div>
+  <p id="fb3" style="font-size:13px;margin-top:8px;color:var(--mut)"></p>`;
+
+  // Restore saved
+  if(sv.essencial)updateSelLabel('ess',sv.essencial);
+  if(sv.competidor)updateSelLabel('comp',sv.competidor);
+  if(sv.cEss){const s=g('c-ess');if(s)s.value=sv.cEss;}
+  if(sv.cComp){const s=g('c-comp');if(s)s.value=sv.cComp;}
+
+  caderno(c,'"O que estava visível?" e "O que estava em destaque?" não têm a mesma resposta.');
+  nav(c,3,2);
+
+  // SVG click handlers
+  let mode=null;
+  window.setMode=function(m){
+    mode=m;
+    document.getElementById('mode-hint').textContent=m==='ess'?
+      '▶ Clique no elemento essencial para conferir o destino':
+      '▶ Clique no elemento que compete pela atenção';
+    document.getElementById('mock-svg').style.cursor='crosshair';
+  };
+  document.querySelectorAll('.mock-elem').forEach(el=>{
+    el.addEventListener('click',()=>{
+      if(!mode)return;
+      const id=el.dataset.id;
+      sel[mode]=id;
+      updateSelLabel(mode,id);
+      document.getElementById('mock-svg').style.cursor='default';
+      document.getElementById('mode-hint').textContent='';
+      mode=null;chk3();
+    });
+  });
+  chk3();
+
+  const ELEM_NAMES={E1:'Campo Prédio (já selecionado como Prédio A)',
+    E2:'Campo Categoria',E3:'Campo Armário',E4:'Campo Descrição (central)',
+    E5:'Aviso campanha (amarelo)',E6:'Botão CONCLUIR (grande e verde)'};
+  function updateSelLabel(which,id){
+    const lbl=document.getElementById('lbl-'+which);
+    if(lbl){lbl.textContent=`[${id}] ${ELEM_NAMES[id]}`;
+    lbl.style.color=which==='ess'?'#1565c0':'#b71c1c';}
+    sel[which]=id;
+  }
+  window.chk3=function(){
+    const eOk=sel.ess==='E1';
+    const cOk=sel.comp==='E5'||sel.comp==='E6';
+    const ceOk=gv('c-ess')==='pass';
+    const ccOk=gv('c-comp')==='comp';
+    const fb=g('fb3');
+    if(fb){
+      if(!sel.ess)fb.textContent='▶ Selecione o elemento essencial clicando no formulário acima.';
+      else if(!eOk)fb.textContent='ℹ O campo Prédio (E1) é o essencial — é o valor divergente.';
+      else if(!sel.comp)fb.textContent='▶ Selecione agora o elemento competidor de atenção.';
+      else if(!cOk)fb.textContent='ℹ E6 (botão verde) e E5 (aviso campanha) são os principais competidores.';
+      else if(!ceOk||!ccOk)fb.textContent='▶ Associe as consequências corretas.';
+      else fb.textContent='✓ Correto! O campo Prédio pode passar despercebido; o botão e o aviso competem pela atenção.';
+      fb.style.color=eOk&&cOk&&ceOk&&ccOk?'var(--ok)':'var(--mut)';
+    }
+    const all=eOk&&cOk&&ceOk&&ccOk;
+    if(all){addPista('E02');setResp('t03',{essencial:sel.ess,competidor:sel.comp,cEss:gv('c-ess'),cComp:gv('c-comp')});}
+    setAdv(all);
+  };
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA 4 — O telefone tocou
+// ═══════════════════════════════════════════════════════════
+function s4(m){
+  const c=titleBar(m,4,'Formulário de treinamento (dados fictícios). Tarefa: Prédio C · Eletrônico · Armário 2 · carregador branco.\nSimule a interrupção do telefone e analise a retomada.');
+  const sv=getResp('t04');
+
+  const cf=card(c,'FORMULÁRIO DE TREINAMENTO');
+  cf.innerHTML=`<p style="font-size:12px;color:var(--mut);margin-bottom:10px">Preencha os campos antes de simular a interrupção.</p>
+  ${[['f4-pred','Código do Prédio C:','mono','63'],['f4-cat','Código de Eletrônico:','mono','Y'],
+     ['f4-loc','Código do Armário 2:','mono','16'],['f4-desc','Descrição:','wide','carregador branco']]
+  .map(([id,lbl,cls,ph])=>`<div class="field">
+    <label>${lbl}</label>
+    <input type="text" id="${id}" class="${cls}" value="${escHtml(sv[id]||'')}"
+           placeholder="${ph}" oninput="chk4()">
+    <span class="fb" id="${id}-fb"></span>
+  </div>`).join('')}`;
+
+  const ip=card(c,'🔔 INTERRUPÇÃO — O TELEFONE TOCOU','warn');
+  ip.innerHTML=`<p style="font-size:13px;margin-bottom:10px">Uma pessoa pergunta onde retirar documentos perdidos.</p>
+  <div class="panel yellow" style="margin-bottom:10px">
+    <strong>Aviso na recepção:</strong>&nbsp; Balcão 2 atende documentos · Balcão 3 atende eletrônicos
+  </div>
+  <div class="field">
+    <label>Qual balcão você indicou?</label>
+    <input type="text" id="f4-tel" value="${escHtml(sv['f4-tel']||'')}" placeholder="Balcão ?" style="width:180px" oninput="chk4()">
+    <span class="fb" id="f4-tel-fb"></span>
+  </div>
+  <button class="btn accent small" onclick="simInterr()" style="margin-top:8px">🔔 Simular interrupção e retomada</button>
+  <div id="interr-result" style="margin-top:10px;font-size:13px;color:var(--ok)"></div>`;
+
+  const rp=card(c,'RETOMADA — VOLTANDO AO FORMULÁRIO');
+  rp.innerHTML=`<div class="field"><label>Quais campos estavam preenchidos ao retornar?</label>
+    <select id="f4-camp" onchange="chk4()">
+      <option value="">— escolha —</option>
+      <option value="none" ${sv['f4-camp']==='none'?'selected':''}>Nenhum — tela em branco</option>
+      <option value="some" ${sv['f4-camp']==='some'?'selected':''}>Prédio e Categoria (preservados)</option>
+      <option value="all" ${sv['f4-camp']==='all'?'selected':''}>Todos os campos</option>
+    </select></div>
+  <div class="field"><label>Qual era a próxima ação ao retornar?</label>
+    <select id="f4-prox" onchange="chk4()">
+      <option value="">— escolha —</option>
+      <option value="redo" ${sv['f4-prox']==='redo'?'selected':''}>Redigitar tudo do início</option>
+      <option value="arm" ${sv['f4-prox']==='arm'?'selected':''}>Preencher Armário (próximo vazio)</option>
+      <option value="ok" ${sv['f4-prox']==='ok'?'selected':''}>Clicar em Concluir diretamente</option>
+    </select></div>`;
+
+  caderno(c,'O que ajudou ou dificultou saber onde continuar após a ligação?');
+  nav(c,4,3);
+
+  // Restore interr result
+  if(sv.interrDone){
+    const ir=g('interr-result');
+    if(ir)ir.innerHTML='✓ Dados preservados ao retornar.<br>✓ Indicador: → Próxima ação: Armário (próximo campo vazio)';
+  }
+
+  window.simInterr=function(){
+    const pred=g('f4-pred')?.value||'';const cat=g('f4-cat')?.value||'';
+    if(!pred||!cat){alert('Preencha pelo menos Prédio e Categoria antes de simular a interrupção.');return;}
+    const ir=g('interr-result');
+    if(ir)ir.innerHTML='✓ Dados preservados ao retornar: Prédio e Categoria mantidos.<br>✓ Indicador visível: → Próxima ação: Armário (próximo campo vazio)';
+    const sv2=getResp('t04');sv2.interrDone=true;setResp('t04',sv2);chk4();
+  };
+
+  chk4();
+}
+function chk4(){
+  const gab={'f4-pred':'63','f4-cat':'Y','f4-loc':'16'};
+  let formOk=true;
+  for(const[k,v] of Object.entries(gab)){
+    const val=(g(k)?.value||'').trim();const ok=val===v;
+    setFb(k+'-fb',val?ok:'');if(!ok)formOk=false;
+  }
+  const desc=(g('f4-desc')?.value||'').toLowerCase();
+  const descOk=desc.includes('carregador')||desc.includes('branco');
+  setFb('f4-desc-fb',g('f4-desc')?.value?descOk:'');if(!descOk)formOk=false;
+
+  const tel=(g('f4-tel')?.value||'');const telOk=tel.includes('2');
+  setFb('f4-tel-fb',tel?telOk:'');
+
+  const sv=getResp('t04');
+  sv['f4-pred']=g('f4-pred')?.value||'';sv['f4-cat']=g('f4-cat')?.value||'';
+  sv['f4-loc']=g('f4-loc')?.value||'';sv['f4-desc']=g('f4-desc')?.value||'';
+  sv['f4-tel']=tel;sv['f4-camp']=gv('f4-camp');sv['f4-prox']=gv('f4-prox');
+  setResp('t04',sv);
+
+  const campOk=gv('f4-camp')==='some';
+  const proxOk=gv('f4-prox')==='arm';
+  const all=formOk&&telOk&&campOk&&proxOk&&sv.interrDone;
+  if(all)addPista('E03');
+  setAdv(all);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA 5 — O registro suspeito
+// ═══════════════════════════════════════════════════════════
+function s5(m){
+  const c=titleBar(m,5,'Registro encontrado no sistema. Compare com o destino solicitado (Pista E01). Consulte suas anotações.');
+  const sv=getResp('t05');
+
+  const ct=card(c,'REGISTRO ENCONTRADO');
+  ct.innerHTML=`<table style="max-width:400px"><tr><th>Campo</th><th>Valor registrado</th></tr>
+    <tr><td class="hilite"><strong>Prédio</strong></td><td class="mono hilite"><strong>28</strong></td></tr>
+    <tr><td>Categoria</td><td class="mono">K</td></tr>
+    <tr><td>Armário</td><td class="mono">19</td></tr>
+    <tr><td>Descrição</td><td>guarda-chuva azul</td></tr>
+  </table>
+  <div class="panel yellow" style="margin-top:10px">Compare com a Pista E01: <strong>74 / K / 19</strong> — o destino solicitado.</div>`;
+
+  const ca=card(c,'ANÁLISE');
+  ca.innerHTML=`<div class="field"><label>O código 28 corresponde a qual prédio?</label>
+    <select id="s5-trad" onchange="chk5()">
+      <option value="">— escolha —</option>
+      <option value="A" ${sv.trad==='A'?'selected':''}>Prédio A</option>
+      <option value="B" ${sv.trad==='B'?'selected':''}>Prédio B</option>
+      <option value="C" ${sv.trad==='C'?'selected':''}>Prédio C</option>
+    </select><span class="fb" id="fb5-1"></span></div>
+  <div class="field"><label>Qual campo diverge do destino solicitado?</label>
+    <select id="s5-campo" onchange="chk5()">
+      <option value="">— escolha —</option>
+      ${['Prédio','Categoria','Armário','Descrição'].map(x=>`<option value="${x}" ${sv.campo===x?'selected':''}>${x}</option>`).join('')}
+    </select><span class="fb" id="fb5-2"></span></div>
+  <div class="field"><label>Valor REGISTRADO (código ou nome):</label>
+    <input type="text" id="s5-reg" class="mono" value="${escHtml(sv.registrado||'')}" placeholder="28 ou Prédio A" oninput="chk5()">
+    <span class="fb" id="fb5-3"></span></div>
+  <div class="field"><label>Valor ESPERADO (código ou nome):</label>
+    <input type="text" id="s5-esp" class="mono" value="${escHtml(sv.esperado||'')}" placeholder="74 ou Prédio B" oninput="chk5()">
+    <span class="fb" id="fb5-4"></span></div>
+  <p id="fb5-msg" style="font-size:13px;margin-top:8px;color:var(--mut)"></p>`;
+
+  nav(c,5,4);chk5();
+}
+function chk5(){
+  const t=gv('s5-trad');const cam=gv('s5-campo');
+  const reg=(g('s5-reg')?.value||'').toLowerCase();
+  const esp=(g('s5-esp')?.value||'').toLowerCase();
+  const o1=t==='A';const o2=cam==='Prédio';
+  const o3=reg.includes('28')||reg.includes('prédio a')||reg.includes('predio a');
+  const o4=esp.includes('74')||esp.includes('prédio b')||esp.includes('predio b');
+  setFb('fb5-1',t?o1:'');setFb('fb5-2',cam?o2:'');
+  setFb('fb5-3',g('s5-reg')?.value?o3:'');setFb('fb5-4',g('s5-esp')?.value?o4:'');
+  const msg=g('fb5-msg');if(msg){
+    if(!o1&&t)msg.textContent='ℹ 28 = Prédio A (consulte a tabela da Tela 2)';
+    else if(!o2&&cam)msg.textContent='ℹ Apenas o campo Prédio diverge entre os registros.';
+    else msg.textContent='';
+    msg.style.color='var(--mut)';
+  }
+  setResp('t05',{trad:t,campo:cam,registrado:g('s5-reg')?.value,esperado:g('s5-esp')?.value});
+  const all=o1&&o2&&o3&&o4;if(all)addPista('E04');setAdv(all);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA 6 — Corrigir sem recomeçar
+// ═══════════════════════════════════════════════════════════
+function s6(m){
+  const c=titleBar(m,6,'Simulação de correção com a cópia do registro incorreto. Observe o que acontece — e configure a regra ideal.');
+  const sv=getResp('t06');
+
+  const ci=card(c,'ESTADO INICIAL (cópia de treinamento)');
+  ci.innerHTML=`<div class="panel green"><code>Prédio: 28 (A) · Categoria: K · Armário: 19 · Descrição: guarda-chuva azul</code></div>`;
+
+  const cs=card(c,'▶ SIMULAÇÃO — APLICAR CORREÇÃO');
+  cs.innerHTML=`<p style="font-size:13px;margin-bottom:10px">Clique para simular a correção do Prédio (28 → 74) com o comportamento atual do sistema:</p>
+  <button class="btn danger" id="btn-simul" onclick="runSimul()">▶ Aplicar correção (comportamento atual)</button>
+  <div id="simul-result" style="margin-top:12px"></div>`;
+
+  if(sv.simulDone)showSimulResult();
+
+  const ca=card(c,'ANÁLISE DA SIMULAÇÃO');
+  ca.innerHTML=`<p style="font-size:13px;margin-bottom:10px">Após observar a simulação, responda:</p>
+  <p style="font-size:13px;font-weight:600;margin-bottom:6px">1) Quais campos foram apagados? (marque todos)</p>
+  <div style="display:flex;gap:16px;margin-bottom:12px">
+    ${['cat|Categoria','loc|Armário','desc|Descrição'].map(x=>{
+      const[v,l]=x.split('|');
+      return`<label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+        <input type="checkbox" id="ap-${v}" ${sv['ap-'+v]?'checked':''} onchange="chk6()"> ${l}</label>`;
+    }).join('')}
+  </div>
+  <div class="field"><label style="font-size:13px;font-weight:600">2) Regra de correção ideal:</label>
+    <select id="s6-regra" onchange="chk6()" style="width:360px">
+      <option value="">— escolha —</option>
+      <option value="ideal" ${sv.regra==='ideal'?'selected':''}>Alterar apenas o campo errado, preservar os demais</option>
+      <option value="apaga">Apagar tudo e refazer o registro completo</option>
+      <option value="novo">Criar novo registro e arquivar o incorreto</option>
+    </select></div>
+  <p id="fb6" style="font-size:13px;margin-top:8px;color:var(--mut)"></p>`;
+
+  caderno(c,'"Qual trabalho o sistema obrigou a repetir?" e "O que a correção deveria preservar?"');
+  nav(c,6,5);chk6();
+
+  window.runSimul=function(){
+    const sv2=getResp('t06');sv2.simulDone=true;setResp('t06',sv2);
+    showSimulResult();chk6();
+  };
+  function showSimulResult(){
+    const d=g('simul-result');if(!d)return;
+    d.innerHTML=`<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:8px">
+      <div><strong>Antes:</strong><br><code style="background:var(--grn);padding:4px 8px;border-radius:4px">28 / K / 19 / guarda-chuva azul</code></div>
+      <div><strong>Após (simulação atual):</strong><br><code style="background:var(--red);padding:4px 8px;border-radius:4px">74 / <span style="color:var(--err)">__ / __ / __________________</span></code></div>
+    </div>
+    <p style="color:var(--err);font-size:13px;font-weight:600">⚠ Categoria, Armário e Descrição foram apagados ao corrigir o Prédio!</p>`;
+  }
+}
+function chk6(){
+  const sv=getResp('t06');
+  const apCat=g('ap-cat')?.checked;const apLoc=g('ap-loc')?.checked;const apDesc=g('ap-desc')?.checked;
+  const regra=gv('s6-regra');
+  sv['ap-cat']=apCat;sv['ap-loc']=apLoc;sv['ap-desc']=apDesc;sv.regra=regra;setResp('t06',sv);
+  const all=sv.simulDone&&apCat&&apLoc&&apDesc&&regra==='ideal';
+  const fb=g('fb6');if(fb){
+    if(!sv.simulDone)fb.textContent='▶ Clique "Aplicar correção" para ver o que acontece.';
+    else if(!apCat||!apLoc||!apDesc)fb.textContent='ℹ Marque os três campos que foram apagados.';
+    else if(regra!=='ideal')fb.textContent='ℹ A regra ideal é alterar apenas o campo errado.';
+    else{fb.textContent='✓ Correto: apenas o Prédio deve ser alterado.';fb.style.color='var(--ok)';}
+  }
+  if(all)addPista('E05');setAdv(all);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA 7 — O que significa concluir?
+// ═══════════════════════════════════════════════════════════
+function s7(m){
+  const c=titleBar(m,7,'Três comandos da interface antiga. Registre sua expectativa antes de revelar o comportamento real.\nDepois proponha como cada um deveria funcionar.');
+  const sv=getResp('t07');
+  const cmds=[
+    {k:'Voltar',beh:'Abandona o formulário sem aviso e descarta tudo.',gab:'rascunho'},
+    {k:'Cancelar',beh:'Limpa os campos imediatamente, sem confirmação.',gab:'confirm'},
+    {k:'Concluir',beh:'Verifica obrigatórios e encerra — SEM revisão do destino.',gab:'revisao'},
+  ];
+  const opts={
+    rascunho:'Voltar preservando rascunho (pedir antes de descartar)',
+    confirm:'Descartar com confirmação',
+    revisao:'Revisar destino antes de finalizar',
+  };
+
+  const ce=card(c,'ETAPA 1 — EXPECTATIVAS (antes de testar)');
+  ce.innerHTML=`<p style="font-size:13px;margin-bottom:10px">O que você espera de cada comando? Escreva antes de revelar.</p>`+
+  cmds.map(({k})=>`<div class="field">
+    <label>${k}:</label><input type="text" id="exp-${k}" class="wide"
+    value="${escHtml(sv['exp_'+k]||'')}" oninput="chk7()"
+    placeholder="o que você espera que aconteça?">
+  </div>`).join('');
+
+  const cr=card(c,'ETAPA 2 — COMPORTAMENTO REAL (clique para revelar)');
+  cr.innerHTML=cmds.map(({k,beh})=>{
+    const revealed=sv['rev_'+k];
+    return`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--brd)">
+      <strong style="min-width:80px">${k}:</strong>
+      <span id="beh-${k}" style="flex:1;font-size:13px;color:${revealed?'var(--err)':'var(--mut)'}">${revealed?escHtml(beh):'[não testado]'}</span>
+      <button class="btn primary small" onclick="reveal('${k}','${escHtml(beh)}')">▶ Testar</button>
+    </div>`;
+  }).join('');
+
+  const cp=card(c,'ETAPA 3 — PROPOSTA DE COMPORTAMENTO IDEAL');
+  cp.innerHTML=cmds.map(({k,gab})=>`<div class="field" style="margin:10px 0">
+    <label>Ideal para <strong>${k}</strong>:</label>
+    <select id="prop-${k}" onchange="chk7()" style="width:380px">
+      <option value="">— escolha —</option>
+      ${Object.entries(opts).map(([v,l])=>`<option value="${v}" ${sv['prop_'+k]===v?'selected':''}>${l}</option>`).join('')}
+    </select>
+    <span class="fb" id="fbp-${k}"></span>
+  </div>`).join('')+
+  `<p id="fb7" style="font-size:13px;margin-top:8px;color:var(--mut)"></p>`;
+
+  nav(c,7,6);chk7();
+
+  window.reveal=function(k,beh){
+    const el=g('beh-'+k);if(el){el.textContent=beh;el.style.color='var(--err)';}
+    const sv2=getResp('t07');sv2['rev_'+k]=true;setResp('t07',sv2);chk7();
+  };
+}
+function chk7(){
+  const sv=getResp('t07');
+  const cmds=['Voltar','Cancelar','Concluir'];
+  const gab={Voltar:'rascunho',Cancelar:'confirm',Concluir:'revisao'};
+  const allRev=cmds.every(k=>sv['rev_'+k]);
+  let allProp=true;
+  cmds.forEach(k=>{
+    const v=gv('prop-'+k);const ok=v===gab[k];
+    setFb('fbp-'+k,v?ok:'');if(!ok)allProp=false;
+    const sv2=getResp('t07');sv2['exp_'+k]=g('exp-'+k)?.value||'';sv2['prop_'+k]=v;setResp('t07',sv2);
+  });
+  const fb=g('fb7');if(fb){
+    if(!allRev)fb.textContent='⚠ Teste os três comandos antes de propor.';
+    else if(!allProp)fb.textContent='▶ Associe o comportamento ideal a cada comando.';
+    else{fb.textContent='✓ Ótimo! Especialmente "Revisar destino" antes de Concluir.';fb.style.color='var(--ok)';}
+  }
+  const all=allRev&&allProp;if(all)addPista('E06');setAdv(all);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA 8 — Além da tela
+// ═══════════════════════════════════════════════════════════
+function s8(m){
+  const c=titleBar(m,8,'Posto de trabalho de Lia. Na disposição atual, ela gira o corpo repetidamente para alcançar o telefone.\nDistribua os objetos pelas posições conforme a frequência de uso.');
+  const sv=getResp('t08');
+
+  const cd=card(c,'OBJETOS E FREQUÊNCIA DE USO');
+  cd.innerHTML=`<p style="font-size:13px;margin-bottom:12px">Selecione a posição de cada objeto. Itens mais usados devem ficar mais acessíveis.</p>`+
+  [['A','Teclado','muito frequente'],['B','Telefone','frequente'],
+   ['C','Bandeja de entrada','frequente'],['D','Arquivo de consulta','raro']]
+  .map(([cod,nome,freq])=>`<div class="field">
+    <label>[${cod}] <strong>${nome}</strong> <em style="font-weight:400;color:var(--mut)">(${freq})</em></label>
+    <select id="pos-${cod}" onchange="chk8()" style="width:240px">
+      <option value="">— posição —</option>
+      <option value="1" ${sv['pos-'+cod]==='1'?'selected':''}>1 — Frente imediata</option>
+      <option value="2" ${sv['pos-'+cod]==='2'?'selected':''}>2 — Lado esquerdo</option>
+      <option value="3" ${sv['pos-'+cod]==='3'?'selected':''}>3 — Lado direito</option>
+      <option value="4" ${sv['pos-'+cod]==='4'?'selected':''}>4 — Fundo / secundário</option>
+    </select>
+    <span class="fb" id="fp8-${cod}"></span>
+  </div>`).join('');
+
+  // Visual grid
+  const cg=card(c,'VISUALIZAÇÃO DO POSTO (atualiza automaticamente)');
+  cg.innerHTML=`<div class="posto-grid" id="posto-grid">
+    <div class="posto-cell" id="pc-2"><div class="cell-label">[2] Esquerda</div><div class="cell-item" id="pi-2">—</div></div>
+    <div class="posto-cell posto-center"><div style="font-size:20px">💻</div><div style="font-size:11px">Área de Trabalho</div></div>
+    <div class="posto-cell" id="pc-3"><div class="cell-label">[3] Direita</div><div class="cell-item" id="pi-3">—</div></div>
+    <div class="posto-cell" id="pc-1" style="grid-column:1/4"><div class="cell-label">[1] Frente imediata</div><div class="cell-item" id="pi-1">—</div></div>
+    <div class="posto-cell" id="pc-4" style="grid-column:1/4"><div class="cell-label">[4] Fundo / secundário</div><div class="cell-item" id="pi-4">—</div></div>
+  </div>`;
+
+  const cl=card(c,'CONDIÇÃO A VERIFICAR COM A PESSOA REAL');
+  cl.innerHTML=`<p style="font-size:13px;margin-bottom:8px">Registre algo que só poderia ser verificado com Lia (não uma medição feita aqui):</p>
+  <div class="field"><label></label>
+    <input type="text" id="s8-lim" class="wide" value="${escHtml(sv.limite||'')}" oninput="chk8()"
+           placeholder="Ex: verificar se Lia é destra para ajustar o lado do telefone">
+  </div>
+  <p id="fb8" style="font-size:13px;margin-top:8px;color:var(--mut)"></p>`;
+
+  caderno(c,'Desenhe a nova disposição antes de configurá-la aqui.');
+  nav(c,8,7);chk8();
+}
+function chk8(){
+  const nomes={A:'Teclado',B:'Telefone',C:'Bandeja',D:'Arquivo'};
+  const d={};let allChosen=true;
+  for(const cod of ['A','B','C','D']){const v=gv('pos-'+cod);d['pos-'+cod]=v;if(!v)allChosen=false;}
+  d.limite=(g('s8-lim')?.value||'').trim();setResp('t08',d);
+
+  // Update grid
+  for(let p=1;p<=4;p++){
+    const el=g('pi-'+p);if(!el)continue;
+    const items=Object.entries(nomes).filter(([c])=>d['pos-'+c]===String(p));
+    el.textContent=items.length?items.map(([,n])=>n).join(' · '):'—';
+    const cell=g('pc-'+p);
+    if(cell){cell.className='posto-cell'+(items.length?' has-item':'');}
+  }
+
+  const freqBack=['A','B','C'].every(c=>d['pos-'+c]==='4');
+  const fb=g('fb8');if(fb){
+    if(!allChosen)fb.textContent='▶ Escolha a posição de todos os objetos.';
+    else if(freqBack){fb.textContent='⚠ Itens frequentes não deveriam ficar todos no fundo.';fb.style.color='var(--err)';}
+    else if(d.limite.length<8){fb.textContent='▶ Registre uma condição a verificar com a pessoa real.';fb.style.color='var(--mut)';}
+    else{fb.textContent='✓ Disposição válida!';fb.style.color='var(--ok)';}
+  }
+  const all=allChosen&&!freqBack&&d.limite.length>=8;
+  if(all)addPista('E07');setAdv(all);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA 9 — Mais rápido = melhor?
+// ═══════════════════════════════════════════════════════════
+function s9(m){
+  const c=titleBar(m,9,'Resultados fictícios de 20 atendimentos por versão da interface.\nCritérios: tempo médio ≤ 50 s  e  registros incorretos ≤ 1.');
+  const sv=getResp('t09');
+
+  const ct=card(c,'TABELA DE RESULTADOS');
+  ct.innerHTML=`<table style="max-width:600px">
+    <tr><th>Versão</th><th>Tempo médio</th><th>Incorretos</th><th>Campos refeitos</th></tr>
+    ${[['A','38 s','5','12',false],['B','47 s','1','2',true],['C','43 s','2','0',false]]
+    .map(([v,t,i,r,h])=>`<tr style="${h?'background:var(--grn)':''}">
+      <td><strong>${v}</strong></td><td>${t}</td><td><strong style="color:${parseInt(i)>1?'var(--err)':'var(--ok)'}">${i}</strong></td><td>${r}</td>
+    </tr>`).join('')}
+  </table>
+  <div class="panel yellow" style="margin-top:10px">Critérios: <strong>tempo médio ≤ 50 s</strong>  e  <strong>registros incorretos ≤ 1</strong></div>`;
+
+  const ca=card(c,'ANÁLISE');
+  ca.innerHTML=`<div class="field"><label>Versão que atende os dois critérios:</label>
+    <select id="s9-ver" onchange="chk9()">
+      <option value="">— escolha —</option>
+      <option value="A" ${sv.versao==='A'?'selected':''}>A</option>
+      <option value="B" ${sv.versao==='B'?'selected':''}>B</option>
+      <option value="C" ${sv.versao==='C'?'selected':''}>C</option>
+    </select><span class="fb" id="fb9-1"></span></div>
+  <div class="field"><label>Porcentagem de incorretos dessa versão:</label>
+    <input type="text" id="s9-pct" style="width:80px" value="${escHtml(sv.pct||'')}"
+           placeholder="5" oninput="chk9()"> %
+    <span class="fb" id="fb9-2"></span></div>
+  <div class="field" style="flex-direction:column;align-items:flex-start">
+    <label style="margin-bottom:6px">Limitação do teste (campo aberto — avaliação docente):</label>
+    <input type="text" id="s9-lim" class="wide" value="${escHtml(sv.limitacao||'')}" oninput="chk9()"
+           placeholder="Ex: testes em laboratório sem interrupções não reproduzem o ambiente real">
+  </div>
+  <p id="fb9-msg" style="font-size:13px;margin-top:8px;color:var(--mut)"></p>`;
+
+  caderno(c,'Anote os critérios e resultados antes de selecionar a resposta.');
+  nav(c,9,8);chk9();
+}
+function chk9(){
+  const ver=gv('s9-ver');const pct=(g('s9-pct')?.value||'').replace('%','').trim();
+  const lim=(g('s9-lim')?.value||'').trim();
+  setFb('fb9-1',ver?ver==='B':'');setFb('fb9-2',pct?pct==='5':'');
+  const fb=g('fb9-msg');if(fb){
+    if(ver&&ver!=='B'){fb.textContent='ℹ Versão A: 5 incorretos. Versão C: 2 incorretos. Apenas B tem ≤1.';fb.style.color='var(--mut)';}
+    else if(ver==='B'&&pct&&pct!=='5'){fb.textContent='ℹ 1 ÷ 20 × 100 = 5%.';fb.style.color='var(--mut)';}
+    else fb.textContent='';
+  }
+  setResp('t09',{versao:ver,pct:pct,limitacao:lim});
+  const all=ver==='B'&&pct==='5'&&lim.length>=10;
+  if(all){addPista('E08');state.relatorio.t09versao='B';state.relatorio.t09pct='5%';save();}
+  setAdv(all);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA 10 — Reconstruindo os acontecimentos
+// ═══════════════════════════════════════════════════════════
+function s10(m){
+  const c=titleBar(m,10,'Três depoimentos e um histórico de eventos. Ordene os eventos e classifique o que o histórico permite ou não confirmar.');
+  const sv=getResp('t10');
+
+  const cd=card(c,'DEPOIMENTOS');
+  cd.innerHTML=[['Lia','O telefone tocou durante o atendimento.'],
+    ['Colega','Acho que ela já tinha conferido o destino.'],
+    ['Supervisor','O botão maior deveria ter resolvido o problema.']].map(([n,f])=>
+    `<p style="font-size:13px;padding:6px 0"><strong style="color:var(--hdr)">${n}:</strong> "${escHtml(f)}"</p>`).join('');
+
+  const ch=card(c,'HISTÓRICO DE EVENTOS (fictício — preparado para a atividade)');
+  ch.innerHTML=EVENTOS.map((ev,i)=>`<p style="font-family:'Courier New',monospace;font-size:12px;
+    padding:4px 8px;background:${ev.includes('28')?'var(--red)':'var(--lgt)'};margin:2px 0;border-radius:4px">${escHtml(ev)}</p>`).join('');
+
+  // Ordering
+  const co=card(c,'ETAPA 1 — ORDENAR OS EVENTOS (use ▲▼)');
+  const order=sv.ordem||EVENTOS.map((_,i)=>i);
+  co.innerHTML=`<ul class="ev-list" id="ev-list">${renderEvOrder(order)}</ul>
+  <p id="fb10-ord" style="font-size:13px;margin-top:6px;color:var(--mut)"></p>`;
+  window._order=order.slice();
+
+  const cc=card(c,'ETAPA 2 — CLASSIFICAR AFIRMAÇÕES');
+  cc.innerHTML=`${[
+    ['af1','Lia atendeu ao telefone durante o preenchimento.','Apoiada pelo histórico'],
+    ['af2','Lia verificou conscientemente o destino antes de concluir.','Histórico NÃO permite confirmar'],
+  ].map(([id,txt,gab])=>`<div class="field" style="flex-wrap:nowrap;margin:10px 0">
+    <label style="font-weight:400;min-width:360px">${escHtml(txt)}</label>
+    <select id="s10-${id}" onchange="chk10()" style="width:260px">
+      <option value="">— escolha —</option>
+      <option value="yes" ${sv[id]==='yes'?'selected':''}>Apoiada pelo histórico</option>
+      <option value="no" ${sv[id]==='no'?'selected':''}>Histórico NÃO permite confirmar</option>
+    </select>
+    <span class="fb" id="fb10-${id}"></span>
+  </div>`).join('')}
+  <p id="fb10-cls" style="font-size:13px;margin-top:6px;color:var(--mut)"></p>`;
+
+  const cr=card(c,'ETAPA 3 — REVISAR HIPÓTESE');
+  const orig=(state.hipotesesIniciais||[]).filter(h=>h);
+  cr.innerHTML=`${orig.length?`<p style="font-size:12px;color:var(--mut);margin-bottom:8px">Hipóteses iniciais: ${orig.map((h,i)=>`${i+1}. ${escHtml(h)}`).join(' | ')}</p>`:''}
+  <div class="field" style="flex-direction:column;align-items:flex-start">
+    <label style="margin-bottom:6px">Hipótese revisada (baseada nas evidências coletadas):</label>
+    <input type="text" id="s10-rev" class="wide" value="${escHtml(sv.rev||'')}" oninput="chk10()"
+           placeholder="Ex: A interface iniciou com prédio errado e não exigiu revisão do destino.">
+  </div>`;
+
+  nav(c,10,9);chk10();
+
+  window.moveEv=function(i,dir){
+    const j=i+dir;if(j<0||j>=window._order.length)return;
+    [window._order[i],window._order[j]]=[window._order[j],window._order[i]];
+    const ul=g('ev-list');if(ul)ul.innerHTML=renderEvOrder(window._order);
+    chk10();
+  };
+}
+function renderEvOrder(order){
+  return order.map((idx,pos)=>`<li class="ev-item ${EVENTOS[idx].includes('28')?'highlight':''}">
+    <div class="ev-arrows">
+      <button onclick="moveEv(${pos},-1)">▲</button>
+      <button onclick="moveEv(${pos},1)">▼</button>
+    </div>
+    <span class="ev-txt">${escHtml(EVENTOS[idx])}</span>
+  </li>`).join('');
+}
+function chk10(){
+  const order=window._order||EVENTOS.map((_,i)=>i);
+  const ordOk=order.every((v,i)=>v===i);
+  const fb_o=g('fb10-ord');if(fb_o){
+    fb_o.textContent=ordOk?'✓ Sequência correta!':'▶ Ordene pelos horários (EV1→EV2→...→EV6).';
+    fb_o.style.color=ordOk?'var(--ok)':'var(--mut)';
+  }
+  const af1=gv('s10-af1');const af2=gv('s10-af2');
+  setFb('fb10-af1',af1?af1==='yes':'');setFb('fb10-af2',af2?af2==='no':'');
+  const clsOk=af1==='yes'&&af2==='no';
+  const fb_c=g('fb10-cls');if(fb_c){
+    if(!clsOk&&(af1||af2)){
+      if(af1==='no')fb_c.textContent='ℹ EV3 confirma o atendimento telefônico — é apoiada pelo histórico.';
+      else if(af2==='yes')fb_c.textContent='ℹ O histórico mostra ações, não intenções — não comprova verificação consciente.';
+      else fb_c.textContent='';
+      fb_c.style.color='var(--mut)';
+    }else fb_c.textContent='';
+  }
+  const rev=(g('s10-rev')?.value||'').trim();
+  setResp('t10',{ordem:order,af1:af1,af2:af2,rev:rev});
+  if(clsOk&&rev){state.hipotesesRevisadas=[rev];save();}
+  const all=ordOk&&clsOk&&rev.length>=15;if(all)addPista('E09');setAdv(all);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA 11 — O relatório da equipe
+// ═══════════════════════════════════════════════════════════
+function s11(m){
+  const c=titleBar(m,11,'Monte o relatório: conecte cada evidência a um problema, uma melhoria e como verificar.\nRecupere também a conclusão quantitativa da Tela 9.');
+  const sv=getResp('t11');
+
+  const cm=card(c,'FORMATO');
+  cm.innerHTML=`<div class="panel blue" style="font-size:13px">
+    <strong>Evidência → Problema / risco → Melhoria proposta → Como verificar</strong><br>
+    <span style="font-size:12px;color:var(--mut)">Ex: E05 → dados válidos apagados ao corrigir → preservar campos → testar se só o campo errado muda</span>
+  </div>`;
+
+  const temas=[
+    {id:'R1',nome:'Retomada após interrupção',ev:'E03',
+     prob:'ausência de indicador de retomada',mel:'preservar dados e indicar o ponto de retomada',ver:'testar com 20 atendimentos e medir incorretos'},
+    {id:'R2',nome:'Conferência do destino',ev:'E02 + E06',
+     prob:'destino invisível antes de confirmar',mel:'revisão explícita do destino antes de finalizar',ver:'observar se operadores percebem prédio errado'},
+    {id:'R3',nome:'Correção de dados',ev:'E05',
+     prob:'apagamento de campos válidos',mel:'alterar apenas o campo errado',ver:'testar se só o campo corrigido muda'},
+    {id:'R4',nome:'Organização do posto',ev:'E07',
+     prob:'itens frequentes em posição ruim',mel:'reposicionar por frequência de uso',ver:'observar rotação do corpo durante atendimento'},
+  ];
+
+  temas.forEach(({id,nome,ev,prob,mel,ver})=>{
+    const ct=card(c,`${id} — ${nome}`);
+    ct.innerHTML=['ev|Evidência(s):|'+ev,'prob|Problema/risco:|'+prob,
+                  'mel|Melhoria proposta:|'+mel,'ver|Como verificar:|'+ver]
+    .map(row=>{const[k,lbl,ph]=row.split('|');return`<div class="field">
+      <label>${lbl}</label>
+      <input type="text" id="${id}-${k}" class="wide" oninput="chk11()"
+             value="${escHtml(sv[id+'_'+k]||ph)}"
+             placeholder="${escHtml(ph)}">
+    </div>`;}).join('');
+  });
+
+  // T9 conclusion
+  const cq=card(c,'CONCLUSÃO QUANTITATIVA (recuperada da Tela 9)');
+  const t9=getResp('t09');
+  cq.innerHTML=t9.versao?`<div class="panel green">
+    <strong>Versão escolhida: ${escHtml(t9.versao)}</strong> · ${escHtml(t9.pct||'5')}% de registros incorretos<br>
+    <span style="font-size:12px;color:var(--mut)">Limitação: ${escHtml(t9.limitacao||'')}</span>
+  </div>`:`<p style="color:var(--mut);font-size:13px">⚠ Conclua a Tela 9 para que os dados apareçam aqui.</p>`;
+
+  // Uncertainty
+  const cu=card(c,'INCERTEZA NÃO RESOLVIDA');
+  cu.innerHTML=`<div class="field" style="flex-direction:column;align-items:flex-start">
+    <label style="margin-bottom:6px">O que a investigação não conseguiu responder?</label>
+    <input type="text" id="s11-inc" class="wide" value="${escHtml(sv.incerteza||'')}" oninput="chk11()"
+           placeholder="Ex: não sabemos se o aviso de campanha ou o telefone foi o principal fator de distração">
+  </div>
+  <p id="fb11" style="font-size:13px;margin-top:8px;color:var(--mut)"></p>`;
+
+  nav(c,11,10);chk11();
+}
+function chk11(){
+  const temas=['R1','R2','R3','R4'];const fields=['ev','prob','mel','ver'];
+  const d={};let filled=0;const total=temas.length*fields.length;
+  temas.forEach(rid=>fields.forEach(f=>{
+    const k=`${rid}_${f}`;const v=(g(`${rid}-${f}`)?.value||'').trim();d[k]=v;if(v.length>=5)filled++;
+  }));
+  d.incerteza=(g('s11-inc')?.value||'').trim();
+  setResp('t11',d);
+  const inc=d.incerteza.length>=10;const allFilled=filled===total;
+  const fb=g('fb11');if(fb){
+    if(!allFilled){fb.textContent=`⚠ Preencha todos os campos (${filled}/${total} campos com ≥5 caracteres).`;fb.style.color='var(--mut)';}
+    else if(!inc){fb.textContent='▶ Registre uma incerteza que a investigação não resolveu.';fb.style.color='var(--mut)';}
+    else{fb.textContent='✓ Relatório completo! Siga para a missão final.';fb.style.color='var(--ok)';}
+  }
+  setAdv(allFilled&&inc);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA 12 — A recepção reabriu
+// ═══════════════════════════════════════════════════════════
+function s12(m){
+  const c=titleBar(m,12,'Novo atendimento. Aplique as melhorias investigadas.\nCASO: caderno vermelho · Documento · Prédio C · Armário 2');
+  const sv=getResp('t12');
+
+  const cc=card(c,'ETAPA 1 — CONVERTER O NOVO CASO');
+  const gab12={predio:'63',cat:'D',local:'16',desc:'caderno vermelho'};
+  cc.innerHTML=`<p style="font-size:13px;margin-bottom:10px">Consulte suas anotações e converta antes de preencher.</p>`+
+  [['predio','Código do Prédio C:','mono'],['cat','Código de Documento:','mono'],
+   ['local','Código do Armário 2:','mono'],['desc','Descrição do objeto:','']]
+  .map(([k,lbl,cls])=>`<div class="field">
+    <label>${lbl}</label>
+    <input type="text" id="t12-${k}" class="${cls}" value="${escHtml(sv[k]||'')}"
+           placeholder="${gab12[k]}" oninput="chk12()">
+    <span class="fb" id="fb12-${k}"></span>
+  </div>`).join('');
+
+  const cr=card(c,'ETAPA 2 — CONFIGURAR APOIO');
+  cr.innerHTML=`<div class="panel yellow">
+    ⚠ A nova interface <strong>ainda inicia com Prédio A selecionado</strong>. O risco não foi eliminado — apenas novos apoios foram adicionados.
+  </div>
+  <div class="field" style="margin-top:10px">
+    <label>Ativar revisão de destino antes de confirmar?</label>
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;margin-right:12px">
+      <input type="radio" name="cfg12" value="S" ${sv.config==='S'||!sv.config?'checked':''} onchange="chk12()"> Sim (recomendado)
+    </label>
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+      <input type="radio" name="cfg12" value="N" ${sv.config==='N'?'checked':''} onchange="chk12()"> Não
+    </label>
+  </div>`;
+
+  const cf=card(c,'ETAPA 3 — PREENCHIMENTO + INTERRUPÇÃO');
+  cf.innerHTML=`<div class="panel muted" id="form-state">Estado atual: —</div>
+  <button class="btn accent" onclick="simInterr12()" style="margin:8px 0">🔔 Simular interrupção e retomada</button>
+  <div id="interr12-result" style="font-size:13px;color:var(--ok);margin-top:6px">${sv.interrDone?'✓ Dados preservados · Indicador: → Próxima ação: Revisar destino e Concluir':''}</div>`;
+
+  const crev=card(c,'ETAPA 4 — REVISAR DESTINO E CONCLUIR');
+  crev.innerHTML=`<div id="rev12-summary" style="font-size:13px;margin-bottom:10px;color:var(--mut)">${sv.revOk?
+    '<div class="panel green">Resumo: Prédio C (63) · Documento (D) · Armário 2 (16) · caderno vermelho<br><strong style="color:var(--ok)">✓ Destino correto — pode confirmar!</strong></div>':
+    'Preencha os campos e clique abaixo para revisar.'}</div>
+  <button class="btn primary" onclick="doReview12()">📋 Revisar destino antes de concluir</button>`;
+
+  const cv=card(c,'ETAPA 5 — VERIFICAÇÃO FINAL');
+  cv.innerHTML=`<div class="field"><label>Verificação mais pertinente para este caso:</label>
+    <select id="s12-ver" onchange="chk12()" style="width:380px">
+      <option value="">— escolha —</option>
+      <option value="ok" ${sv.verif==='ok'?'selected':''}>Confirmar se o prédio gravado corresponde à ficha</option>
+      <option value="count">Contar quantos campos foram preenchidos</option>
+      <option value="net">Verificar se a conexão de rede funcionou</option>
+    </select><span class="fb" id="fb12-ver"></span></div>
+  <p id="fb12" style="font-size:13px;margin-top:8px;color:var(--mut)"></p>`;
+
+  caderno(c,'Consulte sua legenda de códigos para converter o novo caso.');
+  nav(c,12,11,'🏁 Concluir investigação');chk12();
+
+  window.simInterr12=function(){
+    const ok12=Object.entries(gab12).every(([k,gv_])=>{
+      const v=(g(`t12-${k}`)?.value||'').trim();
+      return k==='desc'?v.toLowerCase().includes('caderno'):v===gv_;
+    });
+    if(!ok12){alert('Verifique e corrija os campos antes de simular a interrupção.');return;}
+    const sv2=getResp('t12');sv2.interrDone=true;setResp('t12',sv2);
+    const ir=g('interr12-result');
+    if(ir)ir.innerHTML='✓ Dados preservados: todos os campos mantidos.<br>✓ Indicador: → Próxima ação: Revisar destino e Concluir';
+    chk12();
+  };
+
+  window.doReview12=function(){
+    const pred=(g('t12-predio')?.value||'').trim();
+    const rs=g('rev12-summary');if(!rs)return;
+    if(pred==='63'){
+      rs.innerHTML='<div class="panel green">Prédio C (63) · Documento (D) · Armário 2 (16) · caderno vermelho<br><strong style="color:var(--ok)">✓ Destino correto — pode confirmar!</strong></div>';
+      const sv2=getResp('t12');sv2.revOk=true;setResp('t12',sv2);chk12();
+    }else{
+      rs.innerHTML='<div class="panel red">⚠ O campo Prédio não está correto. Prédio C deve ter código 63 — não o padrão 28 (Prédio A).</div>';
+    }
+  };
+}
+function chk12(){
+  const gab12={predio:'63',cat:'D',local:'16',desc:'caderno vermelho'};
+  let formOk=true;
+  const dform={};
+  for(const[k,gv_] of Object.entries(gab12)){
+    const v=(g(`t12-${k}`)?.value||'').trim();dform[k]=v;
+    const ok=k==='desc'?v.toLowerCase().includes('caderno'):v===gv_;
+    setFb(`fb12-${k}`,v?ok:'');if(!ok)formOk=false;
+  }
+  const fs=g('form-state');if(fs)fs.textContent=
+    `Prédio: ${dform.predio||'—'} · Categoria: ${dform.cat||'—'} · Armário: ${dform.local||'—'} · ${dform.desc||'—'}`;
+
+  const cfg=document.querySelector('input[name="cfg12"]:checked')?.value||'S';
+  const sv=getResp('t12');sv.config=cfg;Object.assign(sv,dform);setResp('t12',sv);
+
+  const verOk=gv('s12-ver')==='ok';setFb('fb12-ver',gv('s12-ver')?verOk:'');
+
+  const all=formOk&&sv.interrDone&&sv.revOk&&verOk;
+  const fb=g('fb12');if(fb){
+    if(!formOk)fb.textContent='⚠ Verifique os campos de conversão (consulte a Tela 2).';
+    else if(!sv.interrDone)fb.textContent='▶ Simule a interrupção antes de revisar.';
+    else if(!sv.revOk)fb.textContent='▶ Revise o destino antes de concluir.';
+    else if(!verOk)fb.textContent='▶ Selecione a verificação mais pertinente.';
+    else{fb.textContent='✓ Missão concluída! O caderno vermelho chegou ao lugar certo.';fb.style.color='var(--ok)';}
+  }
+  setAdv(all);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA FINAL
+// ═══════════════════════════════════════════════════════════
+function showFinal(){
+  done(12);updateHeader(12);
+  const m=document.getElementById('main');m.innerHTML='';
+  const d=document.createElement('div');d.id='final';
+  d.innerHTML=`<div class="medal">🏁</div>
+  <h1>Investigação Concluída — Incidente 074</h1>
+  <p style="color:var(--mut);margin-bottom:20px">Sua equipe utilizou evidências, revisou hipóteses e aplicou as melhorias a um novo atendimento.</p>
+  <div class="card" style="max-width:500px;margin:0 auto 24px">
+    <div class="card-hd ok">Resumo da investigação</div>
+    <div class="card-body">
+      <table><tr><th>Campo</th><th>Resultado</th></tr>
+        <tr><td>Equipe</td><td>${escHtml(state.equipe)}</td></tr>
+        <tr><td>Pistas coletadas</td><td>${Object.keys(state.pistas).length}/9</td></tr>
+        <tr><td>Etapas concluídas</td><td>${state.etapasConcluidas.length}/12</td></tr>
+        <tr><td>Versão recomendada (T9)</td><td>${state.relatorio.t09versao||'B'} · ${state.relatorio.t09pct||'5%'} de incorretos</td></tr>
+      </table>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+    <button class="btn muted" onclick="showScreen(1)">↩ Início</button>
+    <button class="btn accent" onclick="exportJSON()">💾 Exportar JSON</button>
+  </div>`;
+  m.appendChild(d);m.scrollTop=0;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════
+function g(id){return document.getElementById(id);}
+function gv(id){return(g(id)?.value||'');}
+function setFb(id,ok){
+  const el=g(id);if(!el)return;
+  if(ok===true){el.textContent='✓';el.className='fb ok';}
+  else if(ok===false){el.textContent='✗';el.className='fb err';}
+  else{el.textContent='';el.className='fb';}
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TELA INÍCIO
+// ═══════════════════════════════════════════════════════════
+function showInicio(){
+  state=null;updateHeader();
+  const m=document.getElementById('main');m.innerHTML='';
+  const d=document.createElement('div');d.id='inicio';
+
+  const saves=listSaves();
+  const savesList=saves.length?`
+    <div style="width:100%;max-width:500px;text-align:left">
+      <p style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--txt)">Investigações salvas:</p>
+      ${saves.slice(0,5).map(sv=>`
+        <div class="save-item" onclick="continueGame('${escHtml(sv.equipe)}')">
+          <div>
+            <div class="si-main">📁 ${escHtml(sv.equipe)}</div>
+            <div class="si-sub">Tela ${sv.telaAtual}/12 · ${sv.etapasConcluidas.length} etapas · ${Object.keys(sv.pistas).length} pistas</div>
+          </div>
+          <span style="font-size:12px;color:var(--hdr)">Continuar →</span>
+        </div>`).join('')}
+    </div>
+    <div style="height:1px;background:var(--brd);width:100%;max-width:500px"></div>`:'';
+
+  d.innerHTML=`<div class="hero">🔍</div>
+  <h1>INCIDENTE 074</h1>
+  <p class="sub">Investigação em IHC · Aulas 02 e 03 · USJT 2026/2</p>
+  <p class="desc">Um guarda-chuva azul foi registrado no <strong>Prédio A</strong>. A ficha indicava o <strong>Prédio B</strong>.<br>
+  Investigue como aconteceu, quais características da interação contribuíram e como melhorar.</p>
+  ${savesList}
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+    <button class="btn primary" onclick="startNew()" style="font-size:15px;padding:12px 24px">🆕 Nova investigação</button>
+    <button class="btn outline" onclick="importJSON()" style="font-size:13px">📂 Carregar arquivo JSON</button>
+  </div>`;
+  m.appendChild(d);
+}
+
+window.continueGame=function(eq){
+  const sv=loadFromLS(eq);if(sv){state=sv;showScreen(sv.telaAtual);}
+};
+window.startNew=function(){
+  const eq=prompt('Nome da equipe (ex: Dupla-01):','Dupla-01');
+  if(!eq||!eq.trim())return;
+  state=newState(eq.trim());save();showScreen(1);
+};
+
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+showInicio();
+</script>
+</body>
+</html>
