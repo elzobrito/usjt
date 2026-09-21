@@ -8,3 +8,5 @@
 .DS_Store
 Thumbs.db
 *.lock
+*.bd
+*.db

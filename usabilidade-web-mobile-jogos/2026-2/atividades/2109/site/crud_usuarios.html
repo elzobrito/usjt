@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuários</title>
+
+    <style>
+        /* O CSS modifica apenas a apresentação visual da página. */
+        body {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 16px;
+            font-family: Arial, sans-serif;
+            color: #222;
+        }
+
+        .cadastro {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 8px;
+        }
+
+        .cadastro input {
+            flex: 1;
+        }
+
+        button {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .acoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .acoes form {
+            display: flex;
+            gap: 5px;
+        }
+
+        .mensagem {
+            color: #08752c;
+        }
+
+        .erro {
+            color: #b00020;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Cadastro de usuários</h1>
+
+    <!--
+        O formulário envia os dados para a rota POST /usuarios.
+
+        action: endereço que receberá os dados;
+        method: método HTTP utilizado;
+        name: nome pelo qual o Python acessará o campo.
+    -->
+    <form class="cadastro" action="/usuarios" method="post">
+        <input
+            type="text"
+            name="nome"
+            placeholder="Digite o nome"
+            required
+        >
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <!--
+        Estas condições são processadas pelo Flask no servidor.
+        O navegador recebe somente o HTML resultante.
+    -->
+    {% if mensagem %}
+        <p class="mensagem">{{ mensagem }}</p>
+    {% endif %}
+
+    {% if erro %}
+        <p class="erro">{{ erro }}</p>
+    {% endif %}
+
+    <h2>Usuários cadastrados</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <!--
+                O Flask repete esta linha para cada usuário da lista.
+                Não existe JavaScript nesta página.
+            -->
+            {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.nome }}</td>
+                    <td class="acoes">
+                        <!--
+                            O HTML puro não envia PUT. Para facilitar o primeiro
+                            contato, a edição também utiliza POST.
+                        -->
+                        <form
+                            action="/usuarios/{{ usuario.id }}/editar"
+                            method="post"
+                        >
+                            <input
+                                type="text"
+                                name="nome"
+                                value="{{ usuario.nome }}"
+                                required
+                            >
+
+                            <button type="submit">Alterar</button>
+                        </form>
+
+                        <!--
+                            O HTML puro também não envia DELETE.
+                            A exclusão é encaminhada por uma rota POST específica.
+                        -->
+                        <form
+                            action="/usuarios/{{ usuario.id }}/excluir"
+                            method="post"
+                        >
+                            <button type="submit">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">Nenhum usuário cadastrado.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
