@@ -2,18 +2,18 @@ import sqlite3
 from contextlib import closing
 from pathlib import Path
 
-BANCO = Path(__file__).parent / "conexao.db"
+BANCO = Path(__file__).with_name("usuarios.db")
 
-def abri_banco():
-    """Abre a conexão com o banco de dados."""
+
+def abrir_conexao():
     conexao = sqlite3.connect(BANCO)
     conexao.row_factory = sqlite3.Row
     return conexao
 
+
 if __name__ == "__main__":
-    with closing(abri_banco()) as conexao:
-        cursor = conexao.cursor()
-        versao = cursor.execute("SELECT sqlite_version();").fetchone()[0]
-        print(f"conexao com o banco de dados estabelecida com sucesso! Versão do SQLite: {BANCO}")
-        print(f"Versão do SQLite: {versao}")
-    print("Conexão com o banco de dados encerrada.")
+    with closing(abrir_conexao()) as conexao:
+        versao = conexao.execute("SELECT sqlite_version()").fetchone()[0]
+        print(f"Conexão aberta em: {BANCO}")
+        print(f"SQLite: {versao}")
+    print("Conexão fechada.")
