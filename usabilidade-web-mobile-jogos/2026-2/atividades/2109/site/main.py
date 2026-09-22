@@ -38,7 +38,6 @@ from flask import Flask, jsonify, redirect, render_template, request, url_for
 # programa. Em projetos maiores, normalmente seria usada a pasta "templates".
 app = Flask(__name__, template_folder=".")
 
-
 # Lista usada como armazenamento temporário dos usuários.
 #
 # Em Python, cada item da lista é um dicionário com duas propriedades:
@@ -166,39 +165,21 @@ def buscar_usuario(usuario_id):
 def cadastrar_usuario():
     """Valida e adiciona um novo usuário à lista em memória."""
 
-    # request.form acessa os campos enviados por um formulário HTML.
-    # get("nome", "") devolve uma string vazia se o campo não existir.
     nome = request.form.get("nome", "").strip()
 
-    # Se o nome estiver vazio, volta à página inicial com uma mensagem de erro.
     if not nome:
         return redirect(
             url_for("inicio", erro="O campo nome é obrigatório"),
             code=303,
         )
 
-    # Localiza o maior ID existente e acrescenta 1 para formar o próximo ID.
-    # O valor default=0 permite que o cálculo funcione mesmo se a lista estiver
-    # vazia: nesse caso, o primeiro ID gerado será 1.
-    proximo_id = max(
-        (usuario["id"] for usuario in usuarios),
-        default=0,
-    ) + 1
+    try:
+        with closing(abrir_conexao()) as conexao:
+            conexao.execute("INSERT INTO usuarios (nome) VALUES (?)", (nome,))
+            conexao.commit()
+    except sqlite3.Error as e:
+        mensagem_erro = f"Erro ao cadastrar usuário: {e}"   
 
-    # Monta o dicionário que representa o novo usuário.
-    # O nome é armazenado sem espaços desnecessários nas extremidades.
-    novo_usuario = {
-        "id": proximo_id,
-        "nome": nome,
-    }
-
-    # Adiciona efetivamente o novo usuário ao final da lista.
-    # A partir deste momento, ele aparecerá nas consultas GET /usuarios.
-    usuarios.append(novo_usuario)
-
-    # Depois do POST, redireciona o navegador para a página inicial.
-    # O status 303 orienta o navegador a realizar uma nova requisição GET,
-    # evitando o reenvio do formulário se a página for atualizada.
     return redirect(
         url_for("inicio", mensagem="Usuário cadastrado"),
         code=303,
