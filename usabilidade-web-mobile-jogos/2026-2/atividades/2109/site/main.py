@@ -229,18 +229,15 @@ def editar_usuario_com_post(usuario_id):
 def excluir_usuario_com_post(usuario_id):
     """Exclui um usuário por meio de um formulário POST."""
 
-    usuario = next(
-        (item for item in usuarios if item["id"] == usuario_id),
-        None,
-    )
-
-    if usuario is None:
-        return redirect(
-            url_for("inicio", erro="Usuário não encontrado"),
-            code=303,
-        )
-
-    usuarios.remove(usuario)
+    try:
+        with closing(abrir_conexao()) as conexao:
+            conexao.execute(
+                "DELETE FROM usuarios WHERE id = ?",
+                (usuario_id,),
+            )
+            conexao.commit()
+    except sqlite3.Error as e:
+        mensagem = f"Erro ao excluir usuário: {e}"
 
     return redirect(
         url_for("inicio", mensagem="Usuário excluído"),
