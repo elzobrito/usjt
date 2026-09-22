@@ -1,107 +1,332 @@
-"""API HTTP simples para demonstrar rotas com Flask.
+"""Aplicação Flask com CRUD de usuários armazenados em SQLite.
 
-Os usuários são mantidos em uma lista na memória. Portanto, os cadastros
-realizados durante a execução serão perdidos quando o servidor for reiniciado.
-Esse comportamento é intencional para evitar o uso de banco de dados neste
-exemplo introdutório.
+A aplicação disponibiliza:
+
+1. Uma interface HTML para:
+   - listar usuários;
+   - cadastrar usuários;
+   - editar usuários;
+   - excluir usuários.
+
+2. Uma API JSON para:
+   - listar usuários;
+   - buscar um usuário pelo ID;
+   - cadastrar usuários;
+   - atualizar usuários;
+   - excluir usuários.
+
+Os dados são armazenados no arquivo usuarios.db. Diferentemente de uma
+lista em memória, os cadastros permanecem disponíveis depois que o servidor
+é encerrado ou reiniciado.
 """
 
-# Importa os recursos do Flask usados pela aplicação:
+# Biblioteca nativa utilizada para acessar bancos de dados SQLite.
+import sqlite3
+
+# closing() garante que a conexão com o banco seja fechada corretamente
+# depois de cada operação.
+from contextlib import closing
+
+# Path facilita a construção do caminho para o arquivo do banco de dados.
+from pathlib import Path
+
+# Recursos utilizados do Flask:
 #
 # Flask:
-#   cria a aplicação web e permite registrar as rotas HTTP;
-#
-# request:
-#   representa a requisição HTTP recebida e permite acessar os dados enviados
-#   pelo formulário ou em formato JSON;
+#   cria e configura a aplicação web;
 #
 # jsonify:
-#   transforma listas e dicionários Python em respostas JSON e define o
-#   cabeçalho Content-Type como application/json;
+#   transforma dicionários e listas Python em respostas JSON;
+#
+# redirect:
+#   redireciona o navegador para outra rota;
 #
 # render_template:
-#   combina o arquivo HTML com os dados enviados pelo Python;
+#   combina um arquivo HTML com dados enviados pelo Python;
 #
-# redirect e url_for:
-#   redirecionam o navegador para outra rota depois de um formulário POST.
-import sqlite3
-from contextlib import closing
-from pathlib import Path
+# request:
+#   permite acessar formulários, parâmetros da URL e conteúdos JSON;
+#
+# url_for:
+#   gera URLs a partir do nome das funções das rotas.
 from flask import Flask, jsonify, redirect, render_template, request, url_for
 
 
+# ---------------------------------------------------------------------------
+# CONFIGURAÇÃO DA APLICAÇÃO
+# ---------------------------------------------------------------------------
+
 # Cria a aplicação Flask.
 #
-# __name__ informa ao Flask o nome do módulo atual. Essa informação ajuda o
-# framework a localizar os recursos relacionados à aplicação.
-# template_folder="." informa que o arquivo HTML está na mesma pasta deste
-# programa. Em projetos maiores, normalmente seria usada a pasta "templates".
+# __name__ informa ao Flask o nome do módulo atual e ajuda o framework
+# a localizar os recursos da aplicação.
+#
+# template_folder="." informa que o arquivo crud_usuarios.html está na
+# mesma pasta deste arquivo Python.
+#
+# Em projetos maiores, recomenda-se usar uma pasta chamada "templates".
 app = Flask(__name__, template_folder=".")
 
-# Lista usada como armazenamento temporário dos usuários.
+
+# ---------------------------------------------------------------------------
+# CONFIGURAÇÃO DO BANCO DE DADOS
+# ---------------------------------------------------------------------------
+
+# Define o caminho completo do arquivo SQLite.
 #
-# Em Python, cada item da lista é um dicionário com duas propriedades:
-#   id: identificador numérico e único;
-#   nome: nome do usuário.
+# __file__ representa o arquivo Python atual.
+# with_name("usuarios.db") cria o caminho para usuarios.db na mesma pasta.
 #
-# Como não existe um banco de dados, qualquer alteração feita nesta lista
-# permanece disponível somente enquanto o programa estiver em execução.
+# O SQLite criará esse arquivo automaticamente caso ele ainda não exista.
 BANCO = Path(__file__).with_name("usuarios.db")
 
+
 def abrir_conexao():
-    """Abre uma conexão com o banco de dados SQLite."""
+    """Abre e devolve uma conexão com o banco de dados SQLite."""
+
+    # Cria uma conexão com o arquivo usuarios.db.
     conexao = sqlite3.connect(BANCO)
+
+    # Faz com que as linhas retornadas pelo SQLite possam ser acessadas
+    # pelo nome das colunas.
+    #
+    # Exemplo:
+    #     usuario["nome"]
+    #
+    # Sem row_factory, seria necessário acessar por posição:
+    #     usuario[1]
     conexao.row_factory = sqlite3.Row
+
     return conexao
 
-def inicilizar_banco():
-    """Cria a tabela de usuários caso ela não exista."""
+
+def inicializar_banco():
+    """Cria a tabela de usuários caso ela ainda não exista."""
+
+    # closing() fecha a conexão automaticamente ao final do bloco.
     with closing(abrir_conexao()) as conexao:
-        conexao.execute("""
+        conexao.execute(
+            """
             CREATE TABLE IF NOT EXISTS usuarios (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL
             )
-        """)
+            """
+        )
+
+        # Confirma a criação da tabela no banco de dados.
         conexao.commit()
 
-# Registra a rota da interface web.
+
+def converter_usuario_para_dicionario(usuario):
+    """Converte uma linha do SQLite em um dicionário Python."""
+
+    # Uma linha sqlite3.Row precisa ser convertida antes de ser enviada
+    # diretamente como JSON.
+    return {
+        "id": usuario["id"],
+        "nome": usuario["nome"],
+    }
+
+
+# Inicializa o banco assim que este módulo é carregado.
 #
-# Método: GET
-# Caminho: /
-# Exemplo: GET http://localhost:5000/
-#
-# Quando essa URL for acessada, o Flask combinará a lista de usuários com o
-# arquivo crud_usuarios.html.
+# Isso garante que a tabela exista tanto quando o arquivo for executado
+# diretamente quanto quando a aplicação for iniciada pelo comando flask.
+inicializar_banco()
+
+
+# ---------------------------------------------------------------------------
+# ROTAS DA INTERFACE HTML
+# ---------------------------------------------------------------------------
+
 @app.get("/")
 def inicio():
     """Renderiza a interface HTML com os usuários cadastrados."""
 
-    inicilizar_banco()
-    with closing(abrir_conexao()) as conexao:
-        # A consulta SQL seleciona todos os usuários da tabela.
-        # fetchall() devolve uma lista de linhas, cada uma representando um
-        # usuário. O row_factory definido na função abrir_conexao() faz com
-        # que cada linha seja convertida em um dicionário.
-        usuarios = conexao.execute("SELECT * FROM usuarios").fetchall()
+    try:
+        with closing(abrir_conexao()) as conexao:
+            # Seleciona todos os usuários.
+            #
+            # ORDER BY id organiza os usuários pelo identificador em ordem
+            # crescente.
+            usuarios = conexao.execute(
+                """
+                SELECT id, nome
+                FROM usuarios
+                ORDER BY id
+                """
+            ).fetchall()
 
-    # request.args acessa parâmetros presentes na URL. As mensagens são
-    # recebidas depois dos redirecionamentos realizados pelas rotas POST.
+    except sqlite3.Error as erro:
+        # Se houver erro no banco, a página ainda será carregada, mas sem
+        # usuários e com uma mensagem informando o problema.
+        usuarios = []
+        mensagem_erro = f"Erro ao consultar usuários: {erro}"
+
+    else:
+        # request.args lê valores presentes na URL.
+        #
+        # Exemplo:
+        #     /?mensagem=Usuário+cadastrado
+        mensagem_erro = request.args.get("erro")
+
+    # Recupera uma possível mensagem de sucesso enviada por redirecionamento.
     mensagem = request.args.get("mensagem")
-    erro = request.args.get("erro")
 
-    # render_template() abre o arquivo HTML e entrega a ele três valores:
-    # a lista de usuários e as possíveis mensagens de sucesso ou erro.
+    # Envia os dados para o arquivo crud_usuarios.html.
     return render_template(
         "crud_usuarios.html",
         usuarios=usuarios,
         mensagem=mensagem,
-        erro=erro,
+        erro=mensagem_erro,
     )
 
 
-# Disponibiliza uma rota simples para verificar o funcionamento da API sem
-# substituir a página HTML apresentada na rota principal.
+@app.post("/usuarios")
+def cadastrar_usuario():
+    """Cadastra um usuário enviado por formulário HTML."""
+
+    # request.form acessa os campos enviados pelo formulário.
+    #
+    # get("nome", "") devolve uma string vazia caso o campo não exista.
+    # strip() remove espaços em branco do início e do final.
+    nome = request.form.get("nome", "").strip()
+
+    # O nome é obrigatório.
+    if not nome:
+        return redirect(
+            url_for("inicio", erro="O campo nome é obrigatório"),
+            code=303,
+        )
+
+    try:
+        with closing(abrir_conexao()) as conexao:
+            # O caractere ? representa um parâmetro SQL.
+            #
+            # Essa forma evita concatenar o nome diretamente no comando SQL
+            # e protege a aplicação contra injeção de SQL.
+            conexao.execute(
+                """
+                INSERT INTO usuarios (nome)
+                VALUES (?)
+                """,
+                (nome,),
+            )
+
+            conexao.commit()
+
+    except sqlite3.Error as erro:
+        return redirect(
+            url_for(
+                "inicio",
+                erro=f"Erro ao cadastrar usuário: {erro}",
+            ),
+            code=303,
+        )
+
+    return redirect(
+        url_for("inicio", mensagem="Usuário cadastrado com sucesso"),
+        code=303,
+    )
+
+
+@app.post("/usuarios/<int:usuario_id>/editar")
+def editar_usuario_com_post(usuario_id):
+    """Atualiza um usuário por meio de um formulário HTML."""
+
+    nome = request.form.get("nome", "").strip()
+
+    if not nome:
+        return redirect(
+            url_for("inicio", erro="O campo nome é obrigatório"),
+            code=303,
+        )
+
+    try:
+        with closing(abrir_conexao()) as conexao:
+            cursor = conexao.execute(
+                """
+                UPDATE usuarios
+                SET nome = ?
+                WHERE id = ?
+                """,
+                (nome, usuario_id),
+            )
+
+            # rowcount informa quantas linhas foram alteradas.
+            #
+            # Se rowcount for zero, nenhum usuário com esse ID foi encontrado.
+            if cursor.rowcount == 0:
+                return redirect(
+                    url_for(
+                        "inicio",
+                        erro="Usuário não encontrado",
+                    ),
+                    code=303,
+                )
+
+            conexao.commit()
+
+    except sqlite3.Error as erro:
+        return redirect(
+            url_for(
+                "inicio",
+                erro=f"Erro ao atualizar usuário: {erro}",
+            ),
+            code=303,
+        )
+
+    return redirect(
+        url_for("inicio", mensagem="Usuário atualizado com sucesso"),
+        code=303,
+    )
+
+
+@app.post("/usuarios/<int:usuario_id>/excluir")
+def excluir_usuario_com_post(usuario_id):
+    """Exclui um usuário por meio de um formulário HTML."""
+
+    try:
+        with closing(abrir_conexao()) as conexao:
+            cursor = conexao.execute(
+                """
+                DELETE FROM usuarios
+                WHERE id = ?
+                """,
+                (usuario_id,),
+            )
+
+            if cursor.rowcount == 0:
+                return redirect(
+                    url_for(
+                        "inicio",
+                        erro="Usuário não encontrado",
+                    ),
+                    code=303,
+                )
+
+            conexao.commit()
+
+    except sqlite3.Error as erro:
+        return redirect(
+            url_for(
+                "inicio",
+                erro=f"Erro ao excluir usuário: {erro}",
+            ),
+            code=303,
+        )
+
+    return redirect(
+        url_for("inicio", mensagem="Usuário excluído com sucesso"),
+        code=303,
+    )
+
+
+# ---------------------------------------------------------------------------
+# ROTAS DA API JSON
+# ---------------------------------------------------------------------------
+
 @app.get("/api")
 def verificar_api():
     """Informa que a API está em funcionamento."""
@@ -109,230 +334,258 @@ def verificar_api():
     return jsonify(mensagem="API funcionando"), 200
 
 
-# Registra a rota responsável por listar todos os usuários.
-#
-# Método: GET
-# Caminho: /usuarios
-# Exemplo: GET http://localhost:5000/usuarios
-@app.get("/usuarios")
+@app.get("/api/usuarios")
 def listar_usuarios():
-    """Retorna todos os usuários armazenados na lista."""
+    """Retorna em JSON todos os usuários cadastrados no SQLite."""
 
-    # jsonify() converte a lista completa para JSON.
-    # O segundo valor da tupla é o status HTTP 200 OK, indicando sucesso.
-    return jsonify(usuarios), 200
+    try:
+        with closing(abrir_conexao()) as conexao:
+            usuarios = conexao.execute(
+                """
+                SELECT id, nome
+                FROM usuarios
+                ORDER BY id
+                """
+            ).fetchall()
+
+    except sqlite3.Error as erro:
+        return jsonify(
+            erro="Não foi possível consultar os usuários",
+            detalhes=str(erro),
+        ), 500
+
+    # Converte cada sqlite3.Row para um dicionário antes de produzir o JSON.
+    usuarios_convertidos = [
+        converter_usuario_para_dicionario(usuario)
+        for usuario in usuarios
+    ]
+
+    return jsonify(usuarios_convertidos), 200
 
 
-# Registra uma rota com um parâmetro dinâmico.
-#
-# Método: GET
-# Caminho: /usuarios/<int:usuario_id>
-# Exemplos:
-#   GET http://localhost:5000/usuarios/1
-#   GET http://localhost:5000/usuarios/2
-#
-# O conversor "int" exige que o valor presente na URL seja um número inteiro.
-# O valor será entregue à função pelo parâmetro usuario_id.
-@app.get("/usuarios/<int:usuario_id>")
+@app.get("/api/usuarios/<int:usuario_id>")
 def buscar_usuario(usuario_id):
-    """Busca um usuário pelo seu identificador."""
-
-    # A expressão geradora percorre a lista e seleciona os usuários cujo ID
-    # é igual ao recebido pela URL.
-    #
-    # next() devolve o primeiro usuário encontrado. Se nenhum usuário atender
-    # à condição, o valor padrão None será devolvido.
-    usuario = next(
-        (item for item in usuarios if item["id"] == usuario_id),
-        None,
-    )
-
-    # Se a busca não encontrou um usuário, devolve uma mensagem de erro com
-    # o status HTTP 404 Not Found.
-    if usuario is None:
-        return jsonify(erro="Usuário não encontrado"), 404
-
-    # Se o usuário foi encontrado, devolve seus dados e o status 200 OK.
-    return jsonify(usuario), 200
-
-
-# Registra a rota responsável pelo cadastro de usuários.
-#
-# Método: POST
-# Caminho: /usuarios
-# O formulário HTML enviará um campo chamado "nome".
-@app.post("/usuarios")
-def cadastrar_usuario():
-    """Valida e adiciona um novo usuário à lista em memória."""
-
-    nome = request.form.get("nome", "").strip()
-    mensagem = None 
-
-    if not nome:
-        return redirect(
-            url_for("inicio", erro="O campo nome é obrigatório"),
-            code=303,
-        )
+    """Busca e retorna um usuário pelo identificador."""
 
     try:
         with closing(abrir_conexao()) as conexao:
-            conexao.execute("INSERT INTO usuarios (nome) VALUES (?)", (nome,))
-            conexao.commit()
-    except sqlite3.Error as e:
-        mensagem = f"Erro ao cadastrar usuário: {e}"   
-
-
-    return redirect(
-        url_for("inicio", mensagem="Usuário cadastrado"),
-        code=303,
-    )
-
-
-# Esta rota atualiza um usuário utilizando somente um formulário HTML.
-#
-# Embora a operação represente uma atualização, o HTML puro não consegue
-# enviar PUT. Por isso, o formulário utiliza POST e uma rota específica.
-@app.post("/usuarios/<int:usuario_id>/editar")
-def editar_usuario_com_post(usuario_id):
-    """Atualiza um usuário por meio de um formulário POST."""
-
-    nome = request.form.get("nome", "").strip()
-
-    if not nome:
-        return redirect(
-            url_for("inicio", erro="O campo nome é obrigatório"),
-            code=303,
-        )
-
-    try:
-        with closing(abrir_conexao()) as conexao:
-            conexao.execute(
-                "UPDATE usuarios SET nome = ? WHERE id = ?",
-                (nome, usuario_id),
-            )
-            conexao.commit()
-    except sqlite3.Error as e:
-        mensagem = f"Erro ao atualizar usuário: {e}"
-    
-    
-    return redirect(
-        url_for("inicio", mensagem="Usuário atualizado"),
-        code=303,
-    )
-
-
-# Esta rota exclui um usuário utilizando um formulário HTML.
-#
-# O HTML puro não consegue enviar DELETE. Portanto, o formulário usa POST e
-# informa o usuário a ser excluído por meio do endereço da rota.
-@app.post("/usuarios/<int:usuario_id>/excluir")
-def excluir_usuario_com_post(usuario_id):
-    """Exclui um usuário por meio de um formulário POST."""
-
-    try:
-        with closing(abrir_conexao()) as conexao:
-            conexao.execute(
-                "DELETE FROM usuarios WHERE id = ?",
+            # fetchone() devolve a primeira linha encontrada ou None.
+            usuario = conexao.execute(
+                """
+                SELECT id, nome
+                FROM usuarios
+                WHERE id = ?
+                """,
                 (usuario_id,),
-            )
-            conexao.commit()
-    except sqlite3.Error as e:
-        mensagem = f"Erro ao excluir usuário: {e}"
+            ).fetchone()
 
-    return redirect(
-        url_for("inicio", mensagem="Usuário excluído"),
-        code=303,
-    )
+    except sqlite3.Error as erro:
+        return jsonify(
+            erro="Não foi possível consultar o usuário",
+            detalhes=str(erro),
+        ), 500
 
-
-# Registra a rota responsável pela atualização de um usuário.
-#
-# Método: PUT
-# Caminho: /usuarios/<int:usuario_id>
-# Exemplo: PUT http://localhost:5000/usuarios/1
-# Corpo JSON: {"nome": "Ana Maria"}
-@app.put("/usuarios/<int:usuario_id>")
-def atualizar_usuario(usuario_id):
-    """Atualiza o nome de um usuário existente."""
-
-    # Procura o usuário que será atualizado.
-    usuario = next(
-        (item for item in usuarios if item["id"] == usuario_id),
-        None,
-    )
-
-    # Não é possível atualizar um recurso que não existe.
     if usuario is None:
         return jsonify(erro="Usuário não encontrado"), 404
 
-    # Obtém e valida o objeto JSON enviado pelo navegador.
+    return jsonify(converter_usuario_para_dicionario(usuario)), 200
+
+
+@app.post("/api/usuarios")
+def cadastrar_usuario_api():
+    """Cadastra um usuário utilizando um objeto JSON."""
+
+    # silent=True evita uma exceção automática caso o corpo não seja
+    # um JSON válido.
     dados = request.get_json(silent=True)
+
     if not isinstance(dados, dict):
-        return jsonify(erro="Envie um objeto JSON válido"), 400
+        return jsonify(
+            erro="Envie um objeto JSON válido",
+        ), 400
 
     nome = dados.get("nome")
+
     if not isinstance(nome, str) or not nome.strip():
-        return jsonify(erro="O campo nome é obrigatório"), 400
+        return jsonify(
+            erro="O campo nome é obrigatório",
+        ), 400
 
-    # Altera o nome no próprio dicionário armazenado na lista.
-    usuario["nome"] = nome.strip()
+    nome = nome.strip()
 
-    # Retorna o usuário atualizado e o status 200 OK.
+    try:
+        with closing(abrir_conexao()) as conexao:
+            cursor = conexao.execute(
+                """
+                INSERT INTO usuarios (nome)
+                VALUES (?)
+                """,
+                (nome,),
+            )
+
+            conexao.commit()
+
+            # lastrowid contém o ID gerado automaticamente pelo SQLite.
+            usuario_id = cursor.lastrowid
+
+    except sqlite3.Error as erro:
+        return jsonify(
+            erro="Não foi possível cadastrar o usuário",
+            detalhes=str(erro),
+        ), 500
+
+    usuario = {
+        "id": usuario_id,
+        "nome": nome,
+    }
+
+    # O status 201 Created indica que um novo recurso foi criado.
     return jsonify(
-        mensagem="Usuário atualizado",
+        mensagem="Usuário cadastrado com sucesso",
         usuario=usuario,
+    ), 201
+
+
+@app.put("/api/usuarios/<int:usuario_id>")
+def atualizar_usuario(usuario_id):
+    """Atualiza o nome de um usuário utilizando um objeto JSON."""
+
+    dados = request.get_json(silent=True)
+
+    if not isinstance(dados, dict):
+        return jsonify(
+            erro="Envie um objeto JSON válido",
+        ), 400
+
+    nome = dados.get("nome")
+
+    if not isinstance(nome, str) or not nome.strip():
+        return jsonify(
+            erro="O campo nome é obrigatório",
+        ), 400
+
+    nome = nome.strip()
+
+    try:
+        with closing(abrir_conexao()) as conexao:
+            cursor = conexao.execute(
+                """
+                UPDATE usuarios
+                SET nome = ?
+                WHERE id = ?
+                """,
+                (nome, usuario_id),
+            )
+
+            if cursor.rowcount == 0:
+                return jsonify(
+                    erro="Usuário não encontrado",
+                ), 404
+
+            conexao.commit()
+
+    except sqlite3.Error as erro:
+        return jsonify(
+            erro="Não foi possível atualizar o usuário",
+            detalhes=str(erro),
+        ), 500
+
+    usuario_atualizado = {
+        "id": usuario_id,
+        "nome": nome,
+    }
+
+    return jsonify(
+        mensagem="Usuário atualizado com sucesso",
+        usuario=usuario_atualizado,
     ), 200
 
 
-# Registra a rota responsável pela exclusão de um usuário.
-#
-# Método: DELETE
-# Caminho: /usuarios/<int:usuario_id>
-# Exemplo: DELETE http://localhost:5000/usuarios/1
-@app.delete("/usuarios/<int:usuario_id>")
+@app.delete("/api/usuarios/<int:usuario_id>")
 def excluir_usuario(usuario_id):
-    """Remove um usuário da lista em memória."""
+    """Exclui um usuário do banco de dados."""
 
-    # Procura o usuário que será excluído.
-    usuario = next(
-        (item for item in usuarios if item["id"] == usuario_id),
-        None,
-    )
+    try:
+        with closing(abrir_conexao()) as conexao:
+            cursor = conexao.execute(
+                """
+                DELETE FROM usuarios
+                WHERE id = ?
+                """,
+                (usuario_id,),
+            )
 
-    if usuario is None:
-        return jsonify(erro="Usuário não encontrado"), 404
+            if cursor.rowcount == 0:
+                return jsonify(
+                    erro="Usuário não encontrado",
+                ), 404
 
-    # remove() exclui da lista o dicionário encontrado.
-    usuarios.remove(usuario)
+            conexao.commit()
 
-    # O status 200 permite devolver uma mensagem JSON confirmando a exclusão.
-    return jsonify(mensagem="Usuário excluído"), 200
+    except sqlite3.Error as erro:
+        return jsonify(
+            erro="Não foi possível excluir o usuário",
+            detalhes=str(erro),
+        ), 500
+
+    return jsonify(
+        mensagem="Usuário excluído com sucesso",
+    ), 200
 
 
-# Registra um tratador global para erros HTTP 404.
-#
-# Essa função será executada quando o cliente solicitar uma rota que não foi
-# definida, como GET /produtos. Ela garante que o erro também seja devolvido
-# em JSON, mantendo o padrão das demais respostas da API.
+# ---------------------------------------------------------------------------
+# TRATAMENTO DE ERROS HTTP
+# ---------------------------------------------------------------------------
+
 @app.errorhandler(404)
 def rota_nao_encontrada(erro):
-    """Retorna uma resposta JSON para rotas inexistentes."""
+    """Retorna uma resposta apropriada para rotas inexistentes."""
 
-    # O Flask entrega o objeto do erro como argumento. Ele não é necessário
-    # neste exemplo porque foi definida uma mensagem simples e padronizada.
-    return jsonify(erro="Rota não encontrada"), 404
+    # Se a rota solicitada começar com /api/, o erro será devolvido em JSON.
+    if request.path.startswith("/api/"):
+        return jsonify(erro="Rota não encontrada"), 404
+
+    # Para rotas da interface HTML, redireciona para a página inicial.
+    return redirect(
+        url_for("inicio", erro="Página não encontrada"),
+        code=303,
+    )
 
 
-# Executa o servidor somente quando este arquivo é iniciado diretamente com:
+@app.errorhandler(405)
+def metodo_nao_permitido(erro):
+    """Retorna uma resposta para métodos HTTP não permitidos."""
+
+    if request.path.startswith("/api/"):
+        return jsonify(
+            erro="Método HTTP não permitido para esta rota",
+        ), 405
+
+    return redirect(
+        url_for(
+            "inicio",
+            erro="Operação não permitida",
+        ),
+        code=303,
+    )
+
+
+# ---------------------------------------------------------------------------
+# INICIALIZAÇÃO DO SERVIDOR
+# ---------------------------------------------------------------------------
+
+# Este bloco será executado somente quando o arquivo for iniciado diretamente:
 #
-#   python "Código colado.py"
+#     python conexao.py
 #
-# Se o arquivo for importado por outro programa, este bloco não será executado.
+# Se o arquivo for importado por outro programa, o servidor não será iniciado
+# automaticamente.
 if __name__ == "__main__":
     # debug=True ativa recursos úteis durante o desenvolvimento:
-    #   recarregamento automático quando o arquivo é alterado;
-    #   apresentação detalhada de erros no navegador.
     #
-    # O modo de depuração não deve ser utilizado em produção, pois pode
-    # revelar informações internas da aplicação.
+    # 1. recarrega o servidor quando o código é alterado;
+    # 2. mostra informações detalhadas sobre erros;
+    # 3. facilita o desenvolvimento e os testes.
+    #
+    # O modo debug não deve ser utilizado em produção.
     app.run(debug=True)
