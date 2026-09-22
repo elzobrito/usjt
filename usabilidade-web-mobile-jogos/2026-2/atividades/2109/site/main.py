@@ -166,6 +166,7 @@ def cadastrar_usuario():
     """Valida e adiciona um novo usuário à lista em memória."""
 
     nome = request.form.get("nome", "").strip()
+    mensagem = None 
 
     if not nome:
         return redirect(
@@ -178,7 +179,8 @@ def cadastrar_usuario():
             conexao.execute("INSERT INTO usuarios (nome) VALUES (?)", (nome,))
             conexao.commit()
     except sqlite3.Error as e:
-        mensagem_erro = f"Erro ao cadastrar usuário: {e}"   
+        mensagem = f"Erro ao cadastrar usuário: {e}"   
+
 
     return redirect(
         url_for("inicio", mensagem="Usuário cadastrado"),
@@ -194,17 +196,6 @@ def cadastrar_usuario():
 def editar_usuario_com_post(usuario_id):
     """Atualiza um usuário por meio de um formulário POST."""
 
-    usuario = next(
-        (item for item in usuarios if item["id"] == usuario_id),
-        None,
-    )
-
-    if usuario is None:
-        return redirect(
-            url_for("inicio", erro="Usuário não encontrado"),
-            code=303,
-        )
-
     nome = request.form.get("nome", "").strip()
 
     if not nome:
@@ -213,8 +204,17 @@ def editar_usuario_com_post(usuario_id):
             code=303,
         )
 
-    usuario["nome"] = nome
-
+    try:
+        with closing(abrir_conexao()) as conexao:
+            conexao.execute(
+                "UPDATE usuarios SET nome = ? WHERE id = ?",
+                (nome, usuario_id),
+            )
+            conexao.commit()
+    except sqlite3.Error as e:
+        mensagem = f"Erro ao atualizar usuário: {e}"
+    
+    
     return redirect(
         url_for("inicio", mensagem="Usuário atualizado"),
         code=303,
