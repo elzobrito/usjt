@@ -67,3 +67,21 @@ A investigação técnica toma como referência o commit oficial `3fceeec` (vers
 $$\text{Taxa de Sucesso dos Templates} = \frac{\text{templates inseridos corretamente}}{7} \times 100$$
 
 - Critério de Aceitação: $100\%$ de inserção bem-sucedida; esforço $\le 2$ teclas/cliques por template.
+
+
+### QA-MET-[Número] — [Título claro e mensurável][cite: 7]
+
+- Requisito Funcional Relacionado: [Ex.: Persistência / Detecção de Conflitos]
+- Categoria: Falha / Inconsistência Doc vs Código / Melhoria / Dúvida
+- Ambiente: MD Studio v0.2.2[cite: 1, 7], Windows [10/11] x64[cite: 1, 7], Instalador [EXE/MSI][cite: 1, 7]
+- Métrica Obtida: [Ex.: Reprodutibilidade 3/3; Latência de 3,4s; Faixa de 500-10000ms]
+- Passos de Reprodução:
+  1. ...
+  2. ...[cite: 7]
+  3. ...[cite: 7]
+- Resultado Esperado (Critério/Documento): ...[cite: 7]
+- Resultado Observado (Medição real): ...[cite: 7]
+- Impacto Prático para o Usuário: ...[cite: 7]
+- Severidade Proposta: Baixa / Média / Alta / Crítica (com justificativa técnica)[cite: 7]
+- Prioridade Proposta: Baixa / Média / Alta (com justificativa de urgência)[cite: 7]
+- Evidência Anexa: [Nome do arquivo fictício de teste ou print sanitizado][cite: 7]
