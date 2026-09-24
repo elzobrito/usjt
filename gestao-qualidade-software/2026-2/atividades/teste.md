@@ -68,6 +68,13 @@ $$\text{Taxa de Sucesso dos Templates} = \frac{\text{templates inseridos correta
 
 - Critério de Aceitação: $100\%$ de inserção bem-sucedida; esforço $\le 2$ teclas/cliques por template.
 
+### Caso TC-02: Slash Commands e Hub de Formatação
+
+- Em uma linha em branco de notas.md, digitar / e avaliar a exibição do menu de comandos.
+- Inserir uma tabela e aplicar a formatação do bloco.
+- Forçar formatação em texto com sintaxe mista e verificar integridade estrutural.
+- Métrica Coletada: Erros ou Bloqueios (contagem de comandos que falham ou que corrompem o bloco).
+- Critério de Aceitação: Zero corrupções de texto; menu responsivo em $\le 0{,}5\text{ s}$.
 
 ### QA-MET-[Número] — [Título claro e mensurável][cite: 7]
 
