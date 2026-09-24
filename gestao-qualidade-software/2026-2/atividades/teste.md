@@ -76,6 +76,18 @@ $$\text{Taxa de Sucesso dos Templates} = \frac{\text{templates inseridos correta
 - Métrica Coletada: Erros ou Bloqueios (contagem de comandos que falham ou que corrompem o bloco).
 - Critério de Aceitação: Zero corrupções de texto; menu responsivo em $\le 0{,}5\text{ s}$.
 
+## Trilha 02: Pipeline de Preview, KaTeX e Mermaid
+- Requisito Base: Pipeline Unified (CommonMark + GFM: tabelas, task lists, notas de rodapé, alertas), fórmulas matemáticas com KaTeX local e diagramas Mermaid com pan/zoom e exportação SVG/PNG.
+- Massa de Dados: Ficheiro notas.md contendo um cabeçalho H1, uma task list, uma tabela GFM, uma equação KaTeX ($E = mc^2$) e um diagrama Mermaid básico (graph TD; A-->B;).
+
+### Caso TC-03: Fidelidade da Visualização Sintática
+- Colar a massa de dados sintática no editor em modo Split (lado a lado).
+- Comparar visualmente cada elemento renderizado no preview com a especificação esperada do Markdown.
+- Métrica Coletada:$$\text{Fidelidade de Visualização} = \frac{\text{elementos renderizados corretamente}}{\text{5 elementos de sintaxe testados}} \times 100$$
+- Critério de Aceitação: $100\%$ de fidelidade; fórmulas matemáticas renderizadas sem requisição de rede (KaTeX local).
+
+
+
 ### QA-MET-[Número] — [Título claro e mensurável][cite: 7]
 
 - Requisito Funcional Relacionado: [Ex.: Persistência / Detecção de Conflitos]
