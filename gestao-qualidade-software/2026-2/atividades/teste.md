@@ -215,11 +215,11 @@ $$
 
 ## Diagrama Mermaid
 
-```mermaid
+mermaid
 graph TD;
     A[Início] --> B[Processamento];
     B --> C[Fim];
-```
+
 
 O bloco acima deve ser transformado em um diagrama Mermaid real.
 
@@ -296,7 +296,7 @@ Caso alertas sejam estilizados visualmente, o estilo deve aparecer corretamente.
 
 Verifique a expressão:
 
-`$E = mc^2$`
+$E = mc^2$
 
 Ela não deve aparecer literalmente com os caracteres `$`.
 
@@ -304,11 +304,11 @@ Ela deve ser convertida em uma fórmula matemática tipografada.
 
 Verifique também as fórmulas em bloco:
 
-`E = mc^2`
+E = mc^2
 
 e
 
-`a^2 + b^2 = c^2`
+a^2 + b^2 = c^2
 
 As duas devem ser renderizadas corretamente.
 
@@ -334,11 +334,11 @@ Se o KaTeX deixar de funcionar sem conexão, o requisito "KaTeX local" não est�
 
 O seguinte bloco:
 
-```mermaid
+mermaid
 graph TD;
     A[Início] --> B[Processamento];
     B --> C[Fim];
-```
+
 
 deve aparecer como um diagrama visual.
 
@@ -422,15 +422,15 @@ O PNG deve:
 
 Com o Preview aberto, altere:
 
-```markdown
+markdown
 $E = mc^2$
-```
+
 
 para:
 
-```markdown
+markdown
 $a^2 + b^2 = c^2$
-```
+
 
 ### Resultado esperado
 
@@ -454,20 +454,20 @@ Também não devem surgir:
 
 Substitua:
 
-```mermaid
+mermaid
 graph TD;
     A[Início] --> B[Processamento];
     B --> C[Fim];
-```
+
 
 por:
 
-```mermaid
+mermaid
 graph TD;
     A[Início] --> B[Processamento];
     B --> C[Validação];
     C --> D[Fim];
-```
+
 
 ### Resultado esperado
 
@@ -490,46 +490,46 @@ Altere o diagrama Mermaid pelo menos cinco vezes consecutivas.
 
 Exemplo de sequência:
 
-```mermaid
+mermaid
 graph TD;
     A-->B;
-```
+
 
 Depois:
 
-```mermaid
+mermaid
 graph TD;
     A-->B;
     B-->C;
-```
+
 
 Depois:
 
-```mermaid
+mermaid
 graph TD;
     A-->B;
     B-->C;
     C-->D;
-```
+
 
 Depois:
 
-```mermaid
+mermaid
 graph LR;
     A-->B;
     B-->C;
     C-->D;
-```
+
 
 Depois:
 
-```mermaid
+mermaid
 graph LR;
     A-->B;
     B-->C;
     C-->D;
     D-->E;
-```
+
 
 ### Resultado esperado
 
@@ -550,10 +550,10 @@ Não devem ocorrer:
 
 Substitua temporariamente o diagrama por uma sintaxe inválida:
 
-```mermaid
+mermaid
 graph TD;
     A-->
-```
+
 
 ### Resultado esperado
 
@@ -568,10 +568,10 @@ O erro Mermaid:
 
 Depois, restaure um diagrama válido:
 
-```mermaid
+mermaid
 graph TD;
     A-->B;
-```
+
 
 ### Resultado esperado
 
@@ -583,9 +583,9 @@ O Mermaid deve voltar a funcionar normalmente sem reiniciar o MD Studio.
 
 Insira temporariamente uma expressão matemática inválida, por exemplo:
 
-```markdown
+markdown
 $\frac{1}{`
-```
+
 
 ### Resultado esperado
 
@@ -595,9 +595,9 @@ O restante do Preview deve continuar funcionando.
 
 Depois, substitua novamente por:
 
-```markdown
+markdown
 $\frac{1}{2}$
-```
+
 
 ### Resultado esperado
 
