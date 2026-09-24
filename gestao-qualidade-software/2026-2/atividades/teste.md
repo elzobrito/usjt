@@ -56,3 +56,14 @@ A investigação técnica toma como referência o commit oficial `3fceeec` (vers
 ## Trilha 01: Editor, Formatação e Templates
 - Requisito Base: CodeMirror 6 com numeração, soft wrap, slash commands (/), inserção de 7 templates via Ctrl+N e atalhos de formatação sem corrupção de blocos.
 - Massa de Dados: Ficheiro limpo notas.md
+
+### Caso TC-01: Inserção e Validação dos Templates (Ctrl+N)
+
+- Abrir a aplicação e acionar o atalho Ctrl+N.
+- Percorrer sequencialmente os 7 templates disponíveis e aplicar cada um deles no editor.
+- Verificar se o cursor e a estrutura Markdown são inseridos corretamente sem travamentos.
+
+- Métrica Coletada:
+$$\text{Taxa de Sucesso dos Templates} = \frac{\text{templates inseridos corretamente}}{7} \times 100$$
+
+- Critério de Aceitação: $100\%$ de inserção bem-sucedida; esforço $\le 2$ teclas/cliques por template.
