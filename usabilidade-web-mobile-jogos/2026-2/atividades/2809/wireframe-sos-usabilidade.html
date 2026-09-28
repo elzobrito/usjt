@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Wireframe — SOS Usabilidade</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Courier New', monospace;
+    background: #f0ede8;
+    color: #2a2a2a;
+    padding: 40px 20px;
+  }
+
+  /* ── Cabeçalho do documento ── */
+  .doc-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .doc-header h1 {
+    font-size: 22px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #1a1a1a;
+  }
+  .doc-header p {
+    font-size: 12px;
+    color: #666;
+    margin-top: 6px;
+    font-family: Arial, sans-serif;
+  }
+  .doc-header .tag {
+    display: inline-block;
+    background: #333;
+    color: #fff;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-top: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ── Grid de telas ── */
+  .screens-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  .screen-full {
+    grid-column: 1 / -1;
+  }
+
+  /* ── Container de cada tela ── */
+  .screen {
+    background: #fff;
+    border: 2px solid #aaa;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 4px 4px 0 #bbb;
+  }
+
+  /* Barra de título da tela */
+  .screen-title-bar {
+    background: #2a2a2a;
+    color: #fff;
+    padding: 10px 16px;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .screen-title-bar .route {
+    font-size: 10px;
+    font-family: 'Courier New', monospace;
+    background: #555;
+    padding: 2px 8px;
+    border-radius: 3px;
+    color: #f0c040;
+  }
+
+  /* Área de conteúdo da tela */
+  .screen-body {
+    padding: 20px;
+  }
+
+  /* ── Componentes de wireframe ── */
+
+  /* Navbar */
+  .wf-nav {
+    background: #e8e8e8;
+    border: 1.5px solid #bbb;
+    border-radius: 4px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .wf-nav .brand {
+    font-weight: 700;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .wf-nav .brand span {
+    font-size: 20px;
+  }
+  .wf-nav .nav-count {
+    font-size: 11px;
+    color: #666;
+    font-family: Arial, sans-serif;
+    border: 1px solid #bbb;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  /* Alerta / flash */
+  .wf-alert {
+    border: 1.5px dashed #888;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .wf-alert.success { background: #e8f5e8; border-color: #5a9; color: #2a6a3a; }
+  .wf-alert.error   { background: #fdecea; border-color: #c55; color: #6a1a1a; }
+  .wf-alert .icon { font-size: 14px; }
+  .wf-alert .label { font-size: 9px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-right: 4px; }
+
+  /* Card de seção */
+  .wf-section {
+    border: 1.5px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .wf-section-header {
+    background: #e8e8e8;
+    border-bottom: 1.5px solid #ccc;
+    padding: 7px 12px;
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .wf-section-body { padding: 14px; }
+
+  /* Formulário */
+  .wf-form-row {
+    margin-bottom: 12px;
+  }
+  .wf-label {
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #555;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .wf-required { color: #c44; font-size: 11px; }
+  .wf-field {
+    width: 100%;
+    height: 32px;
+    background: #f8f8f8;
+    border: 1.5px solid #aaa;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    color: #888;
+  }
+  .wf-field.textarea {
+    height: 60px;
+    align-items: flex-start;
+    padding-top: 8px;
+    font-family: Arial, sans-serif;
+    line-height: 1.4;
+  }
+  .wf-field.select {
+    justify-content: space-between;
+  }
+  .wf-field.select::after { content: '▾'; color: #888; }
+  .wf-field.prefilled {
+    background: #f0f0ff;
+    border-color: #88a;
+    color: #334;
+  }
+  .wf-field.error-state {
+    border-color: #c44;
+    background: #fff5f5;
+  }
+
+  /* Botões */
+  .wf-btn-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .wf-btn {
+    padding: 8px 18px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    border: 1.5px solid;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .wf-btn.primary   { background: #2a2a2a; color: #fff; border-color: #2a2a2a; }
+  .wf-btn.secondary { background: #f0f0f0; color: #444; border-color: #aaa; }
+  .wf-btn.danger    { background: #c44; color: #fff; border-color: #c44; }
+  .wf-btn.warning   { background: #f5a623; color: #fff; border-color: #f5a623; }
+  .wf-btn.ghost     { background: transparent; color: #888; border-color: #ccc; }
+  .wf-btn.sm { padding: 5px 10px; font-size: 10px; }
+
+  /* Tabela */
+  .wf-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+  }
+  .wf-table thead tr {
+    background: #e8e8e8;
+  }
+  .wf-table th {
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #555;
+    border-bottom: 2px solid #ccc;
+    font-weight: 700;
+  }
+  .wf-table td {
+    padding: 9px 10px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+  }
+  .wf-table tr:hover td { background: #fafafa; }
+
+  /* Badges */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 9px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+  .badge-alta       { background: #fdecea; color: #c00; border-color: #fbb; }
+  .badge-media      { background: #fff8e1; color: #b06000; border-color: #fdd; }
+  .badge-baixa      { background: #e8f5e8; color: #2a6; border-color: #afa; }
+  .badge-nav        { background: #e8f0fe; color: #2455c1; border-color: #b0c4f8; }
+  .badge-form       { background: #f3e8fe; color: #7c3aed; border-color: #d4b0f8; }
+  .badge-feedback   { background: #e8fef3; color: #166534; border-color: #a0dab8; }
+  .badge-acesso     { background: #fef3e8; color: #9a3412; border-color: #f8c8a0; }
+  .badge-outro      { background: #f0f0f0; color: #666; border-color: #ccc; }
+
+  /* Linha de ação na tabela */
+  .action-group { display: flex; gap: 5px; align-items: center; }
+
+  /* Estado vazio */
+  .wf-empty {
+    text-align: center;
+    padding: 30px 20px;
+    color: #aaa;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    border: 1.5px dashed #ddd;
+    border-radius: 4px;
+  }
+  .wf-empty .empty-icon { font-size: 32px; display: block; margin-bottom: 8px; }
+
+  /* Anotações */
+  .annotation {
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    color: #888;
+    font-style: italic;
+    margin-top: 5px;
+    padding-left: 4px;
+  }
+  .annotation.code { font-family: 'Courier New', monospace; font-style: normal; color: #666; }
+
+  /* Separador de telas */
+  .screen-separator {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0;
+  }
+  .screen-separator hr { flex: 1; border: none; border-top: 1.5px dashed #bbb; }
+  .screen-separator span {
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+    color: #999;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Callout de anotação de decisão */
+  .decision-callout {
+    background: #fffbe6;
+    border: 1.5px dashed #f5c518;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    color: #7a5800;
+  }
+  .decision-callout strong { font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Indicador de fluxo */
+  .flow-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #aaa;
+    padding: 10px;
+  }
+  .flow-label {
+    font-size: 9px;
+    font-family: Arial, sans-serif;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+    text-align: center;
+  }
+
+  /* Legend */
+  .legend {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 16px;
+    background: #fff;
+    border: 1.5px solid #ddd;
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    color: #555;
+  }
+  .legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+  }
+
+  /* Header da página */
+  .page-section-label {
+    grid-column: 1 / -1;
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    margin-bottom: -20px;
+    margin-top: 10px;
+    padding-left: 2px;
+  }
+
+  /* Número da tela */
+  .screen-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: #f0c040;
+    color: #333;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: Arial, sans-serif;
+    flex-shrink: 0;
+  }
+
+  /* Indicador de URL */
+  .url-bar {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: #555;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .url-bar::before { content: '🌐'; font-size: 12px; }
+
+  /* Separador de form grid */
+  .form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Skeleton de texto */
+  .skel {
+    height: 10px;
+    background: #e8e8e8;
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  /* Responsivo */
+  @media (max-width: 900px) {
+    .screens-grid { grid-template-columns: 1fr; }
+    .screen-full { grid-column: 1; }
+    .screen-separator { grid-column: 1; }
+    .page-section-label { grid-column: 1; }
+    .legend { grid-column: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ CABEÇALHO ══════════════ -->
+<div class="doc-header">
+  <h1>🏥 SOS USABILIDADE — WIREFRAMES</h1>
+  <p>Estudo de Caso · Aula 09 · UC 0011109 · USJT 2026/2</p>
+  <div class="tag">📐 Wireframe de baixa fidelidade · Referência de implementação</div>
+</div>
+
+<div class="screens-grid">
+
+  <!-- ══════════════════════════════════════════════
+       TELA 1 — LISTAGEM (estado vazio)
+       ══════════════════════════════════════════════ -->
+  <div class="page-section-label">Tela 1 — Listagem</div>
+
+  <div class="screen">
+    <div class="screen-title-bar">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="screen-num">1a</span> GET / — Banco vazio
+      </div>
+      <span class="route">GET /</span>
+    </div>
+    <div class="screen-body">
+      <div class="url-bar">127.0.0.1:5000/</div>
+
+      <!-- Nav -->
+      <div class="wf-nav">
+        <div class="brand"><span>🏥</span> SOS Usabilidade</div>
+        <div class="nav-count">0 problemas</div>
+      </div>
+
+      <!-- Formulário de cadastro -->
+      <div class="wf-section">
+        <div class="wf-section-header">✏️ Registrar novo problema</div>
+        <div class="wf-section-body">
+          <div class="wf-form-row">
+            <div class="wf-label">Título <span class="wf-required">*</span></div>
+            <div class="wf-field">Ex.: Botão de confirmar quase invisível no app...</div>
+          </div>
+          <div class="form-grid-2">
+            <div class="wf-form-row">
+              <div class="wf-label">Sistema <span class="wf-required">*</span></div>
+              <div class="wf-field">Ex.: Nubank, Portal USJT...</div>
+            </div>
+            <div class="wf-form-row">
+              <div class="wf-label">Categoria <span class="wf-required">*</span></div>
+              <div class="wf-field select">Selecione a categoria</div>
+            </div>
+          </div>
+          <div class="wf-form-row">
+            <div class="wf-label">Gravidade <span class="wf-required">*</span></div>
+            <div style="display:flex;gap:12px;margin-top:4px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-family:Arial,sans-serif;"><span style="width:14px;height:14px;border:1.5px solid #aaa;border-radius:50%;display:inline-block;"></span> Baixa</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-family:Arial,sans-serif;"><span style="width:14px;height:14px;border:1.5px solid #aaa;border-radius:50%;display:inline-block;"></span> Média</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-family:Arial,sans-serif;"><span style="width:14px;height:14px;border:1.5px solid #aaa;border-radius:50%;display:inline-block;background:#2a2a2a"></span> Alta</label>
+            </div>
+          </div>
+          <div class="wf-form-row">
+            <div class="wf-label">Descrição <span class="wf-required">*</span></div>
+            <div class="wf-field textarea">Descreva o problema de usabilidade encontrado...</div>
+          </div>
+          <div class="wf-btn-row">
+            <div class="wf-btn primary">💾 Registrar problema</div>
+            <div class="wf-btn secondary">Limpar</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado vazio -->
+      <div class="wf-section">
+        <div class="wf-section-header">📋 Problemas registrados</div>
+        <div class="wf-section-body">
+          <div class="wf-empty">
+            <span class="empty-icon">🗂️</span>
+            Nenhum problema registrado ainda.<br>
+            <span style="font-size:11px;">Use o formulário acima para começar.</span>
+          </div>
+        </div>
+      </div>
+      <div class="annotation code">→ banco vazio: fetchall() retorna [] · sem erro 500</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       TELA 1b — LISTAGEM com dados
+       ══════════════════════════════════════════════ -->
+  <div class="screen">
+    <div class="screen-title-bar">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="screen-num">1b</span> GET / — Com dados + flash de sucesso
+      </div>
+      <span class="route">GET /</span>
+    </div>
+    <div class="screen-body">
+      <div class="url-bar">127.0.0.1:5000/</div>
+
+      <div class="wf-nav">
+        <div class="brand"><span>🏥</span> SOS Usabilidade</div>
+        <div class="nav-count">3 problemas</div>
+      </div>
+
+      <!-- Flash -->
+      <div class="wf-alert success">
+        <span class="icon">✅</span>
+        <span><span class="label">Sucesso</span> Problema registrado com sucesso.</span>
+      </div>
+
+      <!-- Form resumido -->
+      <div class="wf-section">
+        <div class="wf-section-header">✏️ Registrar novo problema</div>
+        <div class="wf-section-body" style="opacity:0.6;">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <div style="flex:2;min-width:120px;">
+              <div class="wf-label">Título *</div>
+              <div class="wf-field" style="height:28px;font-size:10px;">[ campo de texto ]</div>
+            </div>
+            <div style="flex:1;min-width:100px;">
+              <div class="wf-label">Sistema *</div>
+              <div class="wf-field" style="height:28px;font-size:10px;">[ texto ]</div>
+            </div>
+            <div style="flex:1;min-width:100px;">
+              <div class="wf-label">Categoria *</div>
+              <div class="wf-field select" style="height:28px;font-size:10px;">[ select ]</div>
+            </div>
+          </div>
+          <div style="height:10px;"></div>
+          <div class="annotation" style="margin:0;">↳ demais campos colapsados para economizar espaço...</div>
+        </div>
+      </div>
+
+      <!-- Tabela de listagem -->
+      <div class="wf-section">
+        <div class="wf-section-header">📋 Problemas registrados (3)</div>
+        <div class="wf-section-body" style="padding:0;">
+          <table class="wf-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Título</th>
+                <th>Sistema</th>
+                <th>Categoria</th>
+                <th>Gravidade</th>
+                <th>Data</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color:#aaa;font-size:10px;">3</td>
+                <td style="font-weight:600;max-width:180px;">Botão confirmar quase invisível</td>
+                <td>Nubank</td>
+                <td><span class="badge badge-form">formulário</span></td>
+                <td><span class="badge badge-alta">alta</span></td>
+                <td style="font-size:10px;color:#888;">2026-09-28 14:32</td>
+                <td>
+                  <div class="action-group">
+                    <div class="wf-btn warning sm">✏️ Editar</div>
+                    <div class="wf-btn danger sm">🗑️</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="color:#aaa;font-size:10px;">2</td>
+                <td style="font-weight:600;max-width:180px;">Menu de hambúrguer sem rótulo</td>
+                <td>Portal USJT</td>
+                <td><span class="badge badge-nav">navegação</span></td>
+                <td><span class="badge badge-media">média</span></td>
+                <td style="font-size:10px;color:#888;">2026-09-28 14:18</td>
+                <td>
+                  <div class="action-group">
+                    <div class="wf-btn warning sm">✏️ Editar</div>
+                    <div class="wf-btn danger sm">🗑️</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="color:#aaa;font-size:10px;">1</td>
+                <td style="font-weight:600;max-width:180px;">Erro sem mensagem explicativa</td>
+                <td>iFood</td>
+                <td><span class="badge badge-feedback">feedback</span></td>
+                <td><span class="badge badge-baixa">baixa</span></td>
+                <td style="font-size:10px;color:#888;">2026-09-28 14:05</td>
+                <td>
+                  <div class="action-group">
+                    <div class="wf-btn warning sm">✏️ Editar</div>
+                    <div class="wf-btn danger sm">🗑️</div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="annotation code">→ ORDER BY id DESC · mais recente no topo</div>
+
+      <div class="decision-callout">
+        <strong>⚠️ Decisão da dupla:</strong> a tabela acima é apenas uma sugestão de layout.
+        Você pode usar lista &lt;ul&gt;, cards &lt;div&gt; ou qualquer estrutura HTML — desde que
+        todos os campos sejam visíveis e as ações de editar e excluir estejam acessíveis por texto.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       TELA 2 — ERRO DE VALIDAÇÃO
+       ══════════════════════════════════════════════ -->
+  <div class="page-section-label">Tela 2 — Validação e Feedback de Erro</div>
+
+  <div class="screen">
+    <div class="screen-title-bar">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="screen-num">2a</span> POST /problemas — Campo vazio recusado
+      </div>
+      <span class="route">POST /problemas</span>
+    </div>
+    <div class="screen-body">
+      <div class="url-bar">127.0.0.1:5000/</div>
+
+      <div class="wf-nav">
+        <div class="brand"><span>🏥</span> SOS Usabilidade</div>
+        <div class="nav-count">2 problemas</div>
+      </div>
+
+      <!-- Flash de erro -->
+      <div class="wf-alert error">
+        <span class="icon">❌</span>
+        <span><span class="label">Erro</span> O campo "Título" é obrigatório. Preencha antes de salvar.</span>
+      </div>
+
+      <div class="wf-section">
+        <div class="wf-section-header">✏️ Registrar novo problema</div>
+        <div class="wf-section-body">
+          <div class="wf-form-row">
+            <div class="wf-label">Título <span class="wf-required">*</span></div>
+            <div class="wf-field error-state">[ vazio — strip() resultou em "" ]</div>
+            <div class="annotation" style="color:#c44;">↳ recusado — exibe mensagem textual, não apenas borda vermelha</div>
+          </div>
+          <div class="form-grid-2">
+            <div class="wf-form-row">
+              <div class="wf-label">Sistema <span class="wf-required">*</span></div>
+              <div class="wf-field prefilled">Portal USJT</div>
+            </div>
+            <div class="wf-form-row">
+              <div class="wf-label">Categoria <span class="wf-required">*</span></div>
+              <div class="wf-field select prefilled">navegacao ▾</div>
+            </div>
+          </div>
+          <div class="wf-btn-row">
+            <div class="wf-btn primary">💾 Registrar problema</div>
+          </div>
+        </div>
+      </div>
+      <div class="annotation code">→ flash("Informe o título.") + redirect + get_flashed_messages()</div>
+    </div>
+  </div>
+
+  <div class="screen">
+    <div class="screen-title-bar">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="screen-num">2b</span> POST /problemas — Categoria inválida
+      </div>
+      <span class="route">POST /problemas</span>
+    </div>
+    <div class="screen-body">
+      <div class="url-bar">127.0.0.1:5000/</div>
+
+      <div class="wf-nav">
+        <div class="brand"><span>🏥</span> SOS Usabilidade</div>
+        <div class="nav-count">2 problemas</div>
+      </div>
+
+      <div class="wf-alert error">
+        <span class="icon">❌</span>
+        <span><span class="label">Erro</span> Categoria inválida. Use: navegacao, formulario, feedback, acessibilidade ou outro.</span>
+      </div>
+
+      <div class="wf-section">
+        <div class="wf-section-header">✏️ Registrar novo problema</div>
+        <div class="wf-section-body">
+          <div class="wf-form-row">
+            <div class="wf-label">Título</div>
+            <div class="wf-field prefilled">Botão de logout escondido</div>
+          </div>
+          <div class="form-grid-2">
+            <div class="wf-form-row">
+              <div class="wf-label">Sistema</div>
+              <div class="wf-field prefilled">Spotify</div>
+            </div>
+            <div class="wf-form-row">
+              <div class="wf-label">Categoria <span class="wf-required">*</span></div>
+              <div class="wf-field select error-state">interface ▾ ← inválida</div>
+            </div>
+          </div>
+          <div class="wf-form-row">
+            <div class="wf-label">Gravidade</div>
+            <div style="display:flex;gap:12px;margin-top:4px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-family:Arial,sans-serif;"><span style="width:14px;height:14px;border:1.5px solid #aaa;border-radius:50%;display:inline-block;background:#2a2a2a"></span> Baixa ← selecionada</label>
+            </div>
+          </div>
+          <div class="wf-btn-row">
+            <div class="wf-btn primary">💾 Registrar problema</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="decision-callout">
+        <strong>⚠️ Decisão da dupla:</strong> validar categoria no Python (<code>if cat not in CATEGORIAS</code>)
+        ou via <code>CHECK</code> no SQL? Se usar CHECK, como exibir mensagem amigável para o usuário?
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       TELA 3 — EDIÇÃO
+       ══════════════════════════════════════════════ -->
+  <div class="page-section-label">Tela 3 — Edição de Problema</div>
+
+  <div class="screen">
+    <div class="screen-title-bar">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="screen-num">3a</span> GET /problemas/&lt;id&gt;/editar — Formulário pré-preenchido
+      </div>
+      <span class="route">GET /problemas/3/editar</span>
+    </div>
+    <div class="screen-body">
+      <div class="url-bar">127.0.0.1:5000/problemas/3/editar</div>
+
+      <div class="wf-nav">
+        <div class="brand"><span>🏥</span> SOS Usabilidade</div>
+        <div class="nav-count">3 problemas</div>
+      </div>
+
+      <div class="wf-section">
+        <div class="wf-section-header">✏️ Editando problema #3</div>
+        <div class="wf-section-body">
+          <div class="wf-form-row">
+            <div class="wf-label">Título <span class="wf-required">*</span></div>
+            <div class="wf-field prefilled">Botão confirmar quase invisível</div>
+            <div class="annotation code">↳ value="{{ p['titulo'] }}" — dado lido do SQLite</div>
+          </div>
+          <div class="form-grid-2">
+            <div class="wf-form-row">
+              <div class="wf-label">Sistema <span class="wf-required">*</span></div>
+              <div class="wf-field prefilled">Nubank</div>
+            </div>
+            <div class="wf-form-row">
+              <div class="wf-label">Categoria <span class="wf-required">*</span></div>
+              <div class="wf-field select prefilled">formulario ▾</div>
+            </div>
+          </div>
+          <div class="wf-form-row">
+            <div class="wf-label">Gravidade <span class="wf-required">*</span></div>
+            <div style="display:flex;gap:12px;margin-top:4px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-family:Arial,sans-serif;"><span style="width:14px;height:14px;border:1.5px solid #aaa;border-radius:50%;display:inline-block;"></span> Baixa</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-family:Arial,sans-serif;"><span style="width:14px;height:14px;border:1.5px solid #aaa;border-radius:50%;display:inline-block;background:#2a2a2a"></span> <strong>Média ← alterada</strong></label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:11px;font-family:Arial,sans-serif;"><span style="width:14px;height:14px;border:1.5px solid #aaa;border-radius:50%;display:inline-block;"></span> Alta</label>
+            </div>
+            <div class="annotation code">↳ selecionado: p['gravidade'] == 'media'</div>
+          </div>
+          <div class="wf-form-row">
+            <div class="wf-label">Descrição <span class="wf-required">*</span></div>
+            <div class="wf-field textarea prefilled">O contraste entre o botão e o fundo é muito baixo, dificultando...</div>
+          </div>
+          <div class="wf-btn-row">
+            <div class="wf-btn primary">💾 Salvar alterações</div>
+            <div class="wf-btn secondary">← Cancelar</div>
+          </div>
+        </div>
+      </div>
+      <div class="annotation code">→ SELECT * FROM problemas WHERE id = ? · rowfactory → p['campo']</div>
+    </div>
+  </div>
+
+  <div class="screen">
+    <div class="screen-title-bar">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="screen-num">3b</span> GET /problemas/&lt;id&gt;/editar — ID inexistente
+      </div>
+      <span class="route">GET /problemas/999/editar</span>
+    </div>
+    <div class="screen-body">
+      <div class="url-bar">127.0.0.1:5000/problemas/999/editar</div>
+
+      <div class="wf-nav">
+        <div class="brand"><span>🏥</span> SOS Usabilidade</div>
+        <div class="nav-count">3 problemas</div>
+      </div>
+
+      <!-- Opção A: 404 -->
+      <div class="wf-section">
+        <div class="wf-section-header">🔴 Opção A — HTTP 404 Not Found</div>
+        <div class="wf-section-body">
+          <div class="wf-empty">
+            <span class="empty-icon">🔍</span>
+            <strong>404 — Problema não encontrado</strong><br>
+            <span style="font-size:11px;margin-top:6px;display:block;">O problema #999 não existe no banco de dados.</span>
+          </div>
+          <div class="annotation code" style="margin-top:10px;">→ if problema is None: abort(404)</div>
+        </div>
+      </div>
+
+      <!-- Opção B: flash -->
+      <div class="wf-section">
+        <div class="wf-section-header">🟡 Opção B — Flash + redirect para listagem</div>
+        <div class="wf-section-body">
+          <div class="wf-alert error">
+            <span class="icon">⚠️</span>
+            <span><span class="label">Aviso</span> Problema #999 não encontrado. Pode ter sido removido.</span>
+          </div>
+          <div class="annotation code">→ flash("Problema não encontrado.") + redirect(url_for('listar'))</div>
+        </div>
+      </div>
+
+      <div class="decision-callout">
+        <strong>⚠️ Decisão da dupla:</strong> qual opção escolher? 404 é tecnicamente correto.
+        Flash + redirect é mais amigável para o usuário leigo. Justifique a escolha no diário.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       TELA 4 — EXCLUSÃO
+       ══════════════════════════════════════════════ -->
+  <div class="page-section-label">Tela 4 — Exclusão e Persistência</div>
+
+  <div class="screen">
+    <div class="screen-title-bar">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="screen-num">4a</span> POST /problemas/&lt;id&gt;/excluir — Confirmação inline
+      </div>
+      <span class="route">POST /problemas/1/excluir</span>
+    </div>
+    <div class="screen-body">
+      <div class="url-bar">127.0.0.1:5000/</div>
+
+      <div class="wf-nav">
+        <div class="brand"><span>🏥</span> SOS Usabilidade</div>
+        <div class="nav-count">2 problemas</div>
+      </div>
+
+      <div class="wf-alert success">
+        <span class="icon">🗑️</span>
+        <span><span class="label">Removido</span> Problema "Erro sem mensagem explicativa" excluído com sucesso.</span>
+      </div>
+
+      <div class="wf-section">
+        <div class="wf-section-header">📋 Problemas registrados (2)</div>
+        <div class="wf-section-body" style="padding:0;">
+          <table class="wf-table">
+            <thead>
+              <tr>
+                <th>#</th><th>Título</th><th>Sistema</th><th>Categoria</th><th>Gravidade</th><th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color:#aaa;font-size:10px;">3</td>
+                <td style="font-weight:600;">Botão confirmar quase invisível</td>
+                <td>Nubank</td>
+                <td><span class="badge badge-form">formulário</span></td>
+                <td><span class="badge badge-alta">alta</span></td>
+                <td><div class="action-group"><div class="wf-btn warning sm">✏️ Editar</div><div class="wf-btn danger sm">🗑️</div></div></td>
+              </tr>
+              <tr>
+                <td style="color:#aaa;font-size:10px;">2</td>
+                <td style="font-weight:600;">Menu hambúrguer sem rótulo</td>
+                <td>Portal USJT</td>
+                <td><span class="badge badge-nav">navegação</span></td>
+                <td><span class="badge badge-media">média</span></td>
+                <td><div class="action-group"><div class="wf-btn warning sm">✏️ Editar</div><div class="wf-btn danger sm">🗑️</div></div></td>
+              </tr>
+              <tr style="opacity:0.35;text-decoration:line-through;">
+                <td style="color:#aaa;font-size:10px;">1</td>
+                <td>Erro sem mensagem explicativa</td>
+                <td>iFood</td>
+                <td><span class="badge badge-feedback">feedback</span></td>
+                <td><span class="badge badge-baixa">baixa</span></td>
+                <td><span style="font-size:10px;font-family:Arial;color:#c44;">removido</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="annotation code">→ DELETE FROM problemas WHERE id = ? · commit() · redirect</div>
+      <div class="decision-callout">
+        <strong>⚠️ Decisão da dupla:</strong> o botão 🗑️ dispara exclusão direta (UX simples) ou exibe um
+        diálogo de confirmação antes? Qual é mais seguro para o usuário? Justifique.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       TELA 4b — CLÍMAX DO RESTART
+       ══════════════════════════════════════════════ -->
+  <div class="screen">
+    <div class="screen-title-bar">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="screen-num">4b</span> ⚡ Clímax — Ctrl+C + reinício · dados persistem
+      </div>
+      <span class="route">GET / após restart</span>
+    </div>
+    <div class="screen-body">
+
+      <!-- Timeline do clímax -->
+      <div style="display:flex;flex-direction:column;gap:10px;font-family:Arial,sans-serif;font-size:11px;">
+
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:#2a2a2a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">1</div>
+          <div>
+            <div style="font-weight:700;">Situação antes do Ctrl+C</div>
+            <div style="color:#666;margin-top:2px;">Banco tem 2 problemas · servidor rodando em 5000</div>
+            <div style="background:#f0f0f0;border:1px solid #ddd;padding:5px 10px;border-radius:3px;font-family:'Courier New';font-size:10px;margin-top:4px;color:#333;">
+              $ python app.py<br>* Running on http://127.0.0.1:5000
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:#c44;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">2</div>
+          <div>
+            <div style="font-weight:700;color:#c44;">Ctrl+C — processo encerrado</div>
+            <div style="color:#666;margin-top:2px;">RAM apagada · processo Flask morto</div>
+            <div style="background:#1a1a1a;padding:5px 10px;border-radius:3px;font-family:'Courier New';font-size:10px;margin-top:4px;color:#f0f0f0;">
+              ^C<br><span style="color:#ff6b6b;">Stopping flask server...</span>
+            </div>
+            <div style="background:#fdecea;border:1px dashed #f88;padding:4px 8px;border-radius:3px;margin-top:4px;font-size:10px;color:#c00;">
+              ❌ Memória RAM: apagada · variáveis Python: destruídas
+            </div>
+            <div style="background:#e8f5e8;border:1px dashed #5a9;padding:4px 8px;border-radius:3px;margin-top:4px;font-size:10px;color:#2a6;">
+              ✅ problemas.db: intacto no disco · dados persistidos com commit()
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:#2a6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">3</div>
+          <div>
+            <div style="font-weight:700;color:#2a6;">Reinício + F5 no navegador</div>
+            <div style="background:#1a1a1a;padding:5px 10px;border-radius:3px;font-family:'Courier New';font-size:10px;margin-top:4px;color:#f0f0f0;">
+              $ python app.py<br><span style="color:#a0f0a0;">* Running on http://127.0.0.1:5000</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:#f0c040;color:#333;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">🎯</div>
+          <div style="width:100%;">
+            <div style="font-weight:700;">Resultado no navegador após F5</div>
+            <div style="border:2px solid #2a6;border-radius:4px;margin-top:6px;overflow:hidden;">
+              <div style="background:#2a6;color:#fff;padding:4px 10px;font-size:9px;text-transform:uppercase;letter-spacing:1px;">✅ Dados sobreviveram ao restart!</div>
+              <div style="padding:8px 10px;background:#fff;">
+                <table class="wf-table" style="font-size:10px;">
+                  <thead><tr><th>#</th><th>Título</th><th>Sistema</th><th>Gravidade</th></tr></thead>
+                  <tbody>
+                    <tr><td style="color:#aaa;">3</td><td style="font-weight:600;">Botão confirmar quase invisível</td><td>Nubank</td><td><span class="badge badge-alta">alta</span></td></tr>
+                    <tr><td style="color:#aaa;">2</td><td style="font-weight:600;">Menu hambúrguer sem rótulo</td><td>Portal USJT</td><td><span class="badge badge-media">média</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="decision-callout" style="margin-top:14px;">
+        <strong>💡 Pergunta antes do Ctrl+C (preencher na tabela de testes):</strong>
+        "Se dermos Ctrl+C agora e ligarmos de novo, os problemas que cadastramos voltam ou somem?"
+        Preencha a coluna <em>Previsto</em> antes de apertar qualquer tecla.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       DIAGRAMA DE FLUXO
+       ══════════════════════════════════════════════ -->
+  <div class="page-section-label">Diagrama de fluxo — Requisições e SQL</div>
+
+  <div class="screen screen-full">
+    <div class="screen-title-bar">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="screen-num">5</span> Fluxo completo — Navegador → Flask → SQLite → Disco
+      </div>
+      <span class="route">arquitetura da solução</span>
+    </div>
+    <div class="screen-body">
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;font-family:Arial,sans-serif;font-size:11px;text-align:center;">
+
+        <!-- Col 1: Navegador -->
+        <div style="padding:10px;border-right:1.5px dashed #ccc;">
+          <div style="font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#555;margin-bottom:12px;">🌐 Navegador</div>
+          <div style="background:#e8f0fe;border:1.5px solid #b0c4f8;border-radius:4px;padding:8px;margin-bottom:10px;font-size:10px;">GET /</div>
+          <div style="background:#fff8e1;border:1.5px solid #fdd;border-radius:4px;padding:8px;margin-bottom:10px;font-size:10px;">POST /problemas</div>
+          <div style="background:#fff8e1;border:1.5px solid #fdd;border-radius:4px;padding:8px;margin-bottom:10px;font-size:10px;">GET /problemas/&lt;id&gt;/editar</div>
+          <div style="background:#fff8e1;border:1.5px solid #fdd;border-radius:4px;padding:8px;margin-bottom:10px;font-size:10px;">POST .../editar</div>
+          <div style="background:#fdecea;border:1.5px solid #fbb;border-radius:4px;padding:8px;font-size:10px;">POST .../excluir</div>
+        </div>
+
+        <!-- Col 2: seta -->
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px;border-right:1.5px dashed #ccc;">
+          <div style="color:#aaa;font-size:10px;text-transform:uppercase;letter-spacing:1px;">HTTP</div>
+          <div style="font-size:22px;color:#888;">→</div>
+          <div style="font-size:22px;color:#888;">←</div>
+          <div style="color:#aaa;font-size:10px;">HTML</div>
+        </div>
+
+        <!-- Col 3: Flask -->
+        <div style="padding:10px;border-right:1.5px dashed #ccc;">
+          <div style="font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#555;margin-bottom:12px;">🐍 Flask (app.py)</div>
+          <div style="background:#f3e8fe;border:1.5px solid #d4b0f8;border-radius:4px;padding:8px;margin-bottom:6px;font-size:10px;text-align:left;">
+            <strong>listar_usuarios()</strong><br>
+            <span style="color:#666;font-family:'Courier New',monospace;font-size:9px;">SELECT * ORDER BY id DESC</span>
+          </div>
+          <div style="background:#f3e8fe;border:1.5px solid #d4b0f8;border-radius:4px;padding:8px;margin-bottom:6px;font-size:10px;text-align:left;">
+            <strong>cadastrar_problema()</strong><br>
+            <span style="color:#666;font-family:'Courier New',monospace;font-size:9px;">strip · valida · INSERT ? · commit</span>
+          </div>
+          <div style="background:#f3e8fe;border:1.5px solid #d4b0f8;border-radius:4px;padding:8px;margin-bottom:6px;font-size:10px;text-align:left;">
+            <strong>editar_problema(id) GET</strong><br>
+            <span style="color:#666;font-family:'Courier New',monospace;font-size:9px;">SELECT WHERE id=? · pré-preenche</span>
+          </div>
+          <div style="background:#f3e8fe;border:1.5px solid #d4b0f8;border-radius:4px;padding:8px;margin-bottom:6px;font-size:10px;text-align:left;">
+            <strong>editar_problema(id) POST</strong><br>
+            <span style="color:#666;font-family:'Courier New',monospace;font-size:9px;">valida · UPDATE ? WHERE id=? · commit</span>
+          </div>
+          <div style="background:#f3e8fe;border:1.5px solid #d4b0f8;border-radius:4px;padding:8px;font-size:10px;text-align:left;">
+            <strong>excluir_problema(id)</strong><br>
+            <span style="color:#666;font-family:'Courier New',monospace;font-size:9px;">DELETE WHERE id=? · commit · redirect</span>
+          </div>
+        </div>
+
+        <!-- Col 4: seta -->
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px;border-right:1.5px dashed #ccc;">
+          <div style="color:#aaa;font-size:10px;text-transform:uppercase;letter-spacing:1px;">sqlite3</div>
+          <div style="font-size:22px;color:#888;">→</div>
+          <div style="font-size:22px;color:#888;">←</div>
+          <div style="color:#aaa;font-size:10px;">rows</div>
+        </div>
+
+        <!-- Col 5: Disco -->
+        <div style="padding:10px;">
+          <div style="font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#555;margin-bottom:12px;">💾 Disco (problemas.db)</div>
+          <div style="border:2px solid #2a2a2a;border-radius:4px;overflow:hidden;margin-bottom:10px;">
+            <div style="background:#2a2a2a;color:#fff;padding:4px 8px;font-size:9px;text-family:'Courier New',monospace;font-family:'Courier New',monospace;">CREATE TABLE problemas</div>
+            <div style="padding:8px;font-size:9px;font-family:'Courier New',monospace;line-height:1.8;color:#444;">
+              id INTEGER PK AUTO<br>
+              titulo TEXT NOT NULL<br>
+              sistema TEXT NOT NULL<br>
+              categoria TEXT NOT NULL<br>
+              gravidade TEXT NOT NULL<br>
+              descricao TEXT NOT NULL<br>
+              criado_em TEXT DEFAULT NOW
+            </div>
+          </div>
+          <div style="background:#e8f5e8;border:1.5px solid #5a9;border-radius:4px;padding:8px;font-size:10px;">
+            ✅ Persiste após<br>Ctrl+C e restart
+          </div>
+          <div style="margin-top:8px;background:#fdecea;border:1.5px solid #f88;border-radius:4px;padding:8px;font-size:10px;">
+            ❌ Sem ORM<br>❌ Sem servidor externo<br>❌ Sem f-string no SQL
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Regra de ouro -->
+      <div style="margin-top:18px;background:#2a2a2a;color:#fff;border-radius:4px;padding:12px 16px;font-family:'Courier New',monospace;font-size:11px;line-height:1.8;">
+        <span style="color:#f0c040;font-weight:700;">REGRA DE OURO:</span>
+        cursor.execute(<span style="color:#a0f0a0;">"INSERT INTO problemas (titulo,sistema,categoria,gravidade,descricao) VALUES (?,?,?,?,?)"</span>,
+        <span style="color:#88ccff;">(titulo, sistema, categoria, gravidade, descricao)</span>)
+        <br>
+        <span style="color:#ff8888;">PROIBIDO:</span> f"INSERT INTO problemas VALUES ('{titulo}', ...)"
+        <span style="color:#f0c040;"> ← SQL Injection!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       LEGENDA
+       ══════════════════════════════════════════════ -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color" style="background:#e8f0fe;border-color:#b0c4f8;"></div> Requisição GET</div>
+    <div class="legend-item"><div class="legend-color" style="background:#fff8e1;border-color:#fdd;"></div> Requisição POST</div>
+    <div class="legend-item"><div class="legend-color" style="background:#f3e8fe;border-color:#d4b0f8;"></div> Função Flask</div>
+    <div class="legend-item"><div class="legend-color" style="background:#f0f0ff;border-color:#88a;"></div> Campo pré-preenchido (banco)</div>
+    <div class="legend-item"><div class="legend-color" style="background:#fff5f5;border-color:#c44;"></div> Campo com erro de validação</div>
+    <div class="legend-item"><div class="legend-color" style="background:#fffbe6;border-color:#f5c518;"></div> Decisão de implementação da dupla</div>
+    <div class="legend-item"><div class="legend-color" style="background:#e8f5e8;border-color:#5a9;"></div> Dado persistido no disco</div>
+    <div class="legend-item"><div class="legend-color" style="background:#fdecea;border-color:#fbb;"></div> Dado perdido (apenas memória)</div>
+    <span style="font-family:Arial,sans-serif;font-size:10px;color:#999;margin-left:auto;">UC 0011109 · Aula 09 · USJT 2026/2</span>
+  </div>
+
+</div><!-- /screens-grid -->
+
+</body>
+</html>
