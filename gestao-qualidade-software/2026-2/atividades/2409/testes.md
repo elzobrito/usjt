@@ -56,3 +56,132 @@ A investigação técnica toma como referência o commit oficial `3fceeec` (vers
 ## Trilha 01: Editor, Formatação e Templates
 - Requisito Base: CodeMirror 6 com numeração, soft wrap, slash commands (/), inserção de 7 templates via Ctrl+N e atalhos de formatação sem corrupção de blocos.
 - Massa de Dados: Ficheiro limpo notas.md
+
+### Caso TC-01: Inserção e Validação dos Templates (Ctrl+N)
+
+- Abrir a aplicação e acionar o atalho Ctrl+N.
+- Percorrer sequencialmente os 7 templates disponíveis e aplicar cada um deles no editor.
+- Verificar se o cursor e a estrutura Markdown são inseridos corretamente sem travamentos.
+
+- Métrica Coletada:
+$$\text{Taxa de Sucesso dos Templates} = \frac{\text{templates inseridos corretamente}}{7} \times 100$$
+
+- Critério de Aceitação: $100\%$ de inserção bem-sucedida; esforço $\le 2$ teclas/cliques por template.
+
+### Caso TC-02: Slash Commands e Hub de Formatação
+
+- Em uma linha em branco de notas.md, digitar / e avaliar a exibição do menu de comandos.
+- Inserir uma tabela e aplicar a formatação do bloco.
+- Forçar formatação em texto com sintaxe mista e verificar integridade estrutural.
+- Métrica Coletada: Erros ou Bloqueios (contagem de comandos que falham ou que corrompem o bloco).
+- Critério de Aceitação: Zero corrupções de texto; menu responsivo em $\le 0{,}5\text{ s}$.
+
+## Trilha 02: Pipeline de Preview, KaTeX e Mermaid
+- Requisito Base: Pipeline Unified (CommonMark + GFM: tabelas, task lists, notas de rodapé, alertas), fórmulas matemáticas com KaTeX local e diagramas Mermaid com pan/zoom e exportação SVG/PNG.
+- Massa de Dados: Ficheiro notas.md contendo um cabeçalho H1, uma task list, uma tabela GFM, uma equação KaTeX ($E = mc^2$) e um diagrama Mermaid básico (graph TD; A-->B;).
+
+### Caso TC-03: Fidelidade da Visualização Sintática
+- Colar a massa de dados sintática no editor em modo Split (lado a lado).
+- Comparar visualmente cada elemento renderizado no preview com a especificação esperada do Markdown.
+- Métrica Coletada:$$\text{Fidelidade de Visualização} = \frac{\text{elementos renderizados corretamente}}{\text{5 elementos de sintaxe testados}} \times 100$$
+- Critério de Aceitação: $100\%$ de fidelidade; fórmulas matemáticas renderizadas sem requisição de rede (KaTeX local).
+
+### Caso TC-04: HARDTEST
+
+
+## Objetivo
+
+Validar o pipeline de renderização do Preview do MD Studio, garantindo que recursos de Markdown padrão, GFM, KaTeX e Mermaid funcionem corretamente no mesmo documento e no mesmo ciclo de atualização.
+
+O teste deve verificar:
+
+- Markdown CommonMark;
+- GFM;
+- task lists;
+- tabelas;
+- notas de rodapé;
+- alertas;
+- fórmulas matemáticas com KaTeX local;
+- diagramas Mermaid;
+- pan e zoom em diagramas Mermaid;
+- exportação Mermaid para SVG;
+- exportação Mermaid para PNG;
+- atualização dinâmica do Preview após edição;
+- ausência de erros ou duplicações após re-renderização.
+
+---
+
+## Requisito base
+
+O pipeline de Preview deve utilizar Unified com suporte a:
+
+- CommonMark;
+- GFM;
+- tabelas;
+- task lists;
+- notas de rodapé;
+- alertas;
+- KaTeX local;
+- Mermaid.
+
+Diagramas Mermaid devem suportar:
+
+- renderização;
+- pan;
+- zoom;
+- exportação para SVG;
+- exportação para PNG.
+
+---
+
+# Massa de dados principal
+
+O conteúdo abaixo deve ser salvo como:
+
+`notas.md`
+
+---
+
+
+
+´´´text
+# Teste do Preview
+
+- [x] Item concluído
+- [ ] Item pendente
+
+| Recurso | Status |
+|---------|--------|
+| Markdown | OK |
+| GFM | OK |
+
+A famosa equação de Einstein:
+
+$E = mc^2$
+
+```mermaid
+graph TD;
+    A-->B;
+
+Ao abrir esse arquivo no MD Studio, o teste percorre conceitualmente este fluxo:
+
+```text
+notas.md
+   ↓
+leitura do arquivo
+   ↓
+Unified
+   ↓
+parser CommonMark
+   ↓
+plugins GFM
+   ↓
+AST / HAST
+   ↓
+transformações especiais
+   ├── KaTeX
+   └── Mermaid
+   ↓
+HTML
+   ↓
+Preview
