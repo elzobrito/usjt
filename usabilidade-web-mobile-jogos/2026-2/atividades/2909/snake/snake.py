@@ -37,6 +37,10 @@ cobra = [
 velocidade_x = TAMANHO
 velocidade_y = 0
 
+# pontos
+pontos = 0
+fonte = pygame.font.SysFont("arial", 28)
+
 
 # Comida
 comida = [
@@ -116,7 +120,7 @@ while rodando:
     # --------------------------------
 
     if nova_cabeca == comida:
-
+        pontos += 10
         # Gera uma nova comida
         comida = [
             random.randrange(
@@ -151,6 +155,8 @@ while rodando:
 
     tela.fill(PRETO)
 
+    texto = fonte.render(f"Pontos: {pontos}", True, (255, 255, 255))
+    tela.blit(texto, (20, 20))
 
     # Desenha comida
     pygame.draw.rect(
