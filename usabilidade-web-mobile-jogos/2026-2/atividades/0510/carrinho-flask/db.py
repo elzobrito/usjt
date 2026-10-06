@@ -34,6 +34,13 @@ SEED = [
     ("p3", "Mochila escolar",       119.00),
     ("p4", "Estojo duplo",           18.50),
     ("p5", "Régua 30 cm",             4.90),
+    ("p6", "Lápis de cor 12 cores",    9.90),
+    ("p7", "Borracha macia",            2.50),
+    ("p8", "Apontador com depósito",     5.90),
+    ("p9", "Marcador de texto",          6.90),
+    ("p10", "Agenda 2024",              29.90),
+    ("p11", "Mochila de rodinhas",      149.00),
+    ("p12", "Caderno de desenho",        19.90),
 ]
 
 # ─── Funções ──────────────────────────────────────────────────────────────────

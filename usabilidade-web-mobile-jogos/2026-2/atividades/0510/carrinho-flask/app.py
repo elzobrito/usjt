@@ -108,11 +108,40 @@ def vitrine():
         produtos=produtos,
         qtd=contar_itens(cart_id),
     )
-
-
-
 @app.post("/add")
 def add():
+    """
+    Adiciona produto ao carrinho.
+    UPSERT: se já existe, incrementa quantidade.
+    produto_id nunca é concatenado — sempre via ?.
+    """
+    cart_id = get_cart_id()
+    produto_id = request.form.get("produto_id", "").strip()
+
+    if not produto_id:
+        flash("Produto inválido.", "erro")
+        return redirect(url_for("vitrine"))
+
+    with connect(DB_PATH) as conn:
+        prod = conn.execute(
+            "SELECT id, nome FROM produtos WHERE id = ?",
+            (produto_id,),
+        ).fetchone()
+        if not prod:
+            flash("Produto não encontrado.", "erro")
+            return redirect(url_for("vitrine"))
+
+        conn.execute(
+            """
+            INSERT INTO itens_carrinho (cart_id, produto_id, quantidade)
+            VALUES (?, ?, 1)
+            ON CONFLICT(cart_id, produto_id)
+            DO UPDATE SET quantidade = quantidade + 1
+            """,
+            (cart_id, produto_id),
+        )
+
+    flash(f'"{prod["nome"]}" adicionado ao carrinho.', "ok")
     return redirect(url_for("vitrine"))
 
 
@@ -129,9 +158,51 @@ def ver_carrinho():
         qtd=contar_itens(cart_id),
     )
 
-
 @app.post("/update")
 def update():
+    cart_id = get_cart_id()
+    produto_id = request.form.get("produto_id", "").strip()
+    valores = request.form.getlist("quantidade")
+
+    with connect(DB_PATH) as conn:
+        row = conn.execute(
+            "SELECT quantidade FROM itens_carrinho "
+            "WHERE cart_id = ? AND produto_id = ?",
+            (cart_id, produto_id),
+        ).fetchone()
+        if not row:
+            flash("Item não está no carrinho.", "erro")
+            return redirect(url_for("ver_carrinho"))
+        atual = int(row["quantidade"])
+
+        try:
+            numeros = [int(v) for v in valores]
+        except ValueError:
+            flash("Quantidade inválida.", "erro")
+            return redirect(url_for("ver_carrinho"))
+
+        if len(numeros) == 1:
+            nova_qtd = numeros[0]          # OK
+        elif numeros[0] == atual - 1:
+            nova_qtd = numeros[0]          # −
+        elif numeros[-1] == atual + 1:
+            nova_qtd = numeros[-1]         # +
+        else:
+            nova_qtd = numeros[0]
+
+        if nova_qtd <= 0:
+            conn.execute(
+                "DELETE FROM itens_carrinho "
+                "WHERE cart_id = ? AND produto_id = ?",
+                (cart_id, produto_id),
+            )
+            flash("Item removido do carrinho.", "ok")
+        else:
+            conn.execute(
+                "UPDATE itens_carrinho SET quantidade = ? "
+                "WHERE cart_id = ? AND produto_id = ?",
+                (nova_qtd, cart_id, produto_id),
+            )
 
     return redirect(url_for("ver_carrinho"))
 
