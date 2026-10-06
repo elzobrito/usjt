@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block titulo %}Cadastrar item{% endblock %}
+
+{% block estilos %}
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 420px) 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .painel {
+    background: var(--branco);
+    border: 1px solid var(--cinza-brd);
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+    padding: 1.3rem;
+  }
+
+  .campo {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    margin-bottom: .9rem;
+  }
+
+  .campo label {
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--azul);
+    letter-spacing: .02em;
+  }
+
+  .campo input {
+    padding: .55rem .7rem;
+    border: 1px solid var(--cinza-brd);
+    border-radius: var(--radius);
+    font-size: .95rem;
+    color: var(--texto);
+    background: var(--branco);
+  }
+
+  .campo input:focus {
+    outline: 2px solid var(--azul-m);
+    border-color: var(--azul-m);
+  }
+
+  .dica {
+    font-size: .78rem;
+    color: #7f8c8d;
+  }
+
+  .acoes {
+    display: flex;
+    gap: .6rem;
+    margin-top: .4rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .92rem;
+  }
+
+  thead th {
+    text-align: left;
+    font-size: .78rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--azul);
+    padding: .4rem .2rem .6rem;
+    border-bottom: 2px solid var(--azul);
+  }
+
+  td {
+    padding: .65rem .2rem;
+    border-bottom: 1px solid var(--cinza-brd);
+  }
+
+  .vazio {
+    color: #95a5a6;
+    font-size: .92rem;
+    padding: .6rem 0;
+  }
+
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block conteudo %}
+
+  <h1>Cadastrar item</h1>
+
+  <div class="layout">
+    <form class="painel" method="post" action="{{ url_for('cadastrar') }}">
+      <div class="campo">
+        <label for="id">Código</label>
+        <input id="id" name="id" required maxlength="20"
+               value="{{ form.id }}" placeholder="p6"
+               pattern="[A-Za-z0-9_-]+"
+               title="Letras, números, _ ou -" />
+        <span class="dica">Chave do produto. Não repita um código já usado.</span>
+      </div>
+
+      <div class="campo">
+        <label for="nome">Nome</label>
+        <input id="nome" name="nome" required maxlength="80"
+               value="{{ form.nome }}" placeholder="Lápis grafite" />
+      </div>
+
+      <div class="campo">
+        <label for="preco">Preço</label>
+        <input id="preco" name="preco" required
+               type="number" min="0.01" step="0.01"
+               value="{{ form.preco }}" placeholder="2.50" />
+      </div>
+
+      <div class="acoes">
+        <button type="submit" class="btn btn-primario">Salvar</button>
+        <a href="{{ url_for('vitrine') }}" class="btn btn-cinza">Voltar à vitrine</a>
+      </div>
+    </form>
+
+    <section class="painel">
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Preço</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in produtos %}
+            <tr>
+              <td><code>{{ p["id"] }}</code></td>
+              <td>{{ p["nome"] }}</td>
+              <td>R$ {{ "%.2f"|format(p["preco"]) }}</td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="3" class="vazio">Nenhum produto cadastrado.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+{% endblock %}
