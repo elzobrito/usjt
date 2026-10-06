@@ -242,6 +242,10 @@ def esvaziar():
     return redirect(url_for("ver_carrinho"))
  
 
+@app.post("/cadastrar")
+def cadastrar():
+    return redirect(url_for("cadastrar"))
+
 # ─── Entrypoint ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
