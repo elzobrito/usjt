@@ -108,29 +108,34 @@ def vitrine():
         produtos=produtos,
         qtd=contar_itens(cart_id),
     )
+
+
 @app.post("/add")
 def add():
     """
     Adiciona produto ao carrinho.
     UPSERT: se já existe, incrementa quantidade.
-    produto_id nunca é concatenado — sempre via ?.
+    SQL injection: produto_id nunca é concatenado — sempre via ?.
     """
-    cart_id = get_cart_id()
+    cart_id    = get_cart_id()
     produto_id = request.form.get("produto_id", "").strip()
 
     if not produto_id:
         flash("Produto inválido.", "erro")
         return redirect(url_for("vitrine"))
 
+    # Verifica existência do produto no banco
     with connect(DB_PATH) as conn:
         prod = conn.execute(
-            "SELECT id, nome FROM produtos WHERE id = ?",
-            (produto_id,),
+            "SELECT id, nome FROM produtos WHERE id = ?", (produto_id,)
         ).fetchone()
-        if not prod:
-            flash("Produto não encontrado.", "erro")
-            return redirect(url_for("vitrine"))
 
+    if not prod:
+        flash("Produto não encontrado.", "erro")
+        return redirect(url_for("vitrine"))
+
+    # UPSERT: insere ou soma 1 à quantidade existente
+    with connect(DB_PATH) as conn:
         conn.execute(
             """
             INSERT INTO itens_carrinho (cart_id, produto_id, quantidade)
@@ -158,39 +163,26 @@ def ver_carrinho():
         qtd=contar_itens(cart_id),
     )
 
+
 @app.post("/update")
 def update():
-    cart_id = get_cart_id()
+    """
+    Altera quantidade de um item.
+    Se nova quantidade <= 0, remove a linha (DELETE).
+    """
+    cart_id    = get_cart_id()
     produto_id = request.form.get("produto_id", "").strip()
-    valores = request.form.getlist("quantidade")
+    nova_qtd   = request.form.get("quantidade", "0").strip()
+
+    try:
+        nova_qtd = int(nova_qtd)
+    except ValueError:
+        flash("Quantidade inválida.", "erro")
+        return redirect(url_for("ver_carrinho"))
 
     with connect(DB_PATH) as conn:
-        row = conn.execute(
-            "SELECT quantidade FROM itens_carrinho "
-            "WHERE cart_id = ? AND produto_id = ?",
-            (cart_id, produto_id),
-        ).fetchone()
-        if not row:
-            flash("Item não está no carrinho.", "erro")
-            return redirect(url_for("ver_carrinho"))
-        atual = int(row["quantidade"])
-
-        try:
-            numeros = [int(v) for v in valores]
-        except ValueError:
-            flash("Quantidade inválida.", "erro")
-            return redirect(url_for("ver_carrinho"))
-
-        if len(numeros) == 1:
-            nova_qtd = numeros[0]          # OK
-        elif numeros[0] == atual - 1:
-            nova_qtd = numeros[0]          # −
-        elif numeros[-1] == atual + 1:
-            nova_qtd = numeros[-1]         # +
-        else:
-            nova_qtd = numeros[0]
-
         if nova_qtd <= 0:
+            # Remove a linha — quantidade zero viola o CHECK constraint
             conn.execute(
                 "DELETE FROM itens_carrinho "
                 "WHERE cart_id = ? AND produto_id = ?",
@@ -209,14 +201,33 @@ def update():
 
 @app.post("/delete")
 def delete():
+    """Remove completamente um item do carrinho."""
+    cart_id    = get_cart_id()
+    produto_id = request.form.get("produto_id", "").strip()
 
+    with connect(DB_PATH) as conn:
+        conn.execute(
+            "DELETE FROM itens_carrinho "
+            "WHERE cart_id = ? AND produto_id = ?",
+            (cart_id, produto_id),
+        )
+
+    flash("Item removido do carrinho.", "ok")
     return redirect(url_for("ver_carrinho"))
 
 
 @app.post("/esvaziar")
 def esvaziar():
+    """Remove todos os itens do carrinho atual."""
+    cart_id = get_cart_id()
+    with connect(DB_PATH) as conn:
+        conn.execute(
+            "DELETE FROM itens_carrinho WHERE cart_id = ?",
+            (cart_id,),
+        )
+    flash("Carrinho esvaziado.", "ok")
     return redirect(url_for("ver_carrinho"))
- 
+
 
 # ─── Entrypoint ───────────────────────────────────────────────────────────────
 
