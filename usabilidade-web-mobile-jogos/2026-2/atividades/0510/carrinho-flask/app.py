@@ -242,9 +242,17 @@ def esvaziar():
     return redirect(url_for("ver_carrinho"))
  
 
-@app.post("/cadastrar")
+@app.route("/cadastrar", methods=["GET", "POST"])
 def cadastrar():
-    return redirect(url_for("cadastrar"))
+    form = {"id": "", "nome": "", "preco": ""}
+
+    ()
+
+    return render_template(
+        "cadastrar.html",
+        form=form,
+        qtd=contar_itens(get_cart_id()),
+    )
 
 # ─── Entrypoint ───────────────────────────────────────────────────────────────
 
