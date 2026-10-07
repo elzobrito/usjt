@@ -26,7 +26,7 @@ tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption("Snake em Python")
 
 # --- Fontes ---
-fonte       = pygame.font.SysFont("arial", 28)
+fonte = pygame.font.SysFont("arial", 28)
 fonte_grande= pygame.font.SysFont("arial", 50, bold=True)
 
 # --- Relógio ---

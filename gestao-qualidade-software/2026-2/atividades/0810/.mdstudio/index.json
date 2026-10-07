@@ -1,0 +1,123 @@
+{
+  "documents": {
+    "atividade.md": {
+      "path": "atividade.md",
+      "title": "Plano de Testes - Jogo Snake",
+      "headings": [
+        {
+          "depth": 1,
+          "text": "Plano de Testes - Jogo Snake",
+          "anchor": "plano-de-testes-jogo-snake"
+        },
+        {
+          "depth": 2,
+          "text": "1. Objetivo",
+          "anchor": "1-objetivo"
+        },
+        {
+          "depth": 2,
+          "text": "2. Casos de Teste",
+          "anchor": "2-casos-de-teste"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 1 - Iniciar o jogo",
+          "anchor": "teste-1-iniciar-o-jogo"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 2 - Movimento automático",
+          "anchor": "teste-2-movimento-automatico"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 3 - Movimento para cima",
+          "anchor": "teste-3-movimento-para-cima"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 4 - Movimento para baixo",
+          "anchor": "teste-4-movimento-para-baixo"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 5 - Movimento para esquerda",
+          "anchor": "teste-5-movimento-para-esquerda"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 6 - Movimento para direita",
+          "anchor": "teste-6-movimento-para-direita"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 7 - Impedir inversão de direção",
+          "anchor": "teste-7-impedir-inversao-de-direcao"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 8 - Comer a comida",
+          "anchor": "teste-8-comer-a-comida"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 9 - Crescimento da cobra",
+          "anchor": "teste-9-crescimento-da-cobra"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 10 - Atualização da pontuação",
+          "anchor": "teste-10-atualizacao-da-pontuacao"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 11 - Aumento da velocidade",
+          "anchor": "teste-11-aumento-da-velocidade"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 12 - Colisão com a parede",
+          "anchor": "teste-12-colisao-com-a-parede"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 13 - Colisão com o próprio corpo",
+          "anchor": "teste-13-colisao-com-o-proprio-corpo"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 14 - Exibição da pontuação final",
+          "anchor": "teste-14-exibicao-da-pontuacao-final"
+        },
+        {
+          "depth": 3,
+          "text": "Teste 15 - Fechar o jogo",
+          "anchor": "teste-15-fechar-o-jogo"
+        },
+        {
+          "depth": 2,
+          "text": "3. Problemas Encontrados",
+          "anchor": "3-problemas-encontrados"
+        },
+        {
+          "depth": 2,
+          "text": "4. Conclusão",
+          "anchor": "4-conclusao"
+        }
+      ],
+      "links": [],
+      "wikiLinks": [],
+      "blocks": [],
+      "tags": [],
+      "images": [],
+      "tables": 1,
+      "mermaidBlocks": 0,
+      "katexBlocks": 0,
+      "wordCount": 698,
+      "lineCount": 247,
+      "lastModified": 1791400392
+    }
+  },
+  "version": 1,
+  "indexedAt": 1791400392
+}
