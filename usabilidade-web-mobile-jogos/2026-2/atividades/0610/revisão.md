@@ -28,4 +28,4 @@ Dicas:
 - Use a variável pontos para calcular o nível.
 - Defina um limite de velocidade para o jogo não ficar impossível.
 - Para entregar, explique em duas frases qual variável de estado mudou e como o jogador percebe essa mudança na tela.
-[Link para o Drive](https://drive.google.com/drive/folders/18DkaYTexQjtqQ21MR65FH_U6LYmj4E4W?usp=sharing)
+- Clique para entrar e enviar: [Link para o Drive](https://drive.google.com/drive/folders/18DkaYTexQjtqQ21MR65FH_U6LYmj4E4W?usp=sharing)
