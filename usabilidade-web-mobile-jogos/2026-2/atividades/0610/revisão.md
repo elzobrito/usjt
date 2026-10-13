@@ -18,3 +18,13 @@
 8. Um formulário com `method="get"` envia os dados de que forma? Onde eles aparecem? Por que isso é um problema para dados como senha ou CPF?
 9. Um site estático no GitHub Pages consegue salvar uma reserva? Explique o que falta para que o pedido do cliente seja realmente registrado.
 10. Monte a tabela de rotas (método, caminho, intenção) para um sistema de agendamento de consultas, com as operações criar, consultar, remarcar e cancelar. Explique por que `/consultas` é um caminho melhor que `/salvarDados`.
+
+## Bloco 4: Snake
+- Altere o jogo para que, a cada 5 maçãs comidas, a cobra fique mais rápida. Mostre também na tela o nível atual ao lado da pontuação, por exemplo "Pontos: 7 | Nível: 2".
+
+Dicas:
+
+- A velocidade vem do valor passado para relogio.tick(10). Troque esse 10 por uma variável.
+- Use a variável pontos para calcular o nível.
+- Defina um limite de velocidade para o jogo não ficar impossível.
+- Para entregar, explique em duas frases qual variável de estado mudou e como o jogador percebe essa mudança na tela.
