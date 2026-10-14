@@ -17,16 +17,17 @@ Apostilas, PDFs e slides (`.pdf`, `.pptx`, `.docx`, `.xlsx`) e bancos `.db` **n�
 
 | Pasta | UC | Oferta 2026-2 |
 |---|---|---|
-| [usabilidade-web-mobile-jogos](usabilidade-web-mobile-jogos/) | Usabilidade, desenvolvimento web, mobile e jogos (0011109) | [10 aulas com material](usabilidade-web-mobile-jogos/2026-2/) |
+| [usabilidade-web-mobile-jogos](usabilidade-web-mobile-jogos/) | Usabilidade, desenvolvimento web, mobile e jogos (0011109) | [14 aulas com material](usabilidade-web-mobile-jogos/2026-2/) |
 | [Interação Humano Computador e UX](Intera%C3%A7%C3%A3o%20Humano%20Computador%20e%20UX/) | Interação Humano-Computador e UX | [3 aulas com material](Intera%C3%A7%C3%A3o%20Humano%20Computador%20e%20UX/2026-2/) |
-| [gestao-qualidade-software](gestao-qualidade-software/) | Gestão da qualidade de software (0006960) | [cronograma e 5 pastas de aula](gestao-qualidade-software/2026-2/) |
+| [gestao-qualidade-software](gestao-qualidade-software/) | Gestão da qualidade de software (0006960) | [cronograma e 6 pastas de aula](gestao-qualidade-software/2026-2/) |
 | [gerencia-servicos-ti](gerencia-servicos-ti/) | Gerência e serviços de TI | pasta criada, ainda sem atividades |
 | [modelos-metodos-engenharia-software](modelos-metodos-engenharia-software/) | Modelos, métodos e técnicas da engenharia de software | pasta criada, ainda sem atividades |
 
 > A pasta `Interação Humano Computador e UX` tem espaços e acentos no nome. No terminal, use aspas: `cd "Interação Humano Computador e UX"`.
 
-Outras pastas na raiz:
+Outras pastas e documentos na raiz:
 
+- [CATALOGO_AULAS.md](CATALOGO_AULAS.md): Catálogo mestre integrando todas as aulas e o padrão canônico PCA de artefatos pedagógicos.
 - `saves_074/`: progresso salvo pelo jogo de investigação `incidente_074.py` (IHC, aula 11/09). O programa cria essa pasta no diretório de onde é executado.
 - `.github/`: arquivos de ferramenta do editor. Não é material de aula.
 

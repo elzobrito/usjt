@@ -20,6 +20,7 @@ Cada pasta tem o **dia e o mês** da aula (`0309` = 03/09).
 | [atividades/0309](atividades/0309/) | Laboratório de testes: sistema de desconto em Java | Sim (JDK) |
 | [atividades/1009](atividades/1009/) | Classes de equivalência e valores-limite em Python: senha, notas e conta bancária | Sim (Python 3) |
 | [atividades/2409](atividades/2409/) | Plano de teste e métricas de qualidade do MD Studio v0.2.2 | Sim (MD Studio) |
+| [atividades/0810](atividades/0810/) | Plano de testes do jogo Snake: 15 casos de teste (movimento, colisões, pontuação) | Sim (Python 3) |
 
 Na raiz de `atividades/` também estão:
 
@@ -74,3 +75,9 @@ Veja o [README da pasta](atividades/1009/README.md).
 | `testes.md` | Linha de base do MD Studio v0.2.2 (requisitos, fora de escopo, divergências conhecidas entre documentação e código), matriz de métricas de qualidade e as trilhas de teste TC-01 a TC-04 |
 
 Use o `notas.md` da pasta `atividades/` como arquivo de teste e a versão completa em `atividades/teste.md` para o TC-04.
+
+### 0810 — Plano de testes do jogo Snake
+
+| Arquivo | O que é |
+|---|---|
+| `atividade.md` | Plano de testes formal para o jogo Snake contendo 15 casos de teste (início, movimento, inversão, comida, crescimento, pontuação, velocidade, colisões e encerramento) |

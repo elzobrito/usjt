@@ -18,6 +18,10 @@ As aulas ficam em `atividades/`, uma pasta por aula no formato **DDMM** (dia e m
 | [2809](atividades/2809/) | 28/09 | Estudo de caso "SOS Usabilidade": Flask + SQLite em dupla | Python + Flask |
 | [2909](atividades/2909/) | 29/09 | Jogo Snake em Python | Python + pygame-ce |
 | [0510](atividades/0510/) | 05/10 | Carrinho de compras com Flask + SQLite | Python + Flask |
+| [0610](atividades/0610/) | 06/10 | Revisão A1 e evolução do jogo Snake (velocidade por nível) | Python + pygame-ce |
+| [1210](atividades/1210/) | 12/10 | Jogo Pong em Python (trilha de jogos 1/3) | Python + pygame-ce |
+| [1910](atividades/1910/) | 19/10 | Jogo Breakout em Python (trilha de jogos 2/3) | Python + pygame-ce |
+| [2610](atividades/2610/) | 26/10 | Jogo Space Invaders em Python (trilha de jogos 3/3) | Python + pygame-ce |
 
 ### Como as aulas se ligam
 
@@ -126,6 +130,31 @@ Veja o [README da pasta](atividades/2909/README.md). Materiais extras em [link.m
 ## 05/10 — Carrinho de compras com Flask + SQLite (`atividades/0510/`)
 
 Vitrine lida do banco, carrinho gravado no SQLite e três atividades de extensão. Veja o [README da pasta](atividades/0510/README.md).
+
+## 06/10 — Revisão A1 e Snake com Níveis (`atividades/0610/`)
+
+| Arquivo | O que é |
+|---|---|
+| [revisão.md](atividades/0610/revisão.md) | Questões de revisão para A1 (IHC, eventos e estado, rotas HTTP) e desafio de evolução da mecânica do Snake |
+| `snake.py` | Implementação do Snake com aumento de velocidade e pontuação/nível |
+
+## 12/10 — Jogo Pong em Python (`atividades/1210/`)
+
+| Arquivo | O que é |
+|---|---|
+| `pong.py` | Implementação completa do clássico Pong com colisão, placar, controle por teclado e IA adversária |
+
+## 19/10 — Jogo Breakout em Python (`atividades/1910/`)
+
+| Arquivo | O que é |
+|---|---|
+| `braskout.py` | Implementação do Breakout reaproveitando mecânicas do Pong, grade de blocos quebráveis e vidas |
+
+## 26/10 — Jogo Space Invaders em Python (`atividades/2610/`)
+
+| Arquivo | O que é |
+|---|---|
+| `space_invaders.py` | Implementação do Space Invaders com ondas de invasores, escudos defensivos, tiros e vidas |
 
 ---
 
