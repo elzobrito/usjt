@@ -1,0 +1,79 @@
+{
+  "documents": {
+    "link.md": {
+      "path": "link.md",
+      "title": "link para o Drive",
+      "headings": [
+        {
+          "depth": 1,
+          "text": "link para o Drive",
+          "anchor": "link-para-o-drive"
+        }
+      ],
+      "links": [
+        {
+          "text": "Link para o drive",
+          "url": "https://drive.google.com/drive/folders/18DkaYTexQjtqQ21MR65FH_U6LYmj4E4W?usp=drive_link",
+          "isInternal": false,
+          "line": 2
+        }
+      ],
+      "wikiLinks": [],
+      "blocks": [],
+      "tags": [],
+      "images": [],
+      "tables": 0,
+      "mermaidBlocks": 0,
+      "katexBlocks": 0,
+      "wordCount": 9,
+      "lineCount": 2,
+      "lastModified": 1790726575
+    },
+    "README.md": {
+      "path": "README.md",
+      "title": "29/09 — Jogo Snake em Python",
+      "headings": [
+        {
+          "depth": 1,
+          "text": "29/09 — Jogo Snake em Python",
+          "anchor": "2909-jogo-snake-em-python"
+        },
+        {
+          "depth": 2,
+          "text": "Arquivos",
+          "anchor": "arquivos"
+        },
+        {
+          "depth": 2,
+          "text": "Como executar",
+          "anchor": "como-executar"
+        },
+        {
+          "depth": 2,
+          "text": "Números do jogo",
+          "anchor": "numeros-do-jogo"
+        }
+      ],
+      "links": [
+        {
+          "text": "link.md",
+          "url": "link.md",
+          "isInternal": true,
+          "line": 11
+        }
+      ],
+      "wikiLinks": [],
+      "blocks": [],
+      "tags": [],
+      "images": [],
+      "tables": 1,
+      "mermaidBlocks": 0,
+      "katexBlocks": 0,
+      "wordCount": 290,
+      "lineCount": 37,
+      "lastModified": 1791250156
+    }
+  },
+  "version": 1,
+  "indexedAt": 1792093949
+}
