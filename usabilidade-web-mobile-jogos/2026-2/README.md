@@ -22,6 +22,7 @@ As aulas ficam em `atividades/`, uma pasta por aula no formato **DDMM** (dia e m
 | [1210](atividades/1210/) | 12/10 | Jogo Pong em Python (trilha de jogos 1/3) | Python + pygame-ce |
 | [1910](atividades/1910/) | 19/10 | Jogo Breakout em Python (trilha de jogos 2/3) | Python + pygame-ce |
 | [2610](atividades/2610/) | 26/10 | Jogo Space Invaders em Python (trilha de jogos 3/3) | Python + pygame-ce |
+| [a3-jogo](atividades/a3-jogo/) | [preencher] | **A3: jogo original em grupo** (gráfico, jogabilidade, som, documentação, história) | Python + pygame-ce |
 
 ### Como as aulas se ligam
 
