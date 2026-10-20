@@ -188,7 +188,7 @@ while rodando:
 
     pygame.display.update()
 
-    relogio.tick(8)
+    relogio.tick(10)
 
 
 pygame.quit()

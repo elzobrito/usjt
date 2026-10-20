@@ -19,5 +19,9 @@
 9. Explique a diferença entre validar um campo no navegador (HTML ou JavaScript) e validar no servidor. Por que só a validação no navegador não basta?
 10. Para um sistema de biblioteca, monte a tabela de rotas (método, caminho, intenção) para listar livros, ver um livro, cadastrar, atualizar e remover. Que código de resposta HTTP faz sentido quando o livro pedido não existe?
 
+## Modificações
+1. aumentar a velocidade a cada ponto
+2. diminuir a raquete do que fez o ponto
+
 # Link para o Google Drive
 [Clique aqui para enviar](https://drive.google.com/drive/folders/1MIbPTOZ6TP417kTadqImKT3ddUCGrz7p?usp=sharing)
